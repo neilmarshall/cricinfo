@@ -6,15 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="scripts\" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Program.fs" />
     <None Include="app.config" />
-    <PackageReference Include="Npgsql" Version="4.1.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <None Include="app.SECRETS.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="scripts\" />
+    <EmbeddedResource Include="scripts\cricinfo.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <PackageReference Include="Npgsql" Version="4.1.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
   </ItemGroup>
 </Project>
