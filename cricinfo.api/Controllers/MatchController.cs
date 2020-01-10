@@ -18,6 +18,7 @@ namespace Cricinfo.Api.Controllers
         }
 
         [HttpGet()]
+        [Route("{id}")]
         public async Task<IActionResult> GetMatchAsync(int id)
         {
             var match = await this._cricInfoRepository.GetMatchAsync(id);

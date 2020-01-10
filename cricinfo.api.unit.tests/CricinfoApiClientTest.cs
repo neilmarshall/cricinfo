@@ -1,40 +1,58 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Cricinfo.Api.Controllers;
+using Cricinfo.Api.Client;
 using Cricinfo.Api.Models;
-using Microsoft.AspNetCore.Mvc;
+using Cricinfo.Api.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cricinfo.Api.Unit.Tests
 {
-    [TestClass]
-    public class MatchControllerTest
+    public class CustomWebApplicationFactory<TStartup>
+        : WebApplicationFactory<TStartup> where TStartup : class
     {
-        private MatchController matchController;
-        private Match match;
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            builder.ConfigureServices(services =>
+            {
+                // Remove the app's ICricInfoRepository registration.
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(ICricInfoRepository));
+
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
+
+                // Add ICricInfoRepository using a mock repository for testing.
+                services.AddScoped<ICricInfoRepository, Utilities.MockCricInfoRepository>();
+            });
+        }
+    }
+
+    [TestClass]
+    public class CricinfoApiClientTest
+    {
+        private HttpClient _httpclient;
+        private CricinfoApiClient _cricinfoApiClient;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.matchController = new MatchController(new Utilities.MockCricInfoRepository());
-            this.match = new Match
-            {
-                Venue = "",
-                DateOfFirstDay = new DateTime(),
-                HomeTeam = "",
-                AwayTeam = ""
-            };
+            var webApplicationFactory = new CustomWebApplicationFactory<Startup>();
+            this._httpclient = webApplicationFactory.CreateClient();
+            this._cricinfoApiClient = new CricinfoApiClient("", this._httpclient);
         }
 
         [TestMethod]
-        public async Task GetMatchAsyncReturns200ForValidId()
+        public async Task GetMatchAsyncReturnsInstantiatedObject()
         {
-            var result = await matchController.GetMatchAsync(42) as OkObjectResult;
-            var responseObject = result.Value as Match;
-
-            // assert on status code returned
-            Assert.AreEqual(200, result.StatusCode);
+            var responseObject = await this._cricinfoApiClient.GetMatchAsync(42);
 
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
@@ -112,38 +130,6 @@ namespace Cricinfo.Api.Unit.Tests
             CollectionAssert.AreEqual(
                 new int[] { 0, 32, 71, 97, 111, 198, 245, 252, 277, 284 },
                 responseObject.Scores[0].FallOfWicketScorecard);
-        }
-
-        [TestMethod]
-        public async Task GetMatchAsyncReturns404ForMissingId()
-        {
-            var result = await matchController.GetMatchAsync(99) as NotFoundResult;
-            Assert.AreEqual(404, result.StatusCode);
-        }
-
-        [TestMethod]
-        public async Task CreateMatchAsyncReturns201ForValidMatch()
-        {
-            var result = await matchController.CreateMatchAsync(this.match) as CreatedAtActionResult;
-            Assert.AreEqual(201, result.StatusCode);
-            Assert.AreEqual(43, result.RouteValues["id"]);
-        }
-
-        [TestMethod]
-        public async Task CreateMatchAsyncReturns400ForBadInput()
-        {
-            var result = await matchController.CreateMatchAsync(null) as BadRequestResult;
-            Assert.AreEqual(400, result.StatusCode);
-        } 
-
-        [TestMethod]
-        public async Task CreateMatchAsyncReturns409ForDuplicateMatch()
-        {
-            this.match.DateOfFirstDay = DateTime.Parse("2018-12-26");
-            this.match.HomeTeam = "South Africa";
-            this.match.AwayTeam = "England";
-            var result = await matchController.CreateMatchAsync(this.match) as StatusCodeResult;
-            Assert.AreEqual(409, result.StatusCode);
         }
     }
 }
