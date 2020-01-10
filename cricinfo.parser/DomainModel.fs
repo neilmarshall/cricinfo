@@ -1,4 +1,4 @@
-﻿namespace cricinfo.parser
+﻿namespace Cricinfo.Parser
 
 module private DomainModel =
 

@@ -5,13 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using cricinfo.api.Controllers;
-using cricinfo.api.Models;
-using cricinfo.api.Services;
+using Cricinfo.Api.Controllers;
+using Cricinfo.Api.Models;
+using Cricinfo.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace cricinfo.api.unit.tests
+namespace Cricinfo.Api.unit.tests
 {
     [TestClass]
     public class MatchControllerTest
@@ -23,7 +23,7 @@ namespace cricinfo.api.unit.tests
             public MockCricInfoRepository()
             {
                 Assembly a = Assembly.GetExecutingAssembly();
-                using Stream s = a.GetManifestResourceStream("cricinfo.api.unit.tests.resources.south_africa-england-26-12-18.json");
+                using Stream s = a.GetManifestResourceStream("Cricinfo.Api.Unit.Tests.resources.south_africa-england-26-12-18.json");
                 using StreamReader reader = new StreamReader(s);
                 var matchData = reader.ReadToEnd();
                 var match = JsonSerializer.Deserialize<Match>(matchData);

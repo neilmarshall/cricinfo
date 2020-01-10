@@ -1,8 +1,8 @@
-﻿namespace cricinfo.parser
+﻿namespace Cricinfo.Parser
 
 module Parse =
-
-    open cricinfo.api.Models
+    
+    open Cricinfo.Api.Models
     open DomainModel
 
     let private convertPlayerName = function Player p -> p

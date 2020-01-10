@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using cricinfo.api.Models;
-using cricinfo.api.Services;
+using Cricinfo.Api.Models;
+using Cricinfo.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cricinfo.api.Controllers
+namespace Cricinfo.Api.Controllers
 {
     [ApiController]
     [Route("api/")]

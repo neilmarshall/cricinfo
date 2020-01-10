@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace cricinfo.api.Models
+namespace Cricinfo.Api.Models
 {
     public enum Result
     {

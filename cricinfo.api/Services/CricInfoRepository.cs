@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using cricinfo.api.Models;
+using Cricinfo.Api.Models;
 
-namespace cricinfo.api.Services
+namespace Cricinfo.Api.Services
 {
     public class CricInfoRepository : ICricInfoRepository
     {

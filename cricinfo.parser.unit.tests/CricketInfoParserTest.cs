@@ -1,8 +1,8 @@
-using cricinfo.api.Models;
+using Cricinfo.Api.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace cricinfo.parser.unit.tests
+namespace Cricinfo.Parser.Unit.Tests
 {
     [TestClass]
     public class CricketInfoParserTest

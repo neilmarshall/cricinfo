@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace cricinfo.api
+namespace Cricinfo.Api
 {
     public class Program
     {

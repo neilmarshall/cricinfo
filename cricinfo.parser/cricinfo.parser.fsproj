@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\cricinfo.api\cricinfo.api.csproj" />
+    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace cricinfo.api.Models
+﻿namespace Cricinfo.Api.Models
 {
     public class BowlingScorecard
     {
