@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="DomainModel.fs" />
+    <Compile Include="Parse.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cricinfo.api\cricinfo.api.csproj" />
+  </ItemGroup>
+
+</Project>
