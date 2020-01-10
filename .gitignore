@@ -347,3 +347,6 @@ MigrationBackup/
 
 # config files
 **/*SECRETS*
+
+# .swp files
+**/.*.swp
