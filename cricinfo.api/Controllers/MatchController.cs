@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Cricinfo.Api.Models;
 using Cricinfo.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Cricinfo.Api.Controllers
 {
@@ -11,16 +12,21 @@ namespace Cricinfo.Api.Controllers
     public class MatchController : ControllerBase
     {
         private ICricInfoRepository _cricInfoRepository;
+        private readonly ILogger<MatchController> _logger;
 
-        public MatchController(ICricInfoRepository cricInfoRepository)
+        public MatchController(ICricInfoRepository cricInfoRepository,
+            ILogger<MatchController> logger)
         {
             this._cricInfoRepository = cricInfoRepository;
+            this._logger = logger;
         }
 
         [HttpGet()]
         [Route("{id}")]
         public async Task<IActionResult> GetMatchAsync(int id)
         {
+            this._logger.LogInformation($"GET request - ID '{id}'");
+
             var match = await this._cricInfoRepository.GetMatchAsync(id);
 
             if (match == null) { return NotFound(); }

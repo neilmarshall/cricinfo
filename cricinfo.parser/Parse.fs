@@ -19,7 +19,7 @@ module Parse =
     let parseBattingScorecard (scorecard : string) : seq<BattingScorecard> =
         scorecard.Split('\n')
         |> Seq.map Batsman.Score
-        |> Seq.map (fun batsman ->
+        |> Seq.map (fun (batsman : Batsman) ->
             new BattingScorecard(
                 Name = convertPlayerName batsman.Name,
                 Dismissal = convertPlayerDismissal batsman,

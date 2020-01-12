@@ -1,0 +1,45 @@
+﻿@page
+@model ScorecardModel
+@using System
+@using Cricinfo.Api.Models
+@{
+    <div>
+        <form class="form-group" method="post">
+            <label asp-for=Venue></label>
+            <input class="form-control" asp-for=Venue />
+            <span class="text-danger" asp-validation-for="Venue"></span>
+
+            <label asp-for=DateOfFirstDay></label>
+            <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date" />
+
+            <label asp-for=HomeTeam></label>
+            <input class="form-control" asp-for=HomeTeam />
+            <span class="text-danger" asp-validation-for="HomeTeam"></span>
+
+            <label asp-for=AwayTeam></label>
+            <input class="form-control" asp-for=AwayTeam />
+            <span class="text-danger" asp-validation-for="AwayTeam"></span>
+
+            <label asp-for=Result></label>
+            @foreach (var resultType in Enum.GetValues(typeof(Result)))
+            {
+                <div class="form-check">
+                    <input class="form-check-input" asp-for=Result type="radio" value="@resultType">
+                    <label class="form-check-label" asp-for=Result>
+                        @resultType
+                    </label>
+                </div>
+            }
+
+            <label asp-for=HomeSquad></label>
+            <textarea class="form-control" asp-for=HomeSquad></textarea>
+            <span class="text-danger" asp-validation-for="HomeSquad"></span>
+
+            <label asp-for=AwaySquad></label>
+            <textarea class="form-control" asp-for=AwaySquad></textarea>
+            <span class="text-danger" asp-validation-for="AwaySquad"></span>
+
+            <input class="form-control btn btn-primary" type="submit" />
+        </form>
+    </div>
+}

@@ -1,0 +1,148 @@
+﻿@page
+@model VerificationModel
+@using Cricinfo.Api.Models
+@{
+    var match = (Match)ViewData["match"];
+}
+@{
+    <h1>Please reivew the scorecard before submitting</h1>
+
+    <div>Venue: @match.Venue</div>
+
+    <div>Date: @match.DateOfFirstDay</div>
+
+    <div>Home Team: @match.HomeTeam</div>
+
+    <div>Away Team: @match.AwayTeam</div>
+
+    <div>Result: @match.Result</div>
+
+    <div>
+        <div>Home Team:</div>
+        <table>
+            @foreach (var player in match.HomeSquad)
+            {
+                <tr><td>@player</td></tr>
+            }
+        </table>
+    </div>
+
+    <div>
+        <div>Away Team:</div>
+        <table>
+            @foreach (var player in match.AwaySquad)
+            {
+                <tr><td>@player</td></tr>
+            }
+        </table>
+    </div>
+
+    <!-- the two DIVs below can be simplified via a partial helper method -->
+    <div>
+        <h2>>First Innings</h2>
+        @foreach (var innings in match.Scores.Where(i => i.Innings == 1))
+        {
+            <h3>@innings.Team</h3>
+            <h4>Batting Figures:</h4>
+            <table>
+                @foreach (var bs in innings.BattingScorecard)
+                {
+                    <tr>
+                        <td>@bs.Name</td>
+                        <td>@bs.Dismissal</td>
+                        @if (bs.Catcher != null)
+                        {
+                            <td>@bs.Catcher</td>
+                        }
+                        @if (bs.Bowler != null)
+                        {
+                            <td>@bs.Bowler</td>
+                        }
+                        <td>@bs.Runs</td>
+                        <td>@bs.Mins</td>
+                        <td>@bs.Balls</td>
+                        <td>@bs.Fours</td>
+                        <td>@bs.Sixes</td>
+                    </tr>
+                }
+            </table>
+            <h4>Bowling Figures:</h4>
+            <table>
+                @foreach (var bs in innings.BowlingScorecard)
+                {
+                    <tr>
+                        <td>@bs.Name</td>
+                        <td>@bs.Overs</td>
+                        <td>@bs.Maidens</td>
+                        <td>@bs.Runs</td>
+                        <td>@bs.Wickets</td>
+                    </tr>
+                }
+            </table>
+            <h4>Fall of Wicket:</h4>
+            <table>
+                <thead><tr><th>Runs</th><th>Wicket</th></tr></thead>
+                @for (int i = 0; i < innings.FallOfWicketScorecard.Length; i++)
+                {
+                    <tr><td>@innings.FallOfWicketScorecard[i]</td><td>@(i + 1)</td></tr>
+                }
+            </table>
+
+            <h4>@innings.Extras</h4>
+        }
+    </div>
+
+    <div>
+        <h2>>Second Innings</h2>
+        @foreach (var innings in match.Scores.Where(i => i.Innings == 2))
+        {
+            <h3>@innings.Team</h3>
+            <h4>Batting Figures:</h4>
+            <table>
+                @foreach (var bs in innings.BattingScorecard)
+                {
+                    <tr>
+                        <td>@bs.Name</td>
+                        <td>@bs.Dismissal</td>
+                        @if (bs.Catcher != null)
+                        {
+                            <td>@bs.Catcher</td>
+                        }
+                        @if (bs.Bowler != null)
+                        {
+                            <td>@bs.Bowler</td>
+                        }
+                        <td>@bs.Runs</td>
+                        <td>@bs.Mins</td>
+                        <td>@bs.Balls</td>
+                        <td>@bs.Fours</td>
+                        <td>@bs.Sixes</td>
+                    </tr>
+                }
+            </table>
+            <h4>Bowling Figures:</h4>
+            <table>
+                @foreach (var bs in innings.BowlingScorecard)
+                {
+                    <tr>
+                        <td>@bs.Name</td>
+                        <td>@bs.Overs</td>
+                        <td>@bs.Maidens</td>
+                        <td>@bs.Runs</td>
+                        <td>@bs.Wickets</td>
+                    </tr>
+                }
+            </table>
+            <h4>Fall of Wicket:</h4>
+            <table>
+                <thead><tr><th>Runs</th><th>Wicket</th></tr></thead>
+                @for (int i = 0; i < innings.FallOfWicketScorecard.Length; i++)
+                {
+                    <tr><td>@innings.FallOfWicketScorecard[i]</td><td>@(i + 1)</td></tr>
+                }
+            </table>
+
+            <h4>@innings.Extras</h4>
+        }
+    </div>
+}

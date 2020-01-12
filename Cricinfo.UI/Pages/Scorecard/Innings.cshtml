@@ -1,0 +1,36 @@
+﻿@page
+@model InningsModel
+@{
+    <h1>@ViewData["header"]</h1>
+
+    <div>
+        <form class="form-group" method="post">
+            <div class="form-check">
+                <input class="form-check-input" asp-for=Team type="radio" value="@ViewData["homeTeam"]">
+                <label class="form-check-label" asp-for=Team>@ViewData["homeTeam"]</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" asp-for=Team type="radio" value="@ViewData["awayTeam"]">
+                <label class="form-check-label" asp-for=Team>@ViewData["awayTeam"]</label>
+            </div>
+
+            <label asp-for=BattingScorecard></label>
+            <textarea class="form-control" asp-for=BattingScorecard></textarea>
+            <span class="text-danger" asp-validation-for="BattingScorecard"></span>
+
+            <label asp-for=BowlingScorecard></label>
+            <textarea class="form-control" asp-for=BowlingScorecard></textarea>
+            <span class="text-danger" asp-validation-for="BowlingScorecard"></span>
+
+            <label asp-for=FallOfWicketScorecard></label>
+            <textarea class="form-control" asp-for=FallOfWicketScorecard></textarea>
+            <span class="text-danger" asp-validation-for="FallOfWicketScorecard"></span>
+
+            <label asp-for=Extras></label>
+            <input class="form-control" asp-for=Extras />
+            <span class="text-danger" asp-validation-for="Extras"></span>
+
+            <input class="form-control btn btn-primary" type="submit" />
+        </form>
+    </div>
+}

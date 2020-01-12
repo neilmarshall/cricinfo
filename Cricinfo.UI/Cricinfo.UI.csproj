@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cricinfo.Api.Client\Cricinfo.Api.Client.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Cricinfo.Parser\Cricinfo.Parser.fsproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Pages\FirstTeamFirstInningsModel1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\Scorecard\" />
+    <Folder Include="ValidationAttributes\" />
+  </ItemGroup>
+</Project>

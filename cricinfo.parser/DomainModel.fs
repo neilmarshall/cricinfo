@@ -105,7 +105,7 @@ module private DomainModel =
                     NotOut { name = result.Groups.["batsman"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
-            match seq { caught; lbw; caughtAndBowled; bowled; notout } |> Seq.tryFind Option.isSome |> Option.flatten with
+            match seq { yield caught; yield lbw; yield caughtAndBowled; yield bowled; yield notout } |> Seq.tryFind Option.isSome |> Option.flatten with
             | Some dismissal -> dismissal
             | None -> score |> sprintf "invalid data in batting scorecard - '%s'" |> failwith
 

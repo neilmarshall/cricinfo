@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cricinfo.Api.Controllers;
 using Cricinfo.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cricinfo.Api.Unit.Tests
@@ -17,7 +18,11 @@ namespace Cricinfo.Api.Unit.Tests
         [TestInitialize]
         public void Initialize()
         {
-            this.matchController = new MatchController(new Utilities.MockCricInfoRepository());
+            var loggerFactory = LoggerFactory.Create(builder =>
+                builder.AddConsole()
+            );
+            var logger = loggerFactory.CreateLogger<MatchController>();
+            this.matchController = new MatchController(new Utilities.MockCricInfoRepository(), logger);
             this.match = new Match
             {
                 Venue = "",
