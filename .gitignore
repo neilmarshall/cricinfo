@@ -350,3 +350,9 @@ MigrationBackup/
 
 # .swp files
 **/.*.swp
+
+# Python venv files
+**/venv/*
+
+# Python script output files
+Python.Scripts/output/**
