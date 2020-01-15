@@ -24,7 +24,8 @@ namespace Cricinfo.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages().AddSessionStateTempDataProvider();
+            services.AddSession();
             services.AddSingleton<ICricinfoApiClient>(_ =>
                 {
                     return new CricinfoApiClient("http://localhost:5000");
@@ -48,7 +49,7 @@ namespace Cricinfo.UI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
