@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Exceptions.fs" />
     <Compile Include="DomainModel.fs" />
     <Compile Include="Parse.fs" />
   </ItemGroup>

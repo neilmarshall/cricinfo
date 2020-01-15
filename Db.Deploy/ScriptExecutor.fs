@@ -5,11 +5,11 @@ module ScriptExecutor =
     open System.IO
 
     let executeScriptsAsync
-            (extractor : DataExtractor<string>) 
-            (scriptExecutor : ScriptExecutor)
-            (writer : DataWriter)
-            (directory : string)
-                : Async<unit []> =
+        (extractor : DataExtractor<string>) 
+        (scriptExecutor : ScriptExecutor)
+        (writer : DataWriter)
+        (directory : string)
+            : Async<unit []> =
 
         let getUnexecutedScripts directory =
             let getExecutedScripts =

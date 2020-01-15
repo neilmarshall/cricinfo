@@ -4,6 +4,7 @@ module private DomainModel =
 
     open System
     open System.Text.RegularExpressions
+    open Exceptions
 
     let private trim (s : string) = s.Trim()
 
@@ -68,7 +69,7 @@ module private DomainModel =
             let parseBattingFigures (inputString : string) =
                 match inputString.Trim().Split() |> Seq.filter (System.String.IsNullOrWhiteSpace >> not) |> Seq.map Int32.Parse |> Seq.toList with
                 | [runs; mins; balls; fours; sixes] -> { runs = runs; mins = mins; balls = balls; fours = fours; sixes = sixes }
-                | _ -> inputString |> sprintf "invalid figures in batting data - '%s'" |> failwith
+                | _ -> inputString |> sprintf "invalid figures in batting data - '%s'" |> BattingFiguresException |> raise
             let caught =
                 let result = Regex("^(?<batsman>[A-Za-z\s]+)\sc\s(?<catcher>[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){5})").Match(score)
                 if result.Success then
@@ -107,7 +108,7 @@ module private DomainModel =
                 else None
             match seq { yield caught; yield lbw; yield caughtAndBowled; yield bowled; yield notout } |> Seq.tryFind Option.isSome |> Option.flatten with
             | Some dismissal -> dismissal
-            | None -> score |> sprintf "invalid data in batting scorecard - '%s'" |> failwith
+            | None -> score |> sprintf "invalid data in batting scorecard - '%s'" |> BattingFiguresException |> raise
 
     type BowlingFigures = { overs : float; maidens : int; runs : int; wickets : int }
 
@@ -121,12 +122,12 @@ module private DomainModel =
             let parseBowlingFigures (inputString : string) =
                 match inputString.Trim().Split() |> Seq.filter (System.String.IsNullOrWhiteSpace >> not) |> Seq.map Double.Parse |> Seq.toList with
                 | [overs; maidens; runs; wickets] -> { overs = overs; maidens = int maidens; runs = int runs; wickets = int wickets }
-                | _ -> inputString |> sprintf "invalid figures in bowling data - '%s'" |> failwith
+                | _ -> inputString |> sprintf "invalid figures in bowling data - '%s'" |> BowlingFiguresException |> raise
             let result = Regex("^(?<bowler>[A-Za-z\s]+)(?<figures>([\d\.]+\s+){4})").Match(score)
             if result.Success then
                 { name = result.Groups.["bowler"].Value |> trim |> Player;
                   figures = result.Groups.["figures"].Value |> parseBowlingFigures }
-            else score |> sprintf "invalid data in bowling scorecard - '%s'" |> failwith
+            else score |> sprintf "invalid data in bowling scorecard - '%s'" |> BowlingFiguresException |> raise
 
     type FallOfWicket = { runs : int; wicket : int } with
 
@@ -134,4 +135,4 @@ module private DomainModel =
             let result = Regex("^(?<runs>\d+)-(?<wicket>\d+)").Match(inputString.Trim())
             if result.Success
                 then { runs = result.Groups.["runs"].Value |> int; wicket = result.Groups.["wicket"].Value |> int }
-                else inputString |> sprintf "invalid figures in input - '%s'" |> failwith
+                else inputString |> sprintf "invalid figures in input - '%s'" |> FallOfWicketException |> raise
