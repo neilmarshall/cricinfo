@@ -47,9 +47,9 @@ namespace Cricinfo.UI.Pages
                 Team = Team,
                 Innings = innings,
                 Extras = Extras,
-                BattingScorecard = Parse.parseBattingScorecard(BattingScorecard.Trim()).ToArray(),
-                BowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard.Trim()).ToArray(),
-                FallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard.Trim())
+                BattingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray(),
+                BowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray(),
+                FallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard)
             };
             match.Scores = match.Scores == null
                 ? new Score[] { score }

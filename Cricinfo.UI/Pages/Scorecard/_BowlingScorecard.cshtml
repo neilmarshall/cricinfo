@@ -1,0 +1,28 @@
+﻿@using Cricinfo.Api.Models
+@model BowlingScorecard[]
+@{
+    <table class="table table-sm table-striped table-hover text-center">
+        <thead class="text-secondary">
+            <tr><th colspan="9">Bowling Figures</th></tr>
+            <tr>
+                <th class="text-left">Name</th>
+                <th>Overs</th>
+                <th>Maidens</th>
+                <th>Runs</th>
+                <th>Wickets</th>
+            </tr>
+        </thead>
+        <tbody class="text-info">
+            @foreach (var bs in Model)
+            {
+                <tr>
+                    <td class="text-left">@bs.Name</td>
+                    <td>@bs.Overs.ToString("F1")</td>
+                    <td>@bs.Maidens</td>
+                    <td>@bs.Runs</td>
+                    <td>@bs.Wickets</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

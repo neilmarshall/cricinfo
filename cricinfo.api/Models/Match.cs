@@ -41,6 +41,16 @@ namespace Cricinfo.Api.Models
 
     public class Match
     {
+        public static string ConvertResult(Result result) =>
+        result switch
+        {
+            Result.HomeTeamWin => "Home Team Win",
+            Result.AwayTeamWin => "Away Team Win",
+            Result.Draw => "Draw",
+            Result.Tie => "Tie",
+            _ => throw new ArgumentException("bad value for 'Cricinfo.Api.Result' enum")
+        };
+
         public string Venue { get; set; }
         public DateTime DateOfFirstDay { get; set; }
         public string HomeTeam { get; set; }

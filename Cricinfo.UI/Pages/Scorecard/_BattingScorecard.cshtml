@@ -1,0 +1,36 @@
+﻿@using Cricinfo.Api.Models
+@model BattingScorecard[]
+@{
+    <table class="table table-sm table-striped table-hover text-center">
+        <thead class="text-secondary">
+            <tr><th colspan="9">Batting Figures</th></tr>
+            <tr>
+                <th class="text-left">Name</th>
+                <th>Dismissal</th>
+                <th>Catcher</th>
+                <th>Bowler</th>
+                <th>Runs</th>
+                <th>Mins</th>
+                <th>Balls</th>
+                <th>Fours</th>
+                <th>Sixes</th>
+            </tr>
+        </thead>
+        <tbody class="text-info">
+            @foreach (var bs in Model)
+            {
+                <tr>
+                    <td class="text-left">@bs.Name</td>
+                    <td>@bs.Dismissal</td>
+                    <td>@(bs.Catcher != null ? bs.Catcher : "n/a")</td>
+                    <td>@(bs.Bowler != null ? bs.Bowler : "n/a")</td>
+                    <td>@bs.Runs</td>
+                    <td>@bs.Mins</td>
+                    <td>@bs.Balls</td>
+                    <td>@bs.Fours</td>
+                    <td>@bs.Sixes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

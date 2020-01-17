@@ -17,7 +17,7 @@ namespace Cricinfo.Parser.Unit.Tests
                                    Denly b Maharaj   38  191 130 5   0   29.23
                                    Pope not out		61  199 144 7   0   42.36
                                    Denly lbw b Pretorius 32  128 79  3   2   39.24
-                                   Sibley c & b Maharaj   29  118 90  5   0   32.22";
+                                   Sibley c & b Maharaj   29  118 90  5   0   32.22\n";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             CollectionAssert.AreEqual(new string[] { "Crawley", "Sibley", "Stokes", "Archer", "Denly", "Pope", "Denly", "Sibley" },
                 parsedBattingFigures.Select(bf => bf.Name).ToArray());
@@ -40,6 +40,14 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exceptions.BattingFiguresException))]
+        public void BattingScorecardErrorsOnInvalidInput()
+        {
+            var battingFigures = @"Crawley	c de Kock	4	15	15	0	0	26.67";
+            Parse.parseBattingScorecard(battingFigures).ToArray();
+        }
+
+        [TestMethod]
         public void BowlingScorecardParsedCorrectly()
         {
             var bowlingFigures = @"Anderson	18.0	9	23	2	1.28
@@ -48,7 +56,7 @@ namespace Cricinfo.Parser.Unit.Tests
                                    S Curran 16.0    4   37  1   2.31
                                    Denly    18.0    4   42  2   2.33
                                    Root 6.0 0   11  0   1.83
-                                   Stokes   23.4    8   35  3   1.48";
+                                   Stokes   23.4    8   35  3   1.48\n";
             var parsedBowlingFigures = Parse.parseBowlingScorecard(bowlingFigures);
             CollectionAssert.AreEqual(new string[] { "Anderson", "Broad", "Bess", "S Curran", "Denly", "Root", "Stokes" },
                 parsedBowlingFigures.Select(bf => bf.Name).ToArray());
@@ -63,6 +71,14 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exceptions.BowlingFiguresException))]
+        public void BowlingScorecardErrorsOnInvalidInput()
+        {
+            var battingFigures = @"Anderson	18.0	7";
+            Parse.parseBowlingScorecard(battingFigures).ToArray();
+        }
+
+        [TestMethod]
         public void FallOfWicketScorecardParsedCorrectly()
         {
             var fallOfWicketData = @"71-1 (28.6 ovs)	Elgar
@@ -74,9 +90,17 @@ namespace Cricinfo.Parser.Unit.Tests
                                      237-7(125.5 ovs)    van der Dussen
                                      241-8(133.3 ovs)    Pretorius
                                      241-9(133.4 ovs)    Nortje
-                                     248-10(137.4 ovs)   Philander";
+                                     248-10(137.4 ovs)   Philander\n";
             var parsedFallOfWicketData = Parse.parseFallOfWicketScorecard(fallOfWicketData);
             CollectionAssert.AreEqual(new int[] { 71, 123, 129, 164, 171, 237, 237, 241, 241, 248 }, parsedFallOfWicketData);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exceptions.FallOfWicketException))]
+        public void FallOfWicketScorecardErrorsOnInvalidInput()
+        {
+            var battingFigures = @"7abc1-1 (28.6 ovs)	Elgar";
+            Parse.parseFallOfWicketScorecard(battingFigures).ToArray();
         }
     }
 }

@@ -22,18 +22,18 @@ namespace Cricinfo.UI.Unit.Tests
               Elgar c Buttler b Denly	34	115	78	2	0	43.59
               Hamza c Buttler b Anderson	18	102	59	1	0	30.51
               Maharaj lbw b Anderson	2	24	17	0	0	11.76
-              du Plessis  c Denly b Bess	19	78	57	3	0	33.33";
+              du Plessis  c Denly b Bess	19	78	57	3	0	33.33\n";
 
         private string bowlingScorecard =
             @"Anderson	18.0	9	23	2	1.28
               Broad	23.0	8	37	1	1.61
-              Bess	33.0	14	57	1	1.73";
+              Bess	33.0	14	57	1	1.73\n";
 
         private string fallOfWicketScorecard =
             @"71-1 (28.6 ovs)	Elgar
               123-2 (54.2 ovs)	Hamza
               129-3 (58.5 ovs)	Maharaj
-              164-4 (76.2 ovs)	du Plessis";
+              164-4 (76.2 ovs)	du Plessis\n";
 
         private IEnumerable<KeyValuePair<string, string>> FormContent()
         {

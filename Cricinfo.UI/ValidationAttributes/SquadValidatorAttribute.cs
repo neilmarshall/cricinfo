@@ -6,7 +6,7 @@ namespace Cricinfo.UI.ValidationAttributes
 {
     public class SquadValidatorAttribute : ValidationAttribute
     {
-        public static int NumberOfPlayers { get => 2; }  // TODO: change to 10 on release
+        public static int NumberOfPlayers { get => 11; }
 
         public override bool IsValid(object value)
         {

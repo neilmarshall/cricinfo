@@ -23,5 +23,6 @@
   <ItemGroup>
     <Folder Include="Pages\Scorecard\" />
     <Folder Include="ValidationAttributes\" />
+    <Folder Include="wwwroot\js\scorecard\" />
   </ItemGroup>
 </Project>

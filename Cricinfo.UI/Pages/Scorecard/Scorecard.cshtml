@@ -10,7 +10,7 @@
             <span class="text-danger" asp-validation-for="Venue"></span>
 
             <label asp-for=DateOfFirstDay></label>
-            <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date" />
+            <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
 
             <label asp-for=HomeTeam></label>
             <input class="form-control" asp-for=HomeTeam />
@@ -26,7 +26,7 @@
                 <div class="form-check">
                     <input class="form-check-input" asp-for=Result type="radio" value="@resultType">
                     <label class="form-check-label" asp-for=Result>
-                        @resultType
+                        @Match.ConvertResult((Result)resultType)
                     </label>
                 </div>
             }
@@ -39,7 +39,9 @@
             <textarea class="form-control" asp-for=AwaySquad></textarea>
             <span class="text-danger" asp-validation-for="AwaySquad"></span>
 
-            <input class="form-control btn btn-primary" type="submit" />
+            <br />
+
+            <input class="form-control btn btn-info" type="submit" />
         </form>
     </div>
 }

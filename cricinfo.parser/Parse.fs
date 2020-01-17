@@ -17,7 +17,7 @@ module Parse =
         | NotOut _ -> Dismissal.NotOut
 
     let parseBattingScorecard (scorecard : string) : seq<BattingScorecard> =
-        scorecard.Split('\n')
+        scorecard.Trim().Split('\n')
         |> Seq.map Batsman.Score
         |> Seq.map (fun (batsman : Batsman) ->
             new BattingScorecard(
@@ -32,7 +32,7 @@ module Parse =
                 Sixes = batsman.Sixes))
 
     let parseBowlingScorecard (scorecard : string) : seq<BowlingScorecard> =
-        scorecard.Split('\n')
+        scorecard.Trim().Split('\n')
         |> Seq.map Bowler.Score
         |> Seq.map (fun bowler ->
             new BowlingScorecard(
@@ -43,7 +43,7 @@ module Parse =
                 Wickets = bowler.figures.wickets))
 
     let parseFallOfWicketScorecard (scorecard : string) : int [] =
-        scorecard.Split('\n')
+        scorecard.Trim().Split('\n')
         |> Seq.map FallOfWicket.Parse
         |> Seq.map (fun fow -> fow.runs)
         |> Seq.toArray

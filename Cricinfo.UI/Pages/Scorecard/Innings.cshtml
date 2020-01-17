@@ -1,7 +1,7 @@
 ﻿@page
 @model InningsModel
 @{
-    <h1>@ViewData["header"]</h1>
+    <h1 class="font-weight-normal">@ViewData["header"]</h1>
 
     <div>
         <form class="form-group" method="post">
@@ -30,7 +30,9 @@
             <input class="form-control" asp-for=Extras />
             <span class="text-danger" asp-validation-for="Extras"></span>
 
-            <input class="form-control btn btn-primary" type="submit" />
+            <br />
+
+            <input class="form-control btn btn-info" type="submit" />
         </form>
     </div>
 }

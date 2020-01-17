@@ -1,0 +1,38 @@
+﻿@using Cricinfo.Api.Models
+@model Score
+@{
+    <div id="@ViewData["innings-scorecard-id"]", class="innings-scorecard collapse">
+        <h2 class="text-center font-weight-light">@(ViewData["ScorecardTitle"])</h2>
+
+        <div class="row">
+            <partial name="_BattingScorecard" for="BattingScorecard" />
+        </div>
+        <div class="row justify-content-between">
+            <div class="col-7">
+                <div class="row">
+                        <partial name="_BowlingScorecard" for="BowlingScorecard" />
+                </div>
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <table class="table table-sm table-striped table-hover text-center">
+                            <thead class="text-secondary">
+                                <tr class="text-center"><th>Extras</th></tr>
+                            </thead>
+                            <tbody class="text-info">
+                                <tr>
+                                    <td>@Model.Extras</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div>
+                    <partial name="_FallOfWicketScorecard" for="FallOfWicketScorecard" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
