@@ -1,5 +1,6 @@
 using Cricinfo.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 
 namespace Cricinfo.Parser.Unit.Tests
@@ -145,6 +146,17 @@ namespace Cricinfo.Parser.Unit.Tests
         {
             var battingFigures = @"7abc1-1 (28.6 ovs)	Elgar";
             Parse.parseFallOfWicketScorecard(battingFigures).ToArray();
+        }
+
+        [DataTestMethod]
+        [DataRow("Faf du Plessis(c)", "Faf", "du Plessis")]
+        [DataRow("Temba Bavuma", "Temba", "Bavuma")]
+        [DataRow("Quinton de Kock(wk)", "Quinton", "de Kock")]
+        public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName, string expectedLastName)
+        {
+            var (actualFirstName, actualLastName) = Parse.parseName(rawString);
+            Assert.AreEqual(expectedFirstName, actualFirstName);
+            Assert.AreEqual(expectedLastName, actualLastName);
         }
     }
 }

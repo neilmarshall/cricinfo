@@ -49,10 +49,17 @@ module Parse =
         |> Seq.toArray
 
     let parseName (name : string) : string * string =
+        let stripSuffix (name : string) =
+            if name.EndsWith("(c)") then
+                name.[..(name.Length - 4)]
+            else if name.EndsWith("(wk)") then
+                name.[..(name.Length - 5)]
+            else
+                name
         match name.Split() |> Array.toList with
         | ["sub"] -> "", "sub"
         | [_] -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
-        | head::tail -> head, String.concat " " tail
+        | head::tail -> head, String.concat " " tail |> stripSuffix
         | _ -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
 
     let parseNames (names : seq<string>) : seq<string * string> = Seq.map parseName names
