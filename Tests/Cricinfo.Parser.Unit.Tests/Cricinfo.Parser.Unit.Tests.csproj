@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj" />
-    <ProjectReference Include="..\Cricinfo.Parser\Cricinfo.Parser.fsproj" />
+    <ProjectReference Include="..\..\Cricinfo.Parser\Cricinfo.Parser.fsproj" />
+    <ProjectReference Include="..\..\Cricinfo.Models\Cricinfo.Models.csproj" />
   </ItemGroup>
-
 </Project>

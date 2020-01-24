@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cricinfo.Api.Models
+namespace Cricinfo.Models
 {
     public enum Dismissal
     {

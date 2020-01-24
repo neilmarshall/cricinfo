@@ -27,9 +27,10 @@ namespace Cricinfo.UI
             services.AddRazorPages().AddSessionStateTempDataProvider();
             services.AddSession();
             services.AddSingleton<ICricinfoApiClient>(_ =>
-                {
-                    return new CricinfoApiClient("http://localhost:5000");
-                }
+            {
+                var cricInfoAPIURL = this.Configuration.GetValue<string>("cricInfoAPIURL");
+                return new CricinfoApiClient(cricInfoAPIURL);
+            }
             );
         }
 

@@ -36,10 +36,10 @@
       "Innings": 1,
       "BattingScorecard": [
         {
-          "Name": "Dean Elgar",
+          "Name": "Elgar",
           "Dismissal": "c",
-          "Catcher": "Jos Buttler",
-          "Bowler": "James Anderson",
+          "Catcher": "Buttler",
+          "Bowler": "Anderson",
           "Runs": 0,
           "Mins": 1,
           "Balls": 1,
@@ -47,10 +47,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Aiden Markram",
+          "Name": "Markram",
           "Dismissal": "c",
-          "Catcher": "Jonny Bairstow",
-          "Bowler": "Sam Curran",
+          "Catcher": "Bairstow",
+          "Bowler": "Curran",
           "Runs": 20,
           "Mins": 42,
           "Balls": 23,
@@ -58,10 +58,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Zubayr Hamza",
+          "Name": "Hamza",
           "Dismissal": "c",
-          "Catcher": "Ben Stokes",
-          "Bowler": "Stuart Broad",
+          "Catcher": "Stokes",
+          "Bowler": "Broad",
           "Runs": 39,
           "Mins": 96,
           "Balls": 72,
@@ -69,10 +69,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Faf du Plessis",
+          "Name": "du Plessis",
           "Dismissal": "c",
-          "Catcher": "Joe Root",
-          "Bowler": "Stuart Broad",
+          "Catcher": "Root",
+          "Bowler": "Broad",
           "Runs": 29,
           "Mins": 123,
           "Balls": 80,
@@ -80,10 +80,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Rassie van der Dussen",
+          "Name": "van der Dussen",
           "Dismissal": "c",
-          "Catcher": "Joe Root",
-          "Bowler": "Sam Curran",
+          "Catcher": "Root",
+          "Bowler": "Curran",
           "Runs": 6,
           "Mins": 51,
           "Balls": 34,
@@ -91,10 +91,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Quinton de Kock",
+          "Name": "de Kock",
           "Dismissal": "c",
-          "Catcher": "Jos Buttler",
-          "Bowler": "Sam Curran",
+          "Catcher": "Buttler",
+          "Bowler": "Curran",
           "Runs": 95,
           "Mins": 182,
           "Balls": 128,
@@ -102,10 +102,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Dwaine Pretorius",
+          "Name": "Pretorius",
           "Dismissal": "c",
-          "Catcher": "Joe Root",
-          "Bowler": "Sam Curran",
+          "Catcher": "Root",
+          "Bowler": "Curran",
           "Runs": 33,
           "Mins": 86,
           "Balls": 45,
@@ -113,10 +113,10 @@
           "Sixes": 1
         },
         {
-          "Name": "Vernon Philander",
+          "Name": "Philander",
           "Dismissal": "c",
-          "Catcher": "Jos Buttler",
-          "Bowler": "Stuart Broad",
+          "Catcher": "Buttler",
+          "Bowler": "Broad",
           "Runs": 35,
           "Mins": 142,
           "Balls": 81,
@@ -124,10 +124,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Keshav Maharaj",
+          "Name": "Maharaj",
           "Dismissal": "c",
-          "Catcher": "Ben Stokes",
-          "Bowler": "Jofra Archer",
+          "Catcher": "Stokes",
+          "Bowler": "Archer",
           "Runs": 6,
           "Mins": 16,
           "Balls": 15,
@@ -135,9 +135,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Kagiso Rabada",
+          "Name": "Rabada",
           "Dismissal": "b",
-          "Bowler": "Stuart Broad",
+          "Bowler": "Broad",
           "Runs": 12,
           "Mins": 35,
           "Balls": 24,
@@ -145,7 +145,7 @@
           "Sixes": 0
         },
         {
-          "Name": "Anrich Nortje",
+          "Name": "Nortje",
           "Dismissal": "not out",
           "Runs": 0,
           "Mins": 11,
@@ -157,42 +157,42 @@
       "Extras": 9,
       "BowlingScorecard": [
         {
-          "Name": "James Anderson",
+          "Name": "Anderson",
           "Overs": 20.0,
           "Maidens": 4,
           "Runs": 69,
           "Wickets": 1
         },
         {
-          "Name": "Stuart Broad",
+          "Name": "Broad",
           "Overs": 18.3,
           "Maidens": 4,
           "Runs": 58,
           "Wickets": 4
         },
         {
-          "Name": "Sam Curran",
+          "Name": "Curran",
           "Overs": 20.0,
           "Maidens": 5,
           "Runs": 58,
           "Wickets": 4
         },
         {
-          "Name": "Jofra Archer",
+          "Name": "Archer",
           "Overs": 19.0,
           "Maidens": 4,
           "Runs": 65,
           "Wickets": 1
         },
         {
-          "Name": "Joe Root",
+          "Name": "Root",
           "Overs": 4.0,
           "Maidens": 0,
           "Runs": 26,
           "Wickets": 0
         },
         {
-          "Name": "Joe Denly",
+          "Name": "Denly",
           "Overs": 3.0,
           "Maidens": 0,
           "Runs": 4,
@@ -206,10 +206,10 @@
       "Innings": 1,
       "BattingScorecard": [
         {
-          "Name": "Rory Burns",
+          "Name": "Burns",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Vernon Philander",
+          "Catcher": "de Kock",
+          "Bowler": "Philander",
           "Runs": 9,
           "Mins": 15,
           "Balls": 15,
@@ -217,10 +217,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Dominic Sibley",
+          "Name": "Sibley",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "de Kock",
+          "Bowler": "Rabada",
           "Runs": 4,
           "Mins": 25,
           "Balls": 12,
@@ -228,10 +228,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Joe Denly",
+          "Name": "Denly",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Dwaine Pretorius",
+          "Catcher": "de Kock",
+          "Bowler": "Pretorius",
           "Runs": 50,
           "Mins": 166,
           "Balls": 111,
@@ -239,10 +239,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Joe Root",
+          "Name": "Root",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Vernon Philander",
+          "Catcher": "de Kock",
+          "Bowler": "Philander",
           "Runs": 29,
           "Mins": 85,
           "Balls": 49,
@@ -250,10 +250,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Ben Stokes",
+          "Name": "Stokes",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Anrich Nortje",
+          "Catcher": "de Kock",
+          "Bowler": "Nortje",
           "Runs": 35,
           "Mins": 86,
           "Balls": 46,
@@ -261,9 +261,9 @@
           "Sixes": 2
         },
         {
-          "Name": "Jonny Bairstow",
+          "Name": "Bairstow",
           "Dismissal": "b",
-          "Bowler": "Anrich Nortje",
+          "Bowler": "Nortje",
           "Runs": 1,
           "Mins": 7,
           "Balls": 6,
@@ -271,10 +271,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Jos Buttler",
+          "Name": "Buttler",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Vernon Philander",
+          "Catcher": "de Kock",
+          "Bowler": "Philander",
           "Runs": 12,
           "Mins": 58,
           "Balls": 39,
@@ -282,10 +282,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Sam Curran",
+          "Name": "Curran",
           "Dismissal": "c",
-          "Catcher": "Zubayr Hamza",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "Hamza",
+          "Bowler": "Rabada",
           "Runs": 20,
           "Mins": 37,
           "Balls": 24,
@@ -293,9 +293,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Jofra Archer",
+          "Name": "Archer",
           "Dismissal": "b",
-          "Bowler": "Vernon Philander",
+          "Bowler": "Philander",
           "Runs": 3,
           "Mins": 23,
           "Balls": 11,
@@ -303,10 +303,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Stuart Broad",
+          "Name": "Broad",
           "Dismissal": "c",
-          "Catcher": "Dean Elgar",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "Elgar",
+          "Bowler": "Rabada",
           "Runs": 2,
           "Mins": 9,
           "Balls": 7,
@@ -314,7 +314,7 @@
           "Sixes": 0
         },
         {
-          "Name": "James Anderson",
+          "Name": "Anderson",
           "Dismissal": "not out",
           "Runs": 0,
           "Mins": 4,
@@ -326,35 +326,35 @@
       "Extras": 6,
       "BowlingScorecard": [
         {
-          "Name": "Kagiso Rabada",
+          "Name": "Rabada",
           "Overs": 15.0,
           "Maidens": 1,
           "Runs": 68,
           "Wickets": 3
         },
         {
-          "Name": "Vernon Philander",
+          "Name": "Philander",
           "Overs": 14.2,
           "Maidens": 8,
           "Runs": 16,
           "Wickets": 4
         },
         {
-          "Name": "Dwaine Pretorius",
+          "Name": "Pretorius",
           "Overs": 8.0,
           "Maidens": 2,
           "Runs": 23,
           "Wickets": 1
         },
         {
-          "Name": "Anrich Nortje",
+          "Name": "Nortje",
           "Overs": 12.0,
           "Maidens": 2,
           "Runs": 47,
           "Wickets": 2
         },
         {
-          "Name": "Keshav Maharaj",
+          "Name": "Maharaj",
           "Overs": 4.0,
           "Maidens": 1,
           "Runs": 18,
@@ -368,9 +368,9 @@
       "Innings": 2,
       "BattingScorecard": [
         {
-          "Name": "Aiden Markram",
+          "Name": "Markram",
           "Dismissal": "lbw",
-          "Bowler": "James Anderson",
+          "Bowler": "Anderson",
           "Runs": 2,
           "Mins": 5,
           "Balls": 5,
@@ -378,10 +378,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Dean Elgar",
+          "Name": "Elgar",
           "Dismissal": "c",
-          "Catcher": "Jos Buttler",
-          "Bowler": "Jofra Archer",
+          "Catcher": "Buttler",
+          "Bowler": "Archer",
           "Runs": 22,
           "Mins": 41,
           "Balls": 27,
@@ -389,10 +389,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Zubayr Hamza",
+          "Name": "Hamza",
           "Dismissal": "c",
-          "Catcher": "Jos Buttler",
-          "Bowler": "Stuart Broad",
+          "Catcher": "Buttler",
+          "Bowler": "Broad",
           "Runs": 4,
           "Mins": 31,
           "Balls": 16,
@@ -400,10 +400,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Faf du Plessis",
+          "Name": "du Plessis",
           "Dismissal": "c",
-          "Catcher": "Sam Curran",
-          "Bowler": "Jofra Archer",
+          "Catcher": "Curran",
+          "Bowler": "Archer",
           "Runs": 20,
           "Mins": 39,
           "Balls": 28,
@@ -411,9 +411,9 @@
           "Sixes": 1
         },
         {
-          "Name": "Rassie van der Dussen",
+          "Name": "van der Dussen",
           "Dismissal": "lbw",
-          "Bowler": "Jofra Archer",
+          "Bowler": "Archer",
           "Runs": 51,
           "Mins": 150,
           "Balls": 67,
@@ -421,10 +421,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Anrich Nortje",
+          "Name": "Nortje",
           "Dismissal": "c",
-          "Catcher": "sub",
-          "Bowler": "Jofra Archer",
+          "Catcher": "Bairstow",
+          "Bowler": "Archer",
           "Runs": 40,
           "Mins": 125,
           "Balls": 89,
@@ -432,10 +432,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Quinton de Kock",
+          "Name": "de Kock",
           "Dismissal": "c",
-          "Catcher": "Jonny Bairstow",
-          "Bowler": "Ben Stokes",
+          "Catcher": "Bairstow",
+          "Bowler": "Stokes",
           "Runs": 34,
           "Mins": 66,
           "Balls": 37,
@@ -443,10 +443,10 @@
           "Sixes": 3
         },
         {
-          "Name": "Dwaine Pretorius",
+          "Name": "Pretorius",
           "Dismissal": "c",
-          "Catcher": "Dominic Sibley",
-          "Bowler": "Ben Stokes",
+          "Catcher": "Sibley",
+          "Bowler": "Stokes",
           "Runs": 7,
           "Mins": 6,
           "Balls": 7,
@@ -454,10 +454,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Vernon Philander",
+          "Name": "Philander",
           "Dismissal": "c",
-          "Catcher": "Jonny Bairstow",
-          "Bowler": "Sam Curran",
+          "Catcher": "Bairstow",
+          "Bowler": "Curran",
           "Runs": 46,
           "Mins": 101,
           "Balls": 68,
@@ -465,10 +465,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Keshav Maharaj",
+          "Name": "Maharaj",
           "Dismissal": "c",
-          "Catcher": "Sam Curran",
-          "Bowler": "Jofra Archer",
+          "Catcher": "Curran",
+          "Bowler": "Archer",
           "Runs": 11,
           "Mins": 38,
           "Balls": 16,
@@ -476,7 +476,7 @@
           "Sixes": 0
         },
         {
-          "Name": "Kagiso Rabada",
+          "Name": "Rabada",
           "Dismissal": "not out",
           "Runs": 16,
           "Mins": 15,
@@ -488,35 +488,35 @@
       "Extras": 19,
       "BowlingScorecard": [
         {
-          "Name": "James Anderson",
+          "Name": "Anderson",
           "Overs": 13.0,
           "Maidens": 1,
           "Runs": 47,
           "Wickets": 1
         },
         {
-          "Name": "Stuart Broad",
+          "Name": "Broad",
           "Overs": 11.0,
           "Maidens": 2,
           "Runs": 42,
           "Wickets": 1
         },
         {
-          "Name": "Jofra Archer",
+          "Name": "Archer",
           "Overs": 17.0,
           "Maidens": 1,
           "Runs": 102,
           "Wickets": 5
         },
         {
-          "Name": "Sam Curran",
+          "Name": "Curran",
           "Overs": 12.4,
           "Maidens": 3,
           "Runs": 51,
           "Wickets": 1
         },
         {
-          "Name": "Ben Stokes",
+          "Name": "Stokes",
           "Overs": 8.0,
           "Maidens": 1,
           "Runs": 22,
@@ -530,10 +530,10 @@
       "Innings": 2,
       "BattingScorecard": [
         {
-          "Name": "Rory Burns",
+          "Name": "Burns",
           "Dismissal": "c",
-          "Catcher": "Kagiso Rabada",
-          "Bowler": "Anrich Nortje",
+          "Catcher": "Rabada",
+          "Bowler": "Nortje",
           "Runs": 84,
           "Mins": 219,
           "Balls": 154,
@@ -541,9 +541,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Dominic Sibley",
+          "Name": "Sibley",
           "Dismissal": "c&b",
-          "Bowler": "Keshav Maharaj",
+          "Bowler": "Maharaj",
           "Runs": 29,
           "Mins": 118,
           "Balls": 90,
@@ -551,9 +551,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Joe Denly",
+          "Name": "Denly",
           "Dismissal": "lbw",
-          "Bowler": "Dwaine Pretorius",
+          "Bowler": "Pretorius",
           "Runs": 31,
           "Mins": 128,
           "Balls": 79,
@@ -561,10 +561,10 @@
           "Sixes": 2
         },
         {
-          "Name": "Joe Root",
+          "Name": "Root",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Anrich Nortje",
+          "Catcher": "de Kock",
+          "Bowler": "Nortje",
           "Runs": 48,
           "Mins": 166,
           "Balls": 101,
@@ -572,9 +572,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Ben Stokes",
+          "Name": "Stokes",
           "Dismissal": "b",
-          "Bowler": "Keshav Maharaj",
+          "Bowler": "Maharaj",
           "Runs": 14,
           "Mins": 74,
           "Balls": 55,
@@ -582,10 +582,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Jonny Bairstow",
+          "Name": "Bairstow",
           "Dismissal": "c",
-          "Catcher": "Zubayr Hamza",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "Hamza",
+          "Bowler": "Rabada",
           "Runs": 9,
           "Mins": 30,
           "Balls": 25,
@@ -593,10 +593,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Jos Buttler",
+          "Name": "Buttler",
           "Dismissal": "c",
-          "Catcher": "Dwaine Pretorius",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "Pretorius",
+          "Bowler": "Rabada",
           "Runs": 22,
           "Mins": 62,
           "Balls": 33,
@@ -604,10 +604,10 @@
           "Sixes": 2
         },
         {
-          "Name": "Sam Curran",
+          "Name": "Curran",
           "Dismissal": "c",
-          "Catcher": "Quinton de Kock",
-          "Bowler": "Kagiso Rabada",
+          "Catcher": "de Kock",
+          "Bowler": "Rabada",
           "Runs": 9,
           "Mins": 16,
           "Balls": 10,
@@ -615,10 +615,10 @@
           "Sixes": 0
         },
         {
-          "Name": "Jofra Archer",
+          "Name": "Archer",
           "Dismissal": "c",
-          "Catcher": "Rassie van der Dussen",
-          "Bowler": "Anrich Nortje",
+          "Catcher": "van der Dussen",
+          "Bowler": "Nortje",
           "Runs": 4,
           "Mins": 7,
           "Balls": 5,
@@ -626,9 +626,9 @@
           "Sixes": 0
         },
         {
-          "Name": "Stuart Broad",
+          "Name": "Broad",
           "Dismissal": "b",
-          "Bowler": "Kagiso Rabada",
+          "Bowler": "Rabada",
           "Runs": 6,
           "Mins": 12,
           "Balls": 6,
@@ -636,7 +636,7 @@
           "Sixes": 0
         },
         {
-          "Name": "James Anderson",
+          "Name": "Anderson",
           "Dismissal": "not out",
           "Runs": 0,
           "Mins": 6,
@@ -648,35 +648,35 @@
       "Extras": 12,
       "BowlingScorecard": [
         {
-          "Name": "Kagiso Rabada",
+          "Name": "Rabada",
           "Overs": 24.0,
           "Maidens": 3,
           "Runs": 103,
           "Wickets": 4
         },
         {
-          "Name": "Vernon Philander",
+          "Name": "Philander",
           "Overs": 20.0,
           "Maidens": 8,
           "Runs": 35,
           "Wickets": 0
         },
         {
-          "Name": "Anrich Nortje",
+          "Name": "Nortje",
           "Overs": 17.0,
           "Maidens": 4,
           "Runs": 56,
           "Wickets": 3
         },
         {
-          "Name": "Dwaine Pretorius",
+          "Name": "Pretorius",
           "Overs": 16.0,
           "Maidens": 6,
           "Runs": 26,
           "Wickets": 1
         },
         {
-          "Name": "Keshav Maharaj",
+          "Name": "Maharaj",
           "Overs": 16.0,
           "Maidens": 3,
           "Runs": 37,

@@ -1,8 +1,8 @@
 ﻿namespace Cricinfo.Parser
 
 module Parse =
-    
-    open Cricinfo.Api.Models
+
+    open Cricinfo.Models
     open DomainModel
 
     let private convertPlayerName = function Player p -> p
@@ -47,4 +47,13 @@ module Parse =
         |> Seq.map FallOfWicket.Parse
         |> Seq.map (fun fow -> fow.runs)
         |> Seq.toArray
+
+    let parseName (name : string) : string * string =
+        match name.Split() |> Array.toList with
+        | ["sub"] -> "", "sub"
+        | [_] -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
+        | head::tail -> head, String.concat " " tail
+        | _ -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
+
+    let parseNames (names : seq<string>) : seq<string * string> = Seq.map parseName names
 

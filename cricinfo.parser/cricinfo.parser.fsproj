@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj" />
+    <ProjectReference Include="..\Cricinfo.Models\Cricinfo.Models.csproj" />
   </ItemGroup>
 
 </Project>

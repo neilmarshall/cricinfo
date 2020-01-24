@@ -9,9 +9,12 @@ module Program =
     [<EntryPoint>]
     let main argv =
         Logging.Info "Commencing DataBase creation" |> Logging.logMessage
-        System.IO.Path.Combine([|basePath; "scripts"|])
-        |> ComputationRoot.scriptExecutor
-        |> Async.RunSynchronously
-        |> ignore
+        try
+            System.IO.Path.Combine([|basePath; "scripts"|])
+            |> ComputationRoot.scriptExecutor
+            |> Async.RunSynchronously
+            |> ignore
+        with
+            | _ as e -> Logging.Error e.Message |> Logging.logMessage
         Logging.Info "DataBase creation completed" |> Logging.logMessage
         0 // return an integer exit code

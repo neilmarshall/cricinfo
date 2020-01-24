@@ -4,16 +4,21 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="scripts\" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
-    <None Include="scripts\cricinfo_001.sql">
+    <EmbeddedResource Include="scripts\cricinfo_001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\cricinfo_002.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\cricinfo_003.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\cricinfo_004.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Compile Include="Logging.fs" />
     <Compile Include="DomainModel.fs" />
     <Compile Include="PostgresDataManager.fs" />

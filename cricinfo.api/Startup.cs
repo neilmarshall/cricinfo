@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cricinfo.Api.Services;
+using Cricinfo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +28,7 @@ namespace Cricinfo.Api
         {
             services.AddControllers();
 
-            services.AddScoped<ICricInfoRepository, CricInfoRepository>();
+            services.AddScoped<ICricInfoRepository>(sp => new CricInfoRepository(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

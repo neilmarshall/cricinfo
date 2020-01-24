@@ -1,3 +1,17 @@
+Venue = "Newlands, Cape Town"
+DateOfFirstDay = "2020-01-03"
+HomeTeam = "South Africa"
+AwayTeam = "England"
+Result = "AwayTeamWin"
+HomeSquad = ["Pieter Malan", "Dean Elgar", "Zubayr Hamza", "Faf du Plessis",
+             "Rassie van der Dussen", "Quinton de Kock", "Dwaine Pretorius",
+             "Vernon Philander", "Keshav Maharaj", "Kagiso Rabada", "Anrich Nortje"]
+AwaySquad = ["Dominic Sibley", "Zak Crawley", "Joe Denly", "Joe Root", "Ben Stokes",
+             "Ollie Pope", "Jos Buttler", "Sam Curran", "Dom Bess", "Stuart Broad",
+             "James Anderson"]
+TeamOrder = ["England", "South Africa"] * 2
+Extras = [7, 7, 22, 13]
+
 BattingScorecard1 = '\n'.join((
     "Crawley	c de Kock	b Philander	4	15	15	0	0	26.67",
     "Sibley	c de Kock	b Rabada	34	108	76	7	0	44.74",
@@ -125,3 +139,7 @@ FallOfWicketScorecard4 = '\n'.join((
     "241-8 (133.3 ovs)	Pretorius",
     "241-9 (133.4 ovs)	Nortje",
     "248-10 (137.4 ovs)	Philander\n"))
+
+BattingScorecard = [BattingScorecard1, BattingScorecard2, BattingScorecard3, BattingScorecard4]
+BowlingScorecard = [BowlingScorecard1, BowlingScorecard2, BowlingScorecard3, BowlingScorecard4]
+FallOfWicketScorecard = [FallOfWicketScorecard1, FallOfWicketScorecard2, FallOfWicketScorecard3, FallOfWicketScorecard4]

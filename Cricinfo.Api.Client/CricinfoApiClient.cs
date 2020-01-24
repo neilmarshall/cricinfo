@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Cricinfo.Api.Models;
+using Cricinfo.Models;
 
 namespace Cricinfo.Api.Client
 {
@@ -23,9 +23,16 @@ namespace Cricinfo.Api.Client
         {
         }
 
-        public Task CreateMatchAsync(Match match)
+        public async Task CreateMatchAsync(Match match)
         {
-            throw new NotImplementedException();
+            var content = new StringContent(JsonSerializer.Serialize(match),
+                System.Text.Encoding.UTF8, "application/json");
+            var httpResponse = await _httpClient.PostAsync($"{_url}/api", content);
+
+            if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
+            {
+                throw new ArgumentException($"failed to create data for match");
+            }
         }
 
         public async Task<Match> GetMatchAsync(int id)

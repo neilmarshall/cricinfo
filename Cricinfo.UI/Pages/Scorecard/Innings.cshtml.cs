@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Cricinfo.Api.Models;
+using Cricinfo.Models;
 using Cricinfo.Parser;
 using Cricinfo.UI.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +39,42 @@ namespace Cricinfo.UI.Pages
         {
             if (!ModelState.IsValid) { return new PageResult(); }
 
+            var battingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray();
+            var bowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray();
+            var fallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
+
             var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
+
+            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item2).ToHashSet();
+
+            foreach(var bs in battingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    return new PageResult();
+                }
+                if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Bowler}' in either Home or Away squads.");
+                    return new PageResult();
+                }
+                if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Catcher}' in either Home or Away squads.");
+                    return new PageResult();
+                }
+            }
+
+            foreach(var bs in bowlingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    ModelState.AddModelError("BowlingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    return new PageResult();
+                }
+            }
+
             var teamOrder = (int)TempData["teamOrder"];
             var innings = (int)TempData["innings"];
             var score = new Score
@@ -47,9 +82,9 @@ namespace Cricinfo.UI.Pages
                 Team = Team,
                 Innings = innings,
                 Extras = Extras,
-                BattingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray(),
-                BowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray(),
-                FallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard)
+                BattingScorecard = battingScorecard,
+                BowlingScorecard = bowlingScorecard,
+                FallOfWicketScorecard = fallOfWicketScorecard
             };
             match.Scores = match.Scores == null
                 ? new Score[] { score }

@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj" />
-    <ProjectReference Include="..\Cricinfo.Models\Cricinfo.Models.csproj" />
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

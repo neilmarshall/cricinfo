@@ -1,58 +1,45 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cricinfo.Api.Client;
-using Cricinfo.Api.Models;
-using Cricinfo.Api.Services;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+using Cricinfo.Api.Controllers;
+using Cricinfo.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cricinfo.Api.Unit.Tests
 {
-    public class CustomWebApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup : class
-    {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.ConfigureServices(services =>
-            {
-                // Remove the app's ICricInfoRepository registration.
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(ICricInfoRepository));
-
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-
-                // Add ICricInfoRepository using a mock repository for testing.
-                services.AddScoped<ICricInfoRepository, Utilities.MockCricInfoRepository>();
-            });
-        }
-    }
-
     [TestClass]
-    public class CricinfoApiClientTest
+    public class MatchControllerTest
     {
-        private HttpClient _httpclient;
-        private CricinfoApiClient _cricinfoApiClient;
+        private MatchController matchController;
+        private Match match;
 
         [TestInitialize]
         public void Initialize()
         {
-            var webApplicationFactory = new CustomWebApplicationFactory<Startup>();
-            this._httpclient = webApplicationFactory.CreateClient();
-            this._cricinfoApiClient = new CricinfoApiClient("", this._httpclient);
+            var loggerFactory = LoggerFactory.Create(builder =>
+                builder.AddConsole()
+            );
+            var logger = loggerFactory.CreateLogger<MatchController>();
+            this.matchController = new MatchController(new Utilities.MockCricInfoRepository(), logger);
+            this.match = new Match
+            {
+                Venue = "",
+                DateOfFirstDay = new DateTime(),
+                HomeTeam = "",
+                AwayTeam = ""
+            };
         }
 
         [TestMethod]
-        public async Task GetMatchAsyncReturnsInstantiatedObject()
+        public async Task GetMatchAsyncReturns200ForValidId()
         {
-            var responseObject = await this._cricinfoApiClient.GetMatchAsync(42);
+            var result = await matchController.GetMatchAsync(42) as OkObjectResult;
+            var responseObject = result.Value as Match;
+
+            // assert on status code returned
+            Assert.AreEqual(200, result.StatusCode);
 
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
@@ -130,6 +117,38 @@ namespace Cricinfo.Api.Unit.Tests
             CollectionAssert.AreEqual(
                 new int[] { 0, 32, 71, 97, 111, 198, 245, 252, 277, 284 },
                 responseObject.Scores[0].FallOfWicketScorecard);
+        }
+
+        [TestMethod]
+        public async Task GetMatchAsyncReturns404ForMissingId()
+        {
+            var result = await matchController.GetMatchAsync(99) as NotFoundResult;
+            Assert.AreEqual(404, result.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task CreateMatchAsyncReturns201ForValidMatch()
+        {
+            var result = await matchController.CreateMatchAsync(this.match) as CreatedAtRouteResult;
+            Assert.AreEqual(201, result.StatusCode);
+            Assert.AreEqual(43L, result.RouteValues["id"]);
+        }
+
+        [TestMethod]
+        public async Task CreateMatchAsyncReturns400ForBadInput()
+        {
+            var result = await matchController.CreateMatchAsync(null) as BadRequestResult;
+            Assert.AreEqual(400, result.StatusCode);
+        } 
+
+        [TestMethod]
+        public async Task CreateMatchAsyncReturns409ForDuplicateMatch()
+        {
+            this.match.DateOfFirstDay = DateTime.Parse("2018-12-26");
+            this.match.HomeTeam = "South Africa";
+            this.match.AwayTeam = "England";
+            var result = await matchController.CreateMatchAsync(this.match) as StatusCodeResult;
+            Assert.AreEqual(409, result.StatusCode);
         }
     }
 }

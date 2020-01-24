@@ -34,4 +34,4 @@ module ScriptExecutor =
                 do! scriptExecutor script |> Async.Ignore
                 do! Path.GetFileName(filename) |> writeFilenameAsync |> Async.Ignore
            }
-        directory |> getUnexecutedScripts |> Seq.map executeScriptAsync |> Async.Parallel
+        directory |> getUnexecutedScripts |> Seq.map executeScriptAsync |> Async.Sequential

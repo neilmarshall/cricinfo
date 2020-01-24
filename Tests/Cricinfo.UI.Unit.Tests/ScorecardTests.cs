@@ -23,8 +23,8 @@ namespace Cricinfo.UI.Unit.Tests
             yield return new KeyValuePair<string, string>("HomeTeam", "Home Team");
             yield return new KeyValuePair<string, string>("AwayTeam", "Away Team");
             yield return new KeyValuePair<string, string>("Result", "Draw");
-            yield return new KeyValuePair<string, string>("HomeSquad", string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers)));
-            yield return new KeyValuePair<string, string>("AwaySquad", string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers)));
+            yield return new KeyValuePair<string, string>("HomeSquad", string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers)));
+            yield return new KeyValuePair<string, string>("AwaySquad", string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers)));
         }
 
         [TestInitialize]
@@ -93,7 +93,7 @@ namespace Cricinfo.UI.Unit.Tests
         [DataTestMethod]
         [DataRow("HomeSquad")]
         [DataRow("AwaySquad")]
-        public async Task POST_EndpointWithInvalidSquadFieldsReturnsCorrectValidationMessage(string field)
+        public async Task POST_EndpointWithInvalidSquadSizeReturnsCorrectValidationMessage(string field)
         {
             // Arrange
             var getHTML = await this._client.GetAsync("Scorecard/Scorecard");
@@ -101,7 +101,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Act
             var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
-            formElements[field] = string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers + 1));
+            formElements[field] = string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers + 1));
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
             var response = await this._client.PostAsync("Scorecard/Scorecard", formContent);
@@ -109,7 +109,31 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">The field {field} must be a multiline string of {SquadValidatorAttribute.NumberOfPlayers} entries.</span>").Match(content).Success);
+            var expectedErrorMessage = $"The field { field} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
+        }
+
+        [DataTestMethod]
+        [DataRow("HomeSquad")]
+        [DataRow("AwaySquad")]
+        public async Task POST_EndpointWithInvalidSquadNamesReturnsCorrectValidationMessage(string field)
+        {
+            // Arrange
+            var getHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
+
+            // Act
+            var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
+            formElements[field] = string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers));
+            formElements.Add("__RequestVerificationToken", token);
+            var formContent = new FormUrlEncodedContent(formElements);
+            var response = await this._client.PostAsync("Scorecard/Scorecard", formContent);
+            var content = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var expectedErrorMessage = $"The field { field} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
         }
     }
 }

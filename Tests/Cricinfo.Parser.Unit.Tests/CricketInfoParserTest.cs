@@ -1,4 +1,4 @@
-using Cricinfo.Api.Models;
+using Cricinfo.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -40,6 +40,32 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        public void BattingScorecardWithMissingEconomyParsedCorrectly()
+        {
+            var battingFigures = @"Crawley	c de Kock	b Philander	4	15	15	0	0	26.67
+                                   Sibley c & b Maharaj   29  118 90  5   0\n";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            CollectionAssert.AreEqual(new string[] { "Crawley",  "Sibley" },
+                parsedBattingFigures.Select(bf => bf.Name).ToArray());
+            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught,  Dismissal.CaughtAndBowled },
+                parsedBattingFigures.Select(bf => bf.Dismissal).ToArray());
+            CollectionAssert.AreEqual(new string[] { "de Kock",  "Maharaj" },
+                parsedBattingFigures.Select(bf => bf.Catcher).ToArray());
+            CollectionAssert.AreEqual(new string[] { "Philander",  "Maharaj" },
+                parsedBattingFigures.Select(bf => bf.Bowler).ToArray());
+            CollectionAssert.AreEqual(new int[] { 4,  29 },
+                parsedBattingFigures.Select(bf => bf.Runs).ToArray());
+            CollectionAssert.AreEqual(new int[] { 15,  118 },
+                parsedBattingFigures.Select(bf => bf.Mins).ToArray());
+            CollectionAssert.AreEqual(new int[] { 15,  90 },
+                parsedBattingFigures.Select(bf => bf.Balls).ToArray());
+            CollectionAssert.AreEqual(new int[] { 0,  5 },
+                parsedBattingFigures.Select(bf => bf.Fours).ToArray());
+            CollectionAssert.AreEqual(new int[] { 0,  0 },
+                parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exceptions.BattingFiguresException))]
         public void BattingScorecardErrorsOnInvalidInput()
         {
@@ -67,6 +93,24 @@ namespace Cricinfo.Parser.Unit.Tests
             CollectionAssert.AreEqual(new int[] { 23, 37, 57, 37, 42, 11, 35 },
                 parsedBowlingFigures.Select(bf => bf.Runs).ToArray());
             CollectionAssert.AreEqual(new int[] { 2, 1, 1, 1, 2, 0, 3 },
+                parsedBowlingFigures.Select(bf => bf.Wickets).ToArray());
+        }
+
+        [TestMethod]
+        public void BowlingScorecardWithMissingEconomyParsedCorrectly()
+        {
+            var bowlingFigures = @"Anderson	18.0	9	23	2	1.28
+                                   Stokes   23.4    8   35  3\n";
+            var parsedBowlingFigures = Parse.parseBowlingScorecard(bowlingFigures);
+            CollectionAssert.AreEqual(new string[] { "Anderson", "Stokes" },
+                parsedBowlingFigures.Select(bf => bf.Name).ToArray());
+            CollectionAssert.AreEqual(new float[] { 18.0f,  23.4f},
+                parsedBowlingFigures.Select(bf => bf.Overs).ToArray());
+            CollectionAssert.AreEqual(new int[] { 9,  8 },
+                parsedBowlingFigures.Select(bf => bf.Maidens).ToArray());
+            CollectionAssert.AreEqual(new int[] { 23,  35 },
+                parsedBowlingFigures.Select(bf => bf.Runs).ToArray());
+            CollectionAssert.AreEqual(new int[] { 2,  3 },
                 parsedBowlingFigures.Select(bf => bf.Wickets).ToArray());
         }
 

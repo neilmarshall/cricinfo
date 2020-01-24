@@ -20,9 +20,8 @@ namespace Cricinfo.UI.Pages
             _cricinfoApiClient = cricinfoApiClient;
         }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            //var match = await this._cricinfoApiClient.GetMatchAsync(42);
         }
     }
 }

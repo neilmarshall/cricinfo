@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cricinfo.UI.Unit.Tests
@@ -18,7 +16,7 @@ namespace Cricinfo.UI.Unit.Tests
         private HttpClient _client;
 
         private string battingScorecard =
-            @"Malan	c Stokes	b S Curran	84	367	288	3	0	29.17
+            @"Malan	c Stokes	b Curran	84	367	288	3	0	29.17
               Elgar c Buttler b Denly	34	115	78	2	0	43.59
               Hamza c Buttler b Anderson	18	102	59	1	0	30.51
               Maharaj lbw b Anderson	2	24	17	0	0	11.76
@@ -71,10 +69,10 @@ namespace Cricinfo.UI.Unit.Tests
             // Arrange
             var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
-                new FormUrlEncodedContent(
-                    ScorecardTests.FormContent()
-                                  .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
+            var scorecardContent = ScorecardTests.FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken", token)).ToDictionary(kv => kv.Key, kv => kv.Value);
+            scorecardContent["HomeSquad"] = "_ du Plessis\n_ Elgar\n_ Hamza\n_ Maharaj\n_ Malan\n_ _\n_ _\n_ _\n_ _\n_ _\n_ _";
+            scorecardContent["AwaySquad"] = "_ Anderson\n_ Bess\n_ Broad\n_ Buttler\n_ Curran\n_ Denly\n_ Stokes\n_ _\n_ _\n_ _\n_ _";
+            await this._client.PostAsync("Scorecard/Scorecard", new FormUrlEncodedContent(scorecardContent));
 
             var getInningsHTML = await this._client.GetAsync("Scorecard/Innings");
             token = await Utilities.GetCSRFTokenAsync(getInningsHTML.Content);

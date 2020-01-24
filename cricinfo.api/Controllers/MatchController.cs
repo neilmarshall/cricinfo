@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cricinfo.Api.Models;
-using Cricinfo.Api.Services;
+using Cricinfo.Models;
+using Cricinfo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +21,7 @@ namespace Cricinfo.Api.Controllers
             this._logger = logger;
         }
 
-        [HttpGet()]
+        [HttpGet(Name="GetMatchAsync")]
         [Route("{id}")]
         public async Task<IActionResult> GetMatchAsync(int id)
         {
@@ -35,7 +35,7 @@ namespace Cricinfo.Api.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreateMatchAsync(Match match)
+        public async Task<IActionResult> CreateMatchAsync([FromBody]Match match)
         {
             if (match == null) { return BadRequest(); }
 
@@ -43,8 +43,11 @@ namespace Cricinfo.Api.Controllers
 
             if (dataCreationResponse == DataCreationResponse.DuplicateContent) { return StatusCode(409); }
             if (dataCreationResponse == DataCreationResponse.Failure) { return StatusCode(500); }
+            if (dataCreationResponse == DataCreationResponse.Success && id == null) { return StatusCode(500); }
 
-            return CreatedAtAction(nameof(GetMatchAsync), new { id = id }, match);
+            this._logger.LogInformation($"Success - Content created at id '{id}'");
+
+            return CreatedAtRoute("GetMatchAsync", new { id = id }, match);
         }
     }
 }

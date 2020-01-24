@@ -1,24 +1,32 @@
 #! venv/bin/python3
 
 import argparse
-import json
 import re
 import sys
 from shutil import copytree, rmtree
 
 import requests
 
-from resources.data import *
+import resources.south_africa_england_2019_12_26 as s_19_12_26
+import resources.south_africa_england_2020_01_03 as s_20_01_03
+import resources.south_africa_england_2020_01_16 as s_20_01_16
 
 parser = argparse.ArgumentParser(description="Runs HTTP requests to generate CricInfo HTML output")
 parser.add_argument('-p', '--port', type=int, default=5001,
                     help="port number on which an instance of Cricinfo.UI is listening (default is %(default)s)")
-parser.add_argument('-s', '--stage', type=int, default=5, choices=[0, 1, 2,3, 4, 5],
+parser.add_argument('-s', '--stage', type=int, default=5, choices=[0, 1, 2,3, 4, 5, 6],
                     help="stage where requests will halt; options are: "
                          "0 - scorecard page, "
                          "1 - 4 - innings page for each innings, "
-                         "5 - verification page (default is %(default)s)")
+                         "5 - verification page, "
+                         "6 - submit verification page (default is %(default)s)")
+parser.add_argument('-c', '--scorecard', default="s_19_12_26",
+                    choices=["s_19_12_26", "s_20_01_03", "s_20_01_16"],
+                    help="Scorecard to process (default is %(default)s)")
+
 args = parser.parse_args()
+
+scorecard = {'s_19_12_26': s_19_12_26, 's_20_01_03': s_20_01_03, 's_20_01_16': s_20_01_16}[args.scorecard]
 
 # instantiate Session object to store cookies and session state
 session = requests.Session()
@@ -29,55 +37,47 @@ try:
     token = re.search("__RequestVerificationToken\\\" type=\\\"hidden\" value=\\\"(?P<token>[^\"]*)\"",
                       response.text).groupdict()['token']
 
-    # load resources and create form parameters
-    with open('resources/south_africa-england-26-12-18.json', 'r') as f:
-        json = json.loads(f.read())
-
+    # create form parameters
     scorecard_data = {"__RequestVerificationToken": token,
-                      "Venue": json['Venue'],
-                      "DateOfFirstDay": json['DateOfFirstDay'],
-                      "HomeTeam": json["HomeTeam"],
-                      "AwayTeam": json["AwayTeam"],
-                      "Result": 0,
-                      "HomeSquad": '\n'.join(json["HomeSquad"]),
-                      "AwaySquad": '\n'.join(json["AwaySquad"])}
+                      "Venue": scorecard.Venue,
+                      "DateOfFirstDay": scorecard.DateOfFirstDay,
+                      "HomeTeam": scorecard.HomeTeam,
+                      "AwayTeam": scorecard.AwayTeam,
+                      "Result": scorecard.Result,
+                      "HomeSquad": '\n'.join(s_19_12_26.HomeSquad),
+                      "AwaySquad": '\n'.join(s_19_12_26.AwaySquad)}
 
-    def innings_data(team, innings, extras, batting_sorecard, bowling_scorecard, fall_of_wicket_scorecard):
+    def innings_data(innings, idx):
         return {"__RequestVerificationToken": token,
-                "Team": team,
                 "Innings": innings,
-                "Extras": extras,
-                "BattingScorecard": batting_sorecard,
-                "BowlingScorecard": bowling_scorecard,
-                "FallOfWicketScorecard": fall_of_wicket_scorecard}
+                "Team": scorecard.TeamOrder[idx],
+                "Extras": scorecard.Extras[idx],
+                "BattingScorecard": scorecard.BattingScorecard[idx],
+                "BowlingScorecard": scorecard.BowlingScorecard[idx],
+                "FallOfWicketScorecard": scorecard.FallOfWicketScorecard[idx]}
 
     # generic helper method to parameterise POST requests
-    def post_request(session, port, endpoint, data):
-        url = f'https://localhost:{port}/scorecard/{endpoint}'
+    def post_request(endpoint, data):
+        url = f'https://localhost:{args.port}/scorecard/{endpoint}'
         return session.post(url, verify=False, data=data)
 
     if args.stage >= 1:
-        response = post_request(session, args.port, 'scorecard', scorecard_data)
+        response = post_request('scorecard', scorecard_data)
 
     if args.stage >= 2:
-        response = post_request(session, args.port, 'innings',
-                innings_data(json["AwayTeam"], 1, 7,
-                    BattingScorecard1, BowlingScorecard1, FallOfWicketScorecard1))
+        response = post_request('innings', innings_data(1, 0))
 
     if args.stage >= 3:
-        response = post_request(session, args.port, 'innings',
-                innings_data(json["HomeTeam"], 1, 7,
-                    BattingScorecard2, BowlingScorecard2, FallOfWicketScorecard2))
+        response = post_request('innings', innings_data(1, 1))
 
     if args.stage >= 4:
-        response = post_request(session, args.port, 'innings',
-                innings_data(json["AwayTeam"], 2, 22,
-                    BattingScorecard3, BowlingScorecard3, FallOfWicketScorecard3))
+        response = post_request('innings', innings_data(2, 2))
 
-    if args.stage == 5:
-        response = post_request(session, args.port, 'innings',
-                innings_data(json["HomeTeam"], 2, 13,
-                    BattingScorecard4, BowlingScorecard4, FallOfWicketScorecard4))
+    if args.stage >= 5:
+        response = post_request('innings', innings_data(2, 3))
+
+    if args.stage >= 6:
+        response = post_request('verification', {"__RequestVerificationToken": token})
 
     # collect, parse and write output
     output_text = response.text

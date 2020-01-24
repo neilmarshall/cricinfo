@@ -1,4 +1,4 @@
-﻿namespace Cricinfo.Api.Models
+﻿namespace Cricinfo.Models
 {
     public class Score
     {

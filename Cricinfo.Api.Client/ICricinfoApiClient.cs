@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Cricinfo.Api.Models;
+using Cricinfo.Models;
 
 namespace Cricinfo.Api.Client
 {

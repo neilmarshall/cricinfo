@@ -1,3 +1,5 @@
+-- Create table and relations
+
 DROP TABLE IF EXISTS fall_of_wicket_scorecard;
 DROP TABLE IF EXISTS innings;
 DROP TABLE IF EXISTS squad;
@@ -14,17 +16,19 @@ CREATE TABLE team (
     id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL UNIQUE
 );
+CREATE UNIQUE INDEX ON team (lower(name));
 
 CREATE TABLE venue (
     id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL UNIQUE
 );
+CREATE UNIQUE INDEX ON venue (lower(name));
 
 CREATE TABLE result (
     id SERIAL PRIMARY KEY,
 	type VARCHAR(255) NOT NULL UNIQUE
 );
-INSERT INTO result (type) VALUES ('Home Team Win'), ('Away Team Win'), ('Draw');
+INSERT INTO result (type) VALUES ('HomeTeamWin'), ('AwayTeamWin'), ('Draw'), ('Tie');
 
 CREATE TABLE match (
     id SERIAL PRIMARY KEY,
@@ -41,16 +45,35 @@ CREATE TABLE player (
 	lastname VARCHAR(255) NOT NULL,
 	UNIQUE (firstname, lastname)
 );
+CREATE UNIQUE INDEX ON player (lower(firstname), lower(lastname));
+
+CREATE TABLE squad (
+    id SERIAL PRIMARY KEY,
+	match_id INT NOT NULL REFERENCES match(id) ON DELETE CASCADE,
+	team_id INT NOT NULL REFERENCES team(id),
+	player_id INT NOT NULL REFERENCES player(id),
+	UNIQUE(match_id, team_id, player_id)
+);
 
 CREATE TABLE how_out (
     id SERIAL PRIMARY KEY,
 	type VARCHAR(255) UNIQUE
 );
-INSERT INTO how_out (type) VALUES ('not out'), ('c'), ('b'), ('lbw');
+INSERT INTO how_out (type) VALUES ('Caught'), ('Bowled'), ('CaughtAndBowled'), ('LBW'), ('NotOut');
+
+CREATE TABLE innings (
+    id SERIAL PRIMARY KEY,
+	match_id INT NOT NULL REFERENCES match(id) ON DELETE CASCADE,
+    team_id INT NOT NULL REFERENCES team(id),
+	innings INT NOT NULL,
+	extras INT NOT NULL,
+	UNIQUE (match_id, team_id, innings)
+);
 	
 CREATE TABLE batting_scorecard (
     id SERIAL PRIMARY KEY,
-	batsman_id INT REFERENCES player(id) NOT NULL,
+	innings_id INT NOT NULL REFERENCES innings(id) ON DELETE CASCADE,
+	batsman_id INT NOT NULL REFERENCES player(id),
 	how_out_id INT REFERENCES how_out(id),
 	catcher_id INT REFERENCES player(id),
 	bowler_id INT REFERENCES player(id),
@@ -68,7 +91,8 @@ CREATE TABLE batting_scorecard (
 
 CREATE TABLE bowling_scorecard (
     id SERIAL PRIMARY KEY,
-	bowler_id INT REFERENCES player(id) NOT NULL,
+	innings_id INT NOT NULL REFERENCES innings(id) ON DELETE CASCADE,
+	bowler_id INT NOT NULL REFERENCES player(id),
 	overs INT NOT NULL DEFAULT 0,
 	maidens INT NOT NULL DEFAULT 0,
 	runs_conceded INT NOT NULL DEFAULT 0,
@@ -79,27 +103,8 @@ CREATE TABLE bowling_scorecard (
 	CONSTRAINT wickets_non_negative CHECK (wickets >= 0)
 );
 
-CREATE TABLE squad (
-    id SERIAL PRIMARY KEY,
-	match_id INT REFERENCES match(id) NOT NULL,
-	team_id INT REFERENCES team(id) NOT NULL,
-	player_id INT REFERENCES player(id) NOT NULL,
-	batting_order INT,
-	UNIQUE(match_id, team_id, player_id)
-);
-
-CREATE TABLE innings (
-    id SERIAL PRIMARY KEY,
-	match_id INT REFERENCES match(id) NOT NULL,
-    team_id INT REFERENCES team(id) NOT NULL,
-	innings INT NOT NULL,
-	batting_scorecard_id INT REFERENCES batting_scorecard(id),
-	bowling_scorecard_id INT REFERENCES bowling_scorecard(id),
-	UNIQUE (match_id, team_id, innings, batting_scorecard_id, bowling_scorecard_id)
-);
-
 CREATE TABLE fall_of_wicket_scorecard (
-	innings_id INT NOT NULL REFERENCES innings(id),
+	innings_id INT NOT NULL REFERENCES innings(id) ON DELETE CASCADE,
 	runs INT NOT NULL DEFAULT 0,
 	wickets INT NOT NULL DEFAULT 0,
 	PRIMARY KEY (innings_id, wickets),
