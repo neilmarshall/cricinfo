@@ -19,6 +19,9 @@
     <EmbeddedResource Include="scripts\cricinfo_004.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="scripts\cricinfo_005.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Compile Include="Logging.fs" />
     <Compile Include="DomainModel.fs" />
     <Compile Include="PostgresDataManager.fs" />
