@@ -1,4 +1,5 @@
 Venue = "Supersport Park, Centurion"
+MatchType = "TestMatch"
 DateOfFirstDay = "2019-12-26"
 HomeTeam = "South Africa"
 AwayTeam = "England"

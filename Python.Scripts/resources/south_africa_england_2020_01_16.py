@@ -1,4 +1,5 @@
 Venue = "St George's Park, Port Elizabeth"
+MatchType = "TestMatch"
 DateOfFirstDay = "2020-01-16"
 HomeTeam = "South Africa"
 AwayTeam = "England"

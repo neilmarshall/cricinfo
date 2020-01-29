@@ -5,6 +5,7 @@ module private DbFunctions =
     open System
     open Npgsql
     open Cricinfo.Models
+    open Cricinfo.Models.Enums
     open Cricinfo.Parser
 
     let private executeNonQuery (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Unit =
@@ -61,11 +62,13 @@ module private DbFunctions =
         (homeTeamId : int)
         (awayTeamId : int)
         (result : Result)
+        (matchType : MatchType)
             : Async<unit> =
         async {
             let! resultId = executeScalarAsync<int> conn trans "SELECT id FROM result WHERE type = @result" (Map.ofList [ "result", box (result.ToString()) ])
-            let query = "INSERT INTO match (id, date_of_first_day, venue_id, hometeam_id, awayteam_id, result_id) VALUES (@id, @date, @venue_id, @hometeam_id, @awayteam_id, @result_id);"
-            let parameters = Map.ofList [ "id", box matchId; "date", box date; "venue_id", box venueId; "hometeam_id", box homeTeamId; "awayteam_id", box awayTeamId; "result_id", box resultId ]
+            let! matchTypeId = executeScalarAsync<int> conn trans "SELECT id FROM match_type WHERE type = @matchType" (Map.ofList [ "matchType", box (matchType.ToString()) ])
+            let query = "INSERT INTO match (id, match_type_id, date_of_first_day, venue_id, hometeam_id, awayteam_id, result_id) VALUES (@id, @matchTypeId, @date, @venue_id, @hometeam_id, @awayteam_id, @result_id);"
+            let parameters = Map.ofList [ "id", box matchId; "matchTypeId", box matchTypeId; "date", box date; "venue_id", box venueId; "hometeam_id", box homeTeamId; "awayteam_id", box awayTeamId; "result_id", box resultId ]
             do! executeNonQueryAsync conn trans query parameters
         }
 

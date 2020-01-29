@@ -39,7 +39,7 @@ type public CricInfoRepository(connString : string) =
                         else
                             let! venueId, homeTeamId, awayTeamId = getIdsAsync mtch.Venue mtch.HomeTeam mtch.AwayTeam
                             let! matchId = getNextMatchIdAsync
-                            do! insertMatchAsync matchId mtch.DateOfFirstDay venueId homeTeamId awayTeamId mtch.Result
+                            do! insertMatchAsync matchId mtch.DateOfFirstDay venueId homeTeamId awayTeamId mtch.Result mtch.MatchType
                             let! homeSquadIds = insertSquadAsync matchId homeTeamId mtch.HomeSquad
                             let! awaySquadIds = insertSquadAsync matchId awayTeamId mtch.AwaySquad
                             let tryGetPlayerId name =

@@ -42,6 +42,7 @@ try:
     # create form parameters
     scorecard_data = {"__RequestVerificationToken": token,
                       "Venue": scorecard.Venue,
+                      "MatchType": scorecard.MatchType,
                       "DateOfFirstDay": scorecard.DateOfFirstDay,
                       "HomeTeam": scorecard.HomeTeam,
                       "AwayTeam": scorecard.AwayTeam,

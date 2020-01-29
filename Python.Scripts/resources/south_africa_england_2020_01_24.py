@@ -1,4 +1,5 @@
 Venue = "New Wanderers Stadium, Johannesburg"
+MatchType = "TestMatch"
 DateOfFirstDay = "2020-01-24"
 HomeTeam = "South Africa"
 AwayTeam = "England"

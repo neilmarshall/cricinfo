@@ -19,6 +19,7 @@ namespace Cricinfo.UI.Unit.Tests
         internal static IEnumerable<KeyValuePair<string, string>> FormContent()
         {
             yield return new KeyValuePair<string, string>("Venue", "A place");
+            yield return new KeyValuePair<string, string>("MatchType", "TestMatch");
             yield return new KeyValuePair<string, string>("DateOfFirstDay", "2019-12-31");
             yield return new KeyValuePair<string, string>("HomeTeam", "Home Team");
             yield return new KeyValuePair<string, string>("AwayTeam", "Away Team");

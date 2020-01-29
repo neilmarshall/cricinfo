@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS squad;
 DROP TABLE IF EXISTS how_out;
 DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS match;
+DROP TABLE IF EXISTS match_type;
 DROP TABLE IF EXISTS result;
 DROP TABLE IF EXISTS venue;
 DROP TABLE IF EXISTS team;
@@ -30,8 +31,15 @@ CREATE TABLE result (
 );
 INSERT INTO result (type) VALUES ('HomeTeamWin'), ('AwayTeamWin'), ('Draw'), ('Tie');
 
+CREATE TABLE match_type (
+    id SERIAL PRIMARY KEY,
+	type VARCHAR(255) NOT NULL UNIQUE
+);
+INSERT INTO match_type (type) VALUES ('TestMatch'), ('ODI'), ('T20');
+
 CREATE TABLE match (
     id SERIAL PRIMARY KEY,
+    match_type_id INT REFERENCES match_type(id) NOT NULL,
 	date_of_first_day DATE NOT NULL,
 	venue_id INT REFERENCES venue(id) NOT NULL,
     hometeam_id INT REFERENCES team(id) NOT NULL,

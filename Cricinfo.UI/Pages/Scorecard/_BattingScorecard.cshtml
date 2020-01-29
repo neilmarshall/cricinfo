@@ -1,4 +1,5 @@
 ﻿@using Cricinfo.Models
+@using Cricinfo.Models.Enums
 @model BattingScorecard[]
 @{
     <table class="table table-sm table-striped table-hover text-center">
@@ -21,7 +22,7 @@
             {
                 <tr>
                     <td class="text-left">@bs.Name</td>
-                    <td>@Match.ConvertDismissal(bs.Dismissal)</td>
+                    <td>@Converters.ConvertDismissal(bs.Dismissal)</td>
                     <td>@(bs.Catcher != null ? bs.Catcher : "n/a")</td>
                     <td>@(bs.Bowler != null ? bs.Bowler : "n/a")</td>
                     <td>@bs.Runs</td>

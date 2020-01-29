@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
 using Cricinfo.Models;
+using Cricinfo.Models.Enums;
 using Cricinfo.UI.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,7 +15,9 @@ namespace Cricinfo.UI.Pages
     {
         [Required]
         public string Venue { get; set; }
-        [Display(Name= "Date of First Day")]
+        [Display(Name="Match Type")]
+        public MatchType MatchType { get; set; }
+        [Display(Name="Date of First Day")]
         public DateTime DateOfFirstDay { get; set; }
         [Required]
         [Display(Name="Home Team")]
@@ -45,6 +48,7 @@ namespace Cricinfo.UI.Pages
             var match = new Match
             {
                 Venue = Venue,
+                MatchType = MatchType,
                 DateOfFirstDay = DateOfFirstDay,
                 HomeTeam = ti.ToTitleCase(HomeTeam),
                 AwayTeam = ti.ToTitleCase(AwayTeam),

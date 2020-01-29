@@ -1,6 +1,7 @@
 ﻿@page
 @model VerificationModel
 @using Cricinfo.Models
+@using Cricinfo.Models.Enums
 @{
     var match = (Match)ViewData["match"];
 }
@@ -13,10 +14,11 @@
         <div class="col-4">
             <table class="table table-sm table-borderless row justify-content-center">
                 <tr><td class="text-secondary font-weight-bold">Venue</td><td class="text-info text-right">@match.Venue</td></tr>
+                <tr><td class="text-secondary font-weight-bold">Match Type</td><td class="text-info text-right">@Converters.ConvertMatchType(match.MatchType)</td></tr>
                 <tr><td class="text-secondary font-weight-bold">Date</td><td class="text-info text-right">@match.DateOfFirstDay.ToLongDateString()</td></tr>
                 <tr><td class="text-secondary font-weight-bold">Home Team</td><td class="text-info text-right">@match.HomeTeam</td></tr>
                 <tr><td class="text-secondary font-weight-bold">Away Team</td><td class="text-info text-right">@match.AwayTeam</td></tr>
-                <tr><td class="text-secondary font-weight-bold">Result</td><td class="text-info text-right">@Match.ConvertResult(match.Result)</td></tr>
+                <tr><td class="text-secondary font-weight-bold">Result</td><td class="text-info text-right">@Converters.ConvertResult(match.Result)</td></tr>
             </table>
         </div>
 
@@ -73,8 +75,7 @@
 }
 
 @section Scripts {
-    <script>
-        (function() {
+    <script>(function () {
             document.getElementById("innings-scorecard-0").classList.add("show");
 
             const IDs = [...document.querySelectorAll(".innings-scorecard")].map(e => e.id);
@@ -103,6 +104,5 @@
                 () => updateScorecard(idx => idx - 1));
             document.getElementById("next-innings-btn").addEventListener("click",
                 () => updateScorecard(idx => idx + 1));
-        })();
-    </script>
+        })();</script>
 }

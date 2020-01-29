@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Cricinfo.Api.Client;
 using Cricinfo.Services;
-using Cricinfo.Models;
+using Cricinfo.Models.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +56,7 @@ namespace Cricinfo.Api.Unit.Tests
 
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
+            Assert.AreEqual(MatchType.TestMatch, responseObject.MatchType);
             Assert.AreEqual(new DateTime(2018, 12, 26), responseObject.DateOfFirstDay);
             Assert.AreEqual("South Africa", responseObject.HomeTeam);
             Assert.AreEqual("England", responseObject.AwayTeam);

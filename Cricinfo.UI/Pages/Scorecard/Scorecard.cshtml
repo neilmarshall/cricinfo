@@ -1,13 +1,24 @@
 ﻿@page
 @model ScorecardModel
 @using System
-@using Cricinfo.Models
+@using Cricinfo.Models.Enums
 @{
     <div>
         <form class="form-group" method="post">
             <label asp-for=Venue></label>
             <input class="form-control" asp-for=Venue />
             <span class="text-danger" asp-validation-for="Venue"></span>
+
+            <label asp-for=MatchType></label>
+            @foreach (var matchType in Enum.GetValues(typeof(MatchType)))
+            {
+                <div class="form-check">
+                    <input class="form-check-input" asp-for=MatchType type="radio" value="@matchType">
+                    <label class="form-check-label" asp-for=MatchType>
+                        @Converters.ConvertMatchType((MatchType)matchType)
+                    </label>
+                </div>
+            }
 
             <label asp-for=DateOfFirstDay></label>
             <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
@@ -26,7 +37,7 @@
                 <div class="form-check">
                     <input class="form-check-input" asp-for=Result type="radio" value="@resultType">
                     <label class="form-check-label" asp-for=Result>
-                        @Match.ConvertResult((Result)resultType)
+                        @Converters.ConvertResult((Result)resultType)
                     </label>
                 </div>
             }

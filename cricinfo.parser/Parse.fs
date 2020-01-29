@@ -3,6 +3,7 @@
 module Parse =
 
     open Cricinfo.Models
+    open Cricinfo.Models.Enums
     open DomainModel
 
     let private convertPlayerName = function Player p -> p
