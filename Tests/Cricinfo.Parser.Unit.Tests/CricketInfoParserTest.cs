@@ -67,6 +67,22 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        public void BattingScorecardWithRunOutDismissalParsedCorrectly()
+        {
+            var battingFigures = @"Maharaj	run out (S Curran)		71	148	106	10	3	66.98";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            Assert.AreEqual("Maharaj", parsedBattingFigures.First().Name);
+            Assert.AreEqual(Dismissal.RunOut, parsedBattingFigures.First().Dismissal);
+            Assert.IsNull(parsedBattingFigures.First().Catcher);
+            Assert.IsNull(parsedBattingFigures.First().Bowler);
+            Assert.AreEqual(71, parsedBattingFigures.First().Runs);
+            Assert.AreEqual(148, parsedBattingFigures.First().Mins);
+            Assert.AreEqual(106, parsedBattingFigures.First().Balls);
+            Assert.AreEqual(10, parsedBattingFigures.First().Fours);
+            Assert.AreEqual(3, parsedBattingFigures.First().Sixes);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exceptions.BattingFiguresException))]
         public void BattingScorecardErrorsOnInvalidInput()
         {

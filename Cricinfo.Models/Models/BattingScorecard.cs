@@ -10,7 +10,8 @@ namespace Cricinfo.Models
         Bowled = 1,
         CaughtAndBowled = 2,
         LBW = 3,
-        NotOut = 4
+        NotOut = 4,
+        RunOut = 5
     }
 
     public class DismissalConverter : JsonConverter<Dismissal>
@@ -24,6 +25,7 @@ namespace Cricinfo.Models
                 "c&b" => Dismissal.CaughtAndBowled,
                 "lbw" => Dismissal.LBW,
                 "not out" => Dismissal.NotOut,
+                "run out" => Dismissal.RunOut,
                 _ => throw new ArgumentException("Invalid JSON value for 'Dismissal'")
             };
         }
@@ -37,6 +39,7 @@ namespace Cricinfo.Models
                 Dismissal.CaughtAndBowled => "c&b",
                 Dismissal.LBW => "lbw",
                 Dismissal.NotOut => "not out",
+                Dismissal.RunOut => "run out",
                 _ => throw new ArgumentException("Invalid ENUM value for 'Dismissal'")
             });
         }

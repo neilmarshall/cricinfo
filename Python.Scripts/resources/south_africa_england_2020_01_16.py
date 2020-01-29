@@ -20,7 +20,7 @@ BattingScorecard1 = '\n'.join((
     "Stokes  c Elgar b Paterson  120 272 214 12  2   56.07",
     "Pope    not out     135 382 226 18  1   59.73",
     "Buttler     c & b Maharaj   1   12  15  0   0   6.67",
-    "S Curran    c Elgar b Maharaj   44  61  50  6   1   88.00",
+    "Curran    c Elgar b Maharaj   44  61  50  6   1   88.00",
     "Bess    c Malan b Maharaj   1   19  10  0   0   10.00",
     "Wood    c Nortje    b Maharaj   42  37  23  2   5   182.61",
     "Crawley	c de Kock	b Philander	4	15	15	0	0	26.67\n"))
@@ -32,7 +32,7 @@ BattingScorecard2 = '\n'.join((
     "Nortje  c Root  b Stokes    18  191 136 2   0   13.24",
     "du Plessis  c Pope  b Bess  8   10  6   2   0   133.33",
     "van der Dussen      b Bess  24  72  41  3   0   58.54",
-    "de Kock     b S Curran  63  165 139 9   0   45.32",
+    "de Kock     b Curran  63  165 139 9   0   45.32",
     "Philander       b Broad 27  71  61  5   0   44.26",
     "Maharaj     b Broad 0   10  3   0   0   0.00",
     "Rabada  c Wood  b Broad 1   16  8   0   0   12.50",
@@ -46,7 +46,7 @@ BattingScorecard3 = '\n'.join((
     "van der Dussen  c Pope  b Root  10  121 36  1   1   27.78",
     "de Kock c Wood  b Root  3   23  26  0   0   11.54",
     "Philander   c Pope  b Broad 13  63  47  2   0   27.66",
-    "Maharaj run out (S Curran)      71  148 106 10  3   66.98",
+    "Maharaj run out (Curran)      71  148 106 10  3   66.98",
     "Rabada  c Broad b Wood  16  26  24  2   1   66.67",
     "Nortje      b Bess  5   27  19  1   0   26.32",
     "Paterson    not out     39  56  40  6   0   97.50\n"))
@@ -62,7 +62,7 @@ BowlingScorecard1 = '\n'.join((
 
 BowlingScorecard2 = '\n'.join((
     "Broad   13.4    6   30  3   2.20",
-    "S Curran    11.0    2   32  1   2.91",
+    "Curran    11.0    2   32  1   2.91",
     "Bess    31.0    12  51  5   1.65",
     "Wood    11.0    4   31  0   2.82",
     "Denly   4.0 1   10  0   2.50",
@@ -71,7 +71,7 @@ BowlingScorecard2 = '\n'.join((
 
 BowlingScorecard3 = '\n'.join((
     "Broad   10.0    5   14  1   1.40",
-    "S Curran    6.0 0   46  0   7.67",
+    "Curran    6.0 0   46  0   7.67",
     "Wood    16.5    6   32  3   1.90",
     "Bess    22.0    11  36  1   1.64",
     "Stokes  5.0 2   9   0   1.80",
@@ -84,7 +84,7 @@ FallOfWicketScorecard1 = '\n'.join((
     "148-4 (64.5 ovs)    Root",
     "351-5 (123.2 ovs)   Stokes",
     "354-6 (126.2 ovs)   Buttler",
-    "413-7 (139.4 ovs)   S Curran",
+    "413-7 (139.4 ovs)   Curran",
     "426-8 (143.2 ovs)   Bess",
     "499-9 (151.6 ovs)   Wood\n"))
 

@@ -106,14 +106,14 @@ module private DbFunctions =
                 | _ -> None
             let bowlerId =
                 match bs.Dismissal with
-                | Dismissal.NotOut -> None
+                | Dismissal.NotOut | Dismissal.RunOut -> None
                 | _ -> tryGetPlayerId bs.Bowler |> Some
             let query = "INSERT INTO batting_scorecard (innings_id, batsman_id, how_out_id, catcher_id, bowler_id, runs, mins, balls, fours, sixes) VALUES (@innings_id, @batsman_id, @how_out_id, @catcher_id, @bowler_id, @runs, @mins, @balls, @fours, @sixes);"
             let parameters = Map.ofList [ "innings_id", box inningsId; "batsman_id", box batsmanId; "how_out_id", box howOutId;
                                           "catcher_id", match catcherId with | Some id -> box id | None -> box DBNull.Value;
                                           "bowler_id", match bowlerId with | Some id -> box id | None -> box DBNull.Value;
                                           "runs", box bs.Runs; "mins", box bs.Mins; "balls", box bs.Balls; "fours", box bs.Fours ; "sixes", box bs.Sixes ]
-            do executeNonQuery conn trans query parameters
+            executeNonQuery conn trans query parameters
         battingScorecards |> Seq.iter insertBattingScorecard
 
     let private insertBowlingScores
@@ -128,7 +128,7 @@ module private DbFunctions =
             let query = "INSERT INTO bowling_scorecard (innings_id, bowler_id, overs, maidens, runs_conceded, wickets) VALUES (@innings_id, @bowler_id, @overs, @maidens, @runs_conceded, @wickets);"
             let parameters = Map.ofList [ "innings_id", box inningsId; "bowler_id", box bowlerId; "overs", box bs.Overs; "maidens", box bs.Maidens;
                                           "runs_conceded", box bs.Runs; "wickets", box bs.Wickets; ]
-            do executeNonQuery conn trans query parameters
+            executeNonQuery conn trans query parameters
         bowlingScorecards |> Seq.iter insertBowlingScorecard
 
     let private insertFallOfWicket
@@ -141,7 +141,7 @@ module private DbFunctions =
         |> Seq.iteri (fun wickets runs ->
             let query = "INSERT INTO fall_of_wicket_scorecard (innings_id, runs, wickets) VALUES (@innings_id, @runs, @wickets);"
             let parameters = Map.ofList [ "innings_id", box inningsId; "runs", box runs; "wickets", box (wickets + 1); ]
-            do executeNonQuery conn trans query parameters)
+            executeNonQuery conn trans query parameters)
 
     let insertInningsAsync
         (conn : NpgsqlConnection)
@@ -149,18 +149,17 @@ module private DbFunctions =
         (tryGetPlayerId : string -> int)
         (matchId : int64)
         (innings : seq<Score>)
-            : Async<int64[]> =
+            : Async<Unit> =
         async {
-            let insertSingleInnings (innings : Score) : int64 =
+            let insertSingleInnings (innings : Score) : Unit =
                 let id = executeScalar conn trans "SELECT NEXTVAL('innings_id_seq');" Map.empty
                 let teamId = executeScalar<int> conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box innings.Team ])
                 let query = "INSERT INTO innings (id, match_id, team_id, innings, extras) VALUES (@id, @match_id, @team_id, @innings, @extras);"
                 let parameters = Map.ofList [ "id", box id; "match_id", box matchId; "team_id", box teamId; "innings", box innings.Innings;
                                               "extras", box innings.Extras; ]
-                do executeNonQuery conn trans query parameters
-                insertBattingScores conn trans tryGetPlayerId id innings.BattingScorecard |> ignore
-                insertBowlingScores conn trans tryGetPlayerId id innings.BowlingScorecard |> ignore
-                insertFallOfWicket conn trans id innings.FallOfWicketScorecard |> ignore
-                id
-            return innings |> Seq.map insertSingleInnings |> Seq.toArray
+                executeNonQuery conn trans query parameters
+                insertBattingScores conn trans tryGetPlayerId id innings.BattingScorecard
+                insertBowlingScores conn trans tryGetPlayerId id innings.BowlingScorecard
+                insertFallOfWicket conn trans id innings.FallOfWicketScorecard
+            innings |> Seq.iter insertSingleInnings
         }

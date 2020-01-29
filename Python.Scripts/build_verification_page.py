@@ -10,23 +10,25 @@ import requests
 import resources.south_africa_england_2019_12_26 as s_19_12_26
 import resources.south_africa_england_2020_01_03 as s_20_01_03
 import resources.south_africa_england_2020_01_16 as s_20_01_16
+import resources.south_africa_england_2020_01_24 as s_20_01_24
 
 parser = argparse.ArgumentParser(description="Runs HTTP requests to generate CricInfo HTML output")
 parser.add_argument('-p', '--port', type=int, default=5001,
                     help="port number on which an instance of Cricinfo.UI is listening (default is %(default)s)")
-parser.add_argument('-s', '--stage', type=int, default=5, choices=[0, 1, 2,3, 4, 5, 6],
+parser.add_argument('-s', '--stage', type=int, default=0, choices=[0, 1, 2,3, 4, 5, 6],
                     help="stage where requests will halt; options are: "
                          "0 - scorecard page, "
                          "1 - 4 - innings page for each innings, "
                          "5 - verification page, "
                          "6 - submit verification page (default is %(default)s)")
 parser.add_argument('-c', '--scorecard', default="s_19_12_26",
-                    choices=["s_19_12_26", "s_20_01_03", "s_20_01_16"],
+                    choices=["s_19_12_26", "s_20_01_03", "s_20_01_16", "s_20_01_24"],
                     help="Scorecard to process (default is %(default)s)")
 
 args = parser.parse_args()
 
-scorecard = {'s_19_12_26': s_19_12_26, 's_20_01_03': s_20_01_03, 's_20_01_16': s_20_01_16}[args.scorecard]
+scorecard = {'s_19_12_26': s_19_12_26, 's_20_01_03': s_20_01_03,
+             's_20_01_16': s_20_01_16, 's_20_01_24': s_20_01_24}[args.scorecard]
 
 # instantiate Session object to store cookies and session state
 session = requests.Session()
@@ -44,8 +46,8 @@ try:
                       "HomeTeam": scorecard.HomeTeam,
                       "AwayTeam": scorecard.AwayTeam,
                       "Result": scorecard.Result,
-                      "HomeSquad": '\n'.join(s_19_12_26.HomeSquad),
-                      "AwaySquad": '\n'.join(s_19_12_26.AwaySquad)}
+                      "HomeSquad": '\n'.join(scorecard.HomeSquad),
+                      "AwaySquad": '\n'.join(scorecard.AwaySquad)}
 
     def innings_data(innings, idx):
         return {"__RequestVerificationToken": token,
@@ -65,16 +67,24 @@ try:
         response = post_request('scorecard', scorecard_data)
 
     if args.stage >= 2:
-        response = post_request('innings', innings_data(1, 0))
+        response = post_request('innings?handler=AddAnotherInnings', innings_data(1, 0))
 
     if args.stage >= 3:
-        response = post_request('innings', innings_data(1, 1))
+        response = post_request('innings?handler=AddAnotherInnings', innings_data(1, 1))
 
     if args.stage >= 4:
-        response = post_request('innings', innings_data(2, 2))
+        # special case to allow for data with just three innings
+        if args.scorecard == 's_20_01_16':
+            response = post_request('innings?handler=SubmitAllInnings', innings_data(2, 2))
+        else:
+            response = post_request('innings?handler=AddAnotherInnings', innings_data(2, 2))
 
     if args.stage >= 5:
-        response = post_request('innings', innings_data(2, 3))
+        # special case to allow for data with just three innings
+        if args.stage == 5 and args.scorecard == 's_20_01_16':
+            raise ValueError('this scorecard does not support a 4th innings')
+        elif args.scorecard != 's_20_01_16':
+            response = post_request('innings?handler=AddAnotherInnings', innings_data(2, 3))
 
     if args.stage >= 6:
         response = post_request('verification', {"__RequestVerificationToken": token})

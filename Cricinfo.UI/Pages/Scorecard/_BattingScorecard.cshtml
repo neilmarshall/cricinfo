@@ -21,7 +21,7 @@
             {
                 <tr>
                     <td class="text-left">@bs.Name</td>
-                    <td>@bs.Dismissal</td>
+                    <td>@Match.ConvertDismissal(bs.Dismissal)</td>
                     <td>@(bs.Catcher != null ? bs.Catcher : "n/a")</td>
                     <td>@(bs.Bowler != null ? bs.Bowler : "n/a")</td>
                     <td>@bs.Runs</td>

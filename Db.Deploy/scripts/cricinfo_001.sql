@@ -1,10 +1,10 @@
 -- Create table and relations
 
 DROP TABLE IF EXISTS fall_of_wicket_scorecard;
-DROP TABLE IF EXISTS innings;
-DROP TABLE IF EXISTS squad;
 DROP TABLE IF EXISTS bowling_scorecard;
 DROP TABLE IF EXISTS batting_scorecard;
+DROP TABLE IF EXISTS innings;
+DROP TABLE IF EXISTS squad;
 DROP TABLE IF EXISTS how_out;
 DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS match;
@@ -59,7 +59,7 @@ CREATE TABLE how_out (
     id SERIAL PRIMARY KEY,
 	type VARCHAR(255) UNIQUE
 );
-INSERT INTO how_out (type) VALUES ('Caught'), ('Bowled'), ('CaughtAndBowled'), ('LBW'), ('NotOut');
+INSERT INTO how_out (type) VALUES ('Caught'), ('Bowled'), ('CaughtAndBowled'), ('LBW'), ('NotOut'), ('RunOut');
 
 CREATE TABLE innings (
     id SERIAL PRIMARY KEY,

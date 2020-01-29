@@ -18,24 +18,28 @@ namespace Cricinfo.UI.Pages
         public string Team { get; set; }
         [Required]
         [BattingScorecardValidator]
+        [Display(Name= "Batting Scorecard")]
         public string BattingScorecard { get; set; }
         [Required]
         [BowlingScorecardValidator]
+        [Display(Name = "Bowling Scorecard")]
         public string BowlingScorecard { get; set; }
         [Required]
         [FallOFWicketScorecardValidator]
+        [Display(Name = "Fall of Wicket Scorecard")]
         public string FallOfWicketScorecard { get; set; }
         [Range(0, int.MaxValue)]
         public int Extras { get; set; }
 
-        public void OnGetFromScorecard(string header, string homeTeam, string awayTeam)
+        public void OnGetFromScorecard(string header, string homeTeam, string awayTeam, string selectedTeam)
         {
-            ViewData["header"] = header;
-            ViewData["homeTeam"] = homeTeam;
-            ViewData["awayTeam"] = awayTeam;
+            TempData["header"] = header;
+            TempData["homeTeam"] = homeTeam;
+            TempData["awayTeam"] = awayTeam;
+            this.Team = selectedTeam;
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostAddAnotherInnings()
         {
             if (!ModelState.IsValid) { return new PageResult(); }
 
@@ -52,16 +56,19 @@ namespace Cricinfo.UI.Pages
                 if (!parsedNames.Contains(bs.Name))
                 {
                     ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
                     return new PageResult();
                 }
                 if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
                 {
                     ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Bowler}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
                     return new PageResult();
                 }
                 if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
                 {
                     ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Catcher}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
                     return new PageResult();
                 }
             }
@@ -71,6 +78,7 @@ namespace Cricinfo.UI.Pages
                 if (!parsedNames.Contains(bs.Name))
                 {
                     ModelState.AddModelError("BowlingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
                     return new PageResult();
                 }
             }
@@ -116,7 +124,75 @@ namespace Cricinfo.UI.Pages
             }
 
             return RedirectToPage("Innings", "FromScorecard",
-                new { header, homeTeam = match.HomeTeam, awayTeam = match.AwayTeam });
+                new
+                {
+                    header,
+                    homeTeam = match.HomeTeam,
+                    awayTeam = match.AwayTeam,
+                    selectedTeam = (this.Team == match.HomeTeam ? match.AwayTeam : match.HomeTeam)
+                });
+        }
+
+        public IActionResult OnPostSubmitAllInnings()
+        {
+            if (!ModelState.IsValid) { return new PageResult(); }
+
+            var battingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray();
+            var bowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray();
+            var fallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
+
+            var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
+
+            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item2).ToHashSet();
+
+            foreach (var bs in battingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                    return new PageResult();
+                }
+                if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Bowler}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                    return new PageResult();
+                }
+                if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
+                {
+                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Catcher}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                    return new PageResult();
+                }
+            }
+
+            foreach (var bs in bowlingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    ModelState.AddModelError("BowlingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
+                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                    return new PageResult();
+                }
+            }
+
+            var innings = (int)TempData["innings"];
+            var score = new Score
+            {
+                Team = Team,
+                Innings = innings,
+                Extras = Extras,
+                BattingScorecard = battingScorecard,
+                BowlingScorecard = bowlingScorecard,
+                FallOfWicketScorecard = fallOfWicketScorecard
+            };
+            match.Scores = match.Scores == null
+                ? new Score[] { score }
+                : match.Scores.Append(score).ToArray();
+
+            TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
+            return RedirectToPage("Verification");
         }
     }
 }

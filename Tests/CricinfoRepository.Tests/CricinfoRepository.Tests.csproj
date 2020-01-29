@@ -9,12 +9,6 @@
     <ProjectReference Include="..\..\Cricinfo.Service\Cricinfo.Services.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="resources\south_africa-england-26-12-18.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="resources\south_africa-england-26-12-18.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.SECRETS.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

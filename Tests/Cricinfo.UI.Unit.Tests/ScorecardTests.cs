@@ -66,12 +66,12 @@ namespace Cricinfo.UI.Unit.Tests
         }
 
         [DataTestMethod]
-        [DataRow("Venue")]
-        [DataRow("HomeTeam")]
-        [DataRow("AwayTeam")]
-        [DataRow("HomeSquad")]
-        [DataRow("AwaySquad")]
-        public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field)
+        [DataRow("Venue", "Venue")]
+        [DataRow("HomeTeam", "Home Team")]
+        [DataRow("AwayTeam", "Away Team")]
+        [DataRow("HomeSquad", "Home Squad")]
+        [DataRow("AwaySquad", "Away Squad")]
+        public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
             var getHTML = await this._client.GetAsync("Scorecard/Scorecard");
@@ -87,13 +87,13 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">The {field} field is required.</span>").Match(content).Success);
+            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">The {label} field is required.</span>").Match(content).Success);
         }
 
         [DataTestMethod]
-        [DataRow("HomeSquad")]
-        [DataRow("AwaySquad")]
-        public async Task POST_EndpointWithInvalidSquadSizeReturnsCorrectValidationMessage(string field)
+        [DataRow("HomeSquad", "Home Squad")]
+        [DataRow("AwaySquad", "Away Squad")]
+        public async Task POST_EndpointWithInvalidSquadSizeReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
             var getHTML = await this._client.GetAsync("Scorecard/Scorecard");
@@ -109,14 +109,14 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var expectedErrorMessage = $"The field { field} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            var expectedErrorMessage = $"The field {label} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
             Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
         }
 
         [DataTestMethod]
-        [DataRow("HomeSquad")]
-        [DataRow("AwaySquad")]
-        public async Task POST_EndpointWithInvalidSquadNamesReturnsCorrectValidationMessage(string field)
+        [DataRow("HomeSquad", "Home Squad")]
+        [DataRow("AwaySquad", "Away Squad")]
+        public async Task POST_EndpointWithInvalidSquadNamesReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
             var getHTML = await this._client.GetAsync("Scorecard/Scorecard");
@@ -132,7 +132,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var expectedErrorMessage = $"The field { field} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            var expectedErrorMessage = $"The field {label} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
             Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
         }
     }

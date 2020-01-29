@@ -17,52 +17,107 @@ module private DomainModel =
     type CaughtAndBowled = { name : Player; catcher : Player; bowler : Player; figures : BattingFigures }
     type LBW = { name : Player; bowler : Player; figures : BattingFigures }
     type NotOut = { name : Player; figures : BattingFigures }
+    type RunOut = { name : Player; figures : BattingFigures}
 
-    type Batsman = | Bowled of Bowled | Caught of Caught | CaughtAndBowled of CaughtAndBowled | LBW of LBW | NotOut of NotOut with
+    type Batsman =
+        | Bowled of Bowled
+        | Caught of Caught
+        | CaughtAndBowled of CaughtAndBowled
+        | LBW of LBW
+        | NotOut of NotOut
+        | RunOut of RunOut
+        with
 
         member this.Name =
             match this with
-            | Bowled {name = name} | Caught {name = name} | CaughtAndBowled {name = name} | LBW {name = name} | NotOut {name = name}
+            | Bowled {name = name}
+            | Caught {name = name}
+            | CaughtAndBowled {name = name}
+            | LBW {name = name}
+            | NotOut {name = name}
+            | RunOut {name = name}
                 -> name
 
         member this.Catcher =
             match this with
-            | Caught {catcher = catcher} | CaughtAndBowled {catcher = catcher} -> Some catcher
-            | Bowled _ | LBW _ | NotOut _ -> None
+            | Caught {catcher = catcher}
+            | CaughtAndBowled {catcher = catcher}
+                -> Some catcher
+            | Bowled _
+            | LBW _
+            | NotOut _
+            | RunOut _
+                -> None
 
         member this.Bowler =
             match this with
-            | Bowled {bowler = bowler} | Caught {bowler = bowler} | CaughtAndBowled {bowler = bowler} | LBW {bowler = bowler} -> Some bowler
-            | NotOut _ -> None
+            | Bowled {bowler = bowler}
+            | Caught {bowler = bowler}
+            | CaughtAndBowled {bowler = bowler}
+            | LBW {bowler = bowler}
+                -> Some bowler
+            | NotOut _
+            | RunOut _
+                -> None
 
         member this.Runs =
             match this with
-            | Bowled {figures = {runs = runs}} | Caught {figures = {runs = runs}} | CaughtAndBowled {figures = {runs = runs}} | LBW {figures = {runs = runs}} | NotOut {figures = {runs = runs}}
+            | Bowled {figures = {runs = runs}}
+            | Caught {figures = {runs = runs}}
+            | CaughtAndBowled {figures = {runs = runs}}
+            | LBW {figures = {runs = runs}}
+            | NotOut {figures = {runs = runs}}
+            | RunOut {figures = {runs = runs}}
                 -> runs
 
         member this.Mins =
             match this with
-            | Bowled {figures = {mins = mins}} | Caught {figures = {mins = mins}} | CaughtAndBowled {figures = {mins = mins}} | LBW {figures = {mins = mins}} | NotOut {figures = {mins = mins}}
+            | Bowled {figures = {mins = mins}}
+            | Caught {figures = {mins = mins}}
+            | CaughtAndBowled {figures = {mins = mins}}
+            | LBW {figures = {mins = mins}}
+            | NotOut {figures = {mins = mins}}
+            | RunOut {figures = {mins = mins}}
                 -> mins
 
         member this.Balls =
             match this with
-            | Bowled {figures = {balls = balls}} | Caught {figures = {balls = balls}} | CaughtAndBowled {figures = {balls = balls}} | LBW {figures = {balls = balls}} | NotOut {figures = {balls = balls}}
+            | Bowled {figures = {balls = balls}}
+            | Caught {figures = {balls = balls}}
+            | CaughtAndBowled {figures = {balls = balls}}
+            | LBW {figures = {balls = balls}}
+            | NotOut {figures = {balls = balls}}
+            | RunOut {figures = {balls = balls}}
                 -> balls
 
         member this.Fours =
             match this with
-            | Bowled {figures = {fours = fours}} | Caught {figures = {fours = fours}} | CaughtAndBowled {figures = {fours = fours}} | LBW {figures = {fours = fours}} | NotOut {figures = {fours = fours}}
+            | Bowled {figures = {fours = fours}}
+            | Caught {figures = {fours = fours}}
+            | CaughtAndBowled {figures = {fours = fours}}
+            | LBW {figures = {fours = fours}}
+            | NotOut {figures = {fours = fours}}
+            | RunOut {figures = {fours = fours}}
                 -> fours
 
         member this.Sixes =
             match this with
-            | Bowled {figures = {sixes = sixes}} | Caught {figures = {sixes = sixes}} | CaughtAndBowled {figures = {sixes = sixes}} | LBW {figures = {sixes = sixes}} | NotOut {figures = {sixes = sixes}}
+            | Bowled {figures = {sixes = sixes}}
+            | Caught {figures = {sixes = sixes}}
+            | CaughtAndBowled {figures = {sixes = sixes}}
+            | LBW {figures = {sixes = sixes}}
+            | NotOut {figures = {sixes = sixes}}
+            | RunOut {figures = {sixes = sixes}}
                 -> sixes
 
         member this.StrikeRate =
             match this with
-            | Bowled {figures = {runs = r; balls = b}} | Caught {figures = {runs = r; balls = b}} | CaughtAndBowled {figures = {runs = r; balls = b}} | LBW {figures = {runs = r; balls = b}} | NotOut {figures = {runs = r; balls = b}}
+            | Bowled {figures = {runs = r; balls = b}}
+            | Caught {figures = {runs = r; balls = b}}
+            | CaughtAndBowled {figures = {runs = r; balls = b}}
+            | LBW {figures = {runs = r; balls = b}}
+            | NotOut {figures = {runs = r; balls = b}}
+            | RunOut {figures = {runs = r; balls = b}}
                 -> Math.Round(float r / float b * 100.0, 2)
 
         static member Score score =
@@ -100,13 +155,19 @@ module private DomainModel =
                              bowler = result.Groups.["bowler"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
-            let notout =
+            let notOut =
                 let result = Regex("^(?<batsman>[A-Za-z\s]+)\s+not out\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     NotOut { name = result.Groups.["batsman"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
-            match seq { yield caught; yield lbw; yield caughtAndBowled; yield bowled; yield notout } |> Seq.tryFind Option.isSome |> Option.flatten with
+            let runOut =
+                let result = Regex("^(?<batsman>[A-Za-z\s]+)\s+run out[^\d]+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                if result.Success then
+                    RunOut { name = result.Groups.["batsman"].Value |> trim |> Player;
+                             figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
+                else None
+            match seq { yield caught; yield lbw; yield caughtAndBowled; yield bowled; yield notOut; yield runOut } |> Seq.tryFind Option.isSome |> Option.flatten with
             | Some dismissal -> dismissal
             | None -> score |> sprintf "invalid data in batting scorecard - '%s'" |> BattingFiguresException |> raise
 

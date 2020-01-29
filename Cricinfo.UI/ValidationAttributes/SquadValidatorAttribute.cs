@@ -14,7 +14,7 @@ namespace Cricinfo.UI.ValidationAttributes
         {
             if (value == null) { return false; }
 
-            var squad = ((string)value).Split('\n');
+            var squad = ((string)value).Trim().Split('\n');
 
             if (squad.Count() != NumberOfPlayers) { return false; }
 

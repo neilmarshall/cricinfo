@@ -1,17 +1,17 @@
 ﻿@page
 @model InningsModel
 @{
-    <h1 class="font-weight-normal">@ViewData["header"]</h1>
+    <h1 class="font-weight-normal">@TempData.Peek("header")</h1>
 
     <div>
         <form class="form-group" method="post">
             <div class="form-check">
-                <input class="form-check-input" asp-for=Team type="radio" value="@ViewData["homeTeam"]">
-                <label class="form-check-label" asp-for=Team>@ViewData["homeTeam"]</label>
+                <input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("homeTeam")" />
+                <label class="form-check-label" asp-for=Team>@TempData.Peek("homeTeam")</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" asp-for=Team type="radio" value="@ViewData["awayTeam"]">
-                <label class="form-check-label" asp-for=Team>@ViewData["awayTeam"]</label>
+                <input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("awayTeam")" />
+                <label class="form-check-label" asp-for=Team>@TempData.Peek("awayTeam")</label>
             </div>
 
             <label asp-for=BattingScorecard></label>
@@ -32,7 +32,16 @@
 
             <br />
 
-            <input class="form-control btn btn-info" type="submit" />
+            <div class="row">
+                <div class="col">
+                    <input class="form-control btn btn-info" type="submit"
+                           asp-page-handler="AddAnotherInnings" value="Add another innings" />
+                </div>
+                <div class="col">
+                    <input class="form-control btn btn-info" type="submit"
+                           asp-page-handler="SubmitAllInnings" value="Submit all innings" />
+                </div>
+            </div>
         </form>
     </div>
 }

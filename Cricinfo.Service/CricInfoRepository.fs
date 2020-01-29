@@ -19,7 +19,6 @@ type public CricInfoRepository(connString : string) =
 
 
         member this.CreateMatchAsync (mtch : Match) : Task<DataCreationResponse * Nullable<int64>> =
-
             async {
                 try
                     use conn = new NpgsqlConnection(connString)
@@ -47,7 +46,7 @@ type public CricInfoRepository(connString : string) =
                                 seq { yield! homeSquadIds; yield! awaySquadIds }
                                 |> Seq.fold (fun state x -> Map.add x.Key x.Value state) Map.empty
                                 |> Map.find name
-                            let! inningsIds = insertInningsAsync tryGetPlayerId matchId mtch.Scores
+                            do! insertInningsAsync tryGetPlayerId matchId mtch.Scores
 
                             do! trans.CommitAsync() |> Async.AwaitTask
 

@@ -15,6 +15,7 @@ module Parse =
         | CaughtAndBowled _ -> Dismissal.CaughtAndBowled
         | LBW _ -> Dismissal.LBW
         | NotOut _ -> Dismissal.NotOut
+        | RunOut _ -> Dismissal.RunOut
 
     let parseBattingScorecard (scorecard : string) : seq<BattingScorecard> =
         scorecard.Trim().Split('\n')
@@ -56,7 +57,7 @@ module Parse =
                 name.[..(name.Length - 5)]
             else
                 name
-        match name.Split() |> Array.toList with
+        match name.Trim().Split() |> Array.toList with
         | ["sub"] -> "", "sub"
         | [_] -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
         | head::tail -> head, String.concat " " tail |> stripSuffix

@@ -83,31 +83,31 @@ namespace Cricinfo.UI.Unit.Tests
             // Act + Assert
 
             // first call to 'Scorecard/Innings' should redirect back to 'Innings'
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // second call to 'Scorecard/Innings' should redirect back to 'Innings'
-            response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // third call to 'Scorecard/Innings' should redirect back to 'Innings'
-            response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // fourth call to 'Scorecard/Innings' should redirect to 'Verification'
-            response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Verification", response.Headers.Location.OriginalString.Split('?')[0]);
         }
 
         [DataTestMethod]
-        [DataRow("BattingScorecard")]
-        [DataRow("BowlingScorecard")]
-        [DataRow("FallOfWicketScorecard")]
-        public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field)
+        [DataRow("BattingScorecard", "Batting Scorecard")]
+        [DataRow("BowlingScorecard", "Bowling Scorecard")]
+        [DataRow("FallOfWicketScorecard", "Fall of Wicket Scorecard")]
+        public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
             var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
@@ -122,12 +122,12 @@ namespace Cricinfo.UI.Unit.Tests
             formElements[field] = null;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">The {field} field is required.</span>").Match(content).Success);
+            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">The {label} field is required.</span>").Match(content).Success);
         }
 
         [TestMethod]
@@ -153,12 +153,12 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["BattingScorecard"] = invalidBattingScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"BattingScorecard\" data-valmsg-replace=\"true\">The field BattingScorecard is invalid.</span>").Match(content).Success);
+            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"BattingScorecard\" data-valmsg-replace=\"true\">The field Batting Scorecard is invalid.</span>").Match(content).Success);
         }
 
         [TestMethod]
@@ -182,12 +182,12 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["BowlingScorecard"] = invalidBowlingScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"BowlingScorecard\" data-valmsg-replace=\"true\">The field BowlingScorecard is invalid.</span>").Match(content).Success);
+            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"BowlingScorecard\" data-valmsg-replace=\"true\">The field Bowling Scorecard is invalid.</span>").Match(content).Success);
         }
 
         [TestMethod]
@@ -212,12 +212,12 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["FallOfWicketScorecard"] = invalidFallOfWicketScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"FallOfWicketScorecard\" data-valmsg-replace=\"true\">The field FallOfWicketScorecard is invalid.</span>").Match(content).Success);
+            Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"FallOfWicketScorecard\" data-valmsg-replace=\"true\">The field Fall of Wicket Scorecard is invalid.</span>").Match(content).Success);
         }
 
         [TestMethod]
@@ -236,7 +236,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["Extras"] = "-1";
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings", formContent);
+            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert

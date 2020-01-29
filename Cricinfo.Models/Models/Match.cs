@@ -48,7 +48,19 @@ namespace Cricinfo.Models
             Result.AwayTeamWin => "Away Team Win",
             Result.Draw => "Draw",
             Result.Tie => "Tie",
-            _ => throw new ArgumentException("bad value for 'Cricinfo.Api.Result' enum")
+            _ => throw new ArgumentException("bad value for 'Cricinfo.Models.Result' enum")
+        };
+
+        public static string ConvertDismissal(Dismissal dismissal) =>
+        dismissal switch
+        {
+            Dismissal.Bowled => "Bowled",
+            Dismissal.Caught => "Caught",
+            Dismissal.CaughtAndBowled => "Caught and bowled",
+            Dismissal.LBW => "LBW",
+            Dismissal.NotOut => "Not out",
+            Dismissal.RunOut => "Run out",
+            _ => throw new ArgumentException("bad value for 'Cricinfo.Models.Dismissal' enum")
         };
 
         public string Venue { get; set; }
