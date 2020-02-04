@@ -18,14 +18,18 @@ namespace Cricinfo.UI.Unit.Tests
 
         internal static IEnumerable<KeyValuePair<string, string>> FormContent()
         {
+            var generatedNames = string.Join('\n',
+                Enumerable.Range(1, SquadValidatorAttribute.NumberOfPlayers)
+                          .Select((_, i) => $"player player{i}"));
+
             yield return new KeyValuePair<string, string>("Venue", "A place");
             yield return new KeyValuePair<string, string>("MatchType", "TestMatch");
             yield return new KeyValuePair<string, string>("DateOfFirstDay", "2019-12-31");
             yield return new KeyValuePair<string, string>("HomeTeam", "Home Team");
             yield return new KeyValuePair<string, string>("AwayTeam", "Away Team");
             yield return new KeyValuePair<string, string>("Result", "Draw");
-            yield return new KeyValuePair<string, string>("HomeSquad", string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers)));
-            yield return new KeyValuePair<string, string>("AwaySquad", string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers)));
+            yield return new KeyValuePair<string, string>("HomeSquad", generatedNames);
+            yield return new KeyValuePair<string, string>("AwaySquad", generatedNames);
         }
 
         [TestInitialize]

@@ -11,6 +11,7 @@ import resources.south_africa_england_2019_12_26 as s_19_12_26
 import resources.south_africa_england_2020_01_03 as s_20_01_03
 import resources.south_africa_england_2020_01_16 as s_20_01_16
 import resources.south_africa_england_2020_01_24 as s_20_01_24
+import resources.south_africa_england_2020_01_31 as s_20_01_31
 
 parser = argparse.ArgumentParser(description="Runs HTTP requests to generate CricInfo HTML output")
 parser.add_argument('-p', '--port', type=int, default=5001,
@@ -22,13 +23,14 @@ parser.add_argument('-s', '--stage', type=int, default=0, choices=[0, 1, 2,3, 4,
                          "5 - verification page, "
                          "6 - submit verification page (default is %(default)s)")
 parser.add_argument('-c', '--scorecard', default="s_19_12_26",
-                    choices=["s_19_12_26", "s_20_01_03", "s_20_01_16", "s_20_01_24"],
+                    choices=["s_19_12_26", "s_20_01_03", "s_20_01_16", "s_20_01_24", "s_20_01_31"],
                     help="Scorecard to process (default is %(default)s)")
 
 args = parser.parse_args()
 
 scorecard = {'s_19_12_26': s_19_12_26, 's_20_01_03': s_20_01_03,
-             's_20_01_16': s_20_01_16, 's_20_01_24': s_20_01_24}[args.scorecard]
+             's_20_01_16': s_20_01_16, 's_20_01_24': s_20_01_24,
+             's_20_01_31': s_20_01_31}[args.scorecard]
 
 # instantiate Session object to store cookies and session state
 session = requests.Session()
@@ -71,20 +73,23 @@ try:
         response = post_request('innings?handler=AddAnotherInnings', innings_data(1, 0))
 
     if args.stage >= 3:
-        response = post_request('innings?handler=AddAnotherInnings', innings_data(1, 1))
+        if len(scorecard.BattingScorecard) == 2:
+            response = post_request('innings?handler=SubmitAllInnings', innings_data(1, 1))
+        else:
+            response = post_request('innings?handler=AddAnotherInnings', innings_data(1, 1))
 
     if args.stage >= 4:
-        # special case to allow for data with just three innings
-        if args.scorecard == 's_20_01_16':
+        if len(scorecard.BattingScorecard) == 2:
+            pass
+        elif len(scorecard.BattingScorecard) == 3:
             response = post_request('innings?handler=SubmitAllInnings', innings_data(2, 2))
         else:
             response = post_request('innings?handler=AddAnotherInnings', innings_data(2, 2))
 
     if args.stage >= 5:
-        # special case to allow for data with just three innings
-        if args.stage == 5 and args.scorecard == 's_20_01_16':
-            raise ValueError('this scorecard does not support a 4th innings')
-        elif args.scorecard != 's_20_01_16':
+        if len(scorecard.BattingScorecard) <= 3:
+            pass
+        else:
             response = post_request('innings?handler=AddAnotherInnings', innings_data(2, 3))
 
     if args.stage >= 6:

@@ -6,7 +6,7 @@ using System.Linq;
 namespace Cricinfo.Parser.Unit.Tests
 {
     [TestClass]
-    public class CricketInfoParserTest
+    public class BattingScorecardParserFixture
     {
         [TestMethod]
         public void BattingScorecardParsedCorrectly()
@@ -22,7 +22,7 @@ namespace Cricinfo.Parser.Unit.Tests
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             CollectionAssert.AreEqual(new string[] { "Crawley", "Sibley", "Stokes", "Archer", "Denly", "Pope", "Denly", "Sibley" },
                 parsedBattingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught, Dismissal.Caught , Dismissal.Caught , Dismissal.Caught , Dismissal.Bowled, Dismissal.NotOut , Dismissal.LBW, Dismissal.CaughtAndBowled },
+            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Bowled, Dismissal.NotOut, Dismissal.LBW, Dismissal.CaughtAndBowled },
                 parsedBattingFigures.Select(bf => bf.Dismissal).ToArray());
             CollectionAssert.AreEqual(new string[] { "de Kock", "de Kock", "Elgar", "van der Dussen", null, null, null, "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Catcher).ToArray());
@@ -46,23 +46,23 @@ namespace Cricinfo.Parser.Unit.Tests
             var battingFigures = @"Crawley	c de Kock	b Philander	4	15	15	0	0	26.67
                                    Sibley c & b Maharaj   29  118 90  5   0\n";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
-            CollectionAssert.AreEqual(new string[] { "Crawley",  "Sibley" },
+            CollectionAssert.AreEqual(new string[] { "Crawley", "Sibley" },
                 parsedBattingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught,  Dismissal.CaughtAndBowled },
+            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught, Dismissal.CaughtAndBowled },
                 parsedBattingFigures.Select(bf => bf.Dismissal).ToArray());
-            CollectionAssert.AreEqual(new string[] { "de Kock",  "Maharaj" },
+            CollectionAssert.AreEqual(new string[] { "de Kock", "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Catcher).ToArray());
-            CollectionAssert.AreEqual(new string[] { "Philander",  "Maharaj" },
+            CollectionAssert.AreEqual(new string[] { "Philander", "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Bowler).ToArray());
-            CollectionAssert.AreEqual(new int[] { 4,  29 },
+            CollectionAssert.AreEqual(new int[] { 4, 29 },
                 parsedBattingFigures.Select(bf => bf.Runs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15,  118 },
+            CollectionAssert.AreEqual(new int[] { 15, 118 },
                 parsedBattingFigures.Select(bf => bf.Mins).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15,  90 },
+            CollectionAssert.AreEqual(new int[] { 15, 90 },
                 parsedBattingFigures.Select(bf => bf.Balls).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0,  5 },
+            CollectionAssert.AreEqual(new int[] { 0, 5 },
                 parsedBattingFigures.Select(bf => bf.Fours).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0,  0 },
+            CollectionAssert.AreEqual(new int[] { 0, 0 },
                 parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
         }
 
@@ -83,13 +83,49 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        public void BattingScorecardWithStumpedDismissalParsedCorrectly()
+        {
+            var battingFigures = @"du Plessis  st Bairstow b Parkinson	28	0	45	3	0	62.22";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            Assert.AreEqual("du Plessis", parsedBattingFigures.First().Name);
+            Assert.AreEqual(Dismissal.Stumped, parsedBattingFigures.First().Dismissal);
+            Assert.IsNull(parsedBattingFigures.First().Catcher);
+            Assert.AreEqual("Parkinson", parsedBattingFigures.First().Bowler);
+            Assert.AreEqual(28, parsedBattingFigures.First().Runs);
+            Assert.AreEqual(0, parsedBattingFigures.First().Mins);
+            Assert.AreEqual(45, parsedBattingFigures.First().Balls);
+            Assert.AreEqual(3, parsedBattingFigures.First().Fours);
+            Assert.AreEqual(0, parsedBattingFigures.First().Sixes);
+        }
+
+        [TestMethod]
+        public void BattingScorecardWithRetiredDismissalParsedCorrectly()
+        {
+            var battingFigures = "Bairstow Retired Not Out		100	0	83	11	4	120.48";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            Assert.AreEqual("Bairstow", parsedBattingFigures.First().Name);
+            Assert.AreEqual(Dismissal.Retired, parsedBattingFigures.First().Dismissal);
+            Assert.IsNull(parsedBattingFigures.First().Catcher);
+            Assert.IsNull(parsedBattingFigures.First().Bowler);
+            Assert.AreEqual(100, parsedBattingFigures.First().Runs);
+            Assert.AreEqual(0, parsedBattingFigures.First().Mins);
+            Assert.AreEqual(83, parsedBattingFigures.First().Balls);
+            Assert.AreEqual(11, parsedBattingFigures.First().Fours);
+            Assert.AreEqual(4, parsedBattingFigures.First().Sixes);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exceptions.BattingFiguresException))]
         public void BattingScorecardErrorsOnInvalidInput()
         {
             var battingFigures = @"Crawley	c de Kock	4	15	15	0	0	26.67";
             Parse.parseBattingScorecard(battingFigures).ToArray();
         }
+    }
 
+    [TestClass]
+    public class BowlingScorecardParserFixture
+    {
         [TestMethod]
         public void BowlingScorecardParsedCorrectly()
         {
@@ -103,7 +139,7 @@ namespace Cricinfo.Parser.Unit.Tests
             var parsedBowlingFigures = Parse.parseBowlingScorecard(bowlingFigures);
             CollectionAssert.AreEqual(new string[] { "Anderson", "Broad", "Bess", "S Curran", "Denly", "Root", "Stokes" },
                 parsedBowlingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new float[] { 18.0f, 23.0f, 33.0f, 16.0f, 18.0f, 6.0f, 23.4f},
+            CollectionAssert.AreEqual(new float[] { 18.0f, 23.0f, 33.0f, 16.0f, 18.0f, 6.0f, 23.4f },
                 parsedBowlingFigures.Select(bf => bf.Overs).ToArray());
             CollectionAssert.AreEqual(new int[] { 9, 8, 14, 4, 4, 0, 8 },
                 parsedBowlingFigures.Select(bf => bf.Maidens).ToArray());
@@ -121,13 +157,13 @@ namespace Cricinfo.Parser.Unit.Tests
             var parsedBowlingFigures = Parse.parseBowlingScorecard(bowlingFigures);
             CollectionAssert.AreEqual(new string[] { "Anderson", "Stokes" },
                 parsedBowlingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new float[] { 18.0f,  23.4f},
+            CollectionAssert.AreEqual(new float[] { 18.0f, 23.4f },
                 parsedBowlingFigures.Select(bf => bf.Overs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 9,  8 },
+            CollectionAssert.AreEqual(new int[] { 9, 8 },
                 parsedBowlingFigures.Select(bf => bf.Maidens).ToArray());
-            CollectionAssert.AreEqual(new int[] { 23,  35 },
+            CollectionAssert.AreEqual(new int[] { 23, 35 },
                 parsedBowlingFigures.Select(bf => bf.Runs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 2,  3 },
+            CollectionAssert.AreEqual(new int[] { 2, 3 },
                 parsedBowlingFigures.Select(bf => bf.Wickets).ToArray());
         }
 
@@ -138,7 +174,11 @@ namespace Cricinfo.Parser.Unit.Tests
             var battingFigures = @"Anderson	18.0	7";
             Parse.parseBowlingScorecard(battingFigures).ToArray();
         }
+    }
 
+    [TestClass]
+    public class FallOfWicketScorecardParserFixture
+    {
         [TestMethod]
         public void FallOfWicketScorecardParsedCorrectly()
         {
@@ -163,16 +203,48 @@ namespace Cricinfo.Parser.Unit.Tests
             var battingFigures = @"7abc1-1 (28.6 ovs)	Elgar";
             Parse.parseFallOfWicketScorecard(battingFigures).ToArray();
         }
+    }
 
+    [TestClass]
+    public class NameParserFixture
+    {
         [DataTestMethod]
-        [DataRow("Faf du Plessis(c)", "Faf", "du Plessis")]
-        [DataRow("Temba Bavuma", "Temba", "Bavuma")]
-        [DataRow("Quinton de Kock(wk)", "Quinton", "de Kock")]
-        public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName, string expectedLastName)
+        [DataRow("Faf du Plessis(c)", "Faf", "du Plessis", "du Plessis")]
+        [DataRow("Temba Bavuma", "Temba", "Bavuma", "Bavuma")]
+        [DataRow("Quinton de Kock(wk)", "Quinton", "de Kock", "de Kock")]
+        [DataRow("Quinton de Kock(c)(wk)", "Quinton", "de Kock", "de Kock")]
+        public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName,
+            string expectedLastName, string expectedLookupCode)
         {
-            var (actualFirstName, actualLastName) = Parse.parseName(rawString);
+            var (actualFirstName, actualLastName, actualLookupCode) =
+                Parse.parseNames(new[] { rawString }).First();
             Assert.AreEqual(expectedFirstName, actualFirstName);
             Assert.AreEqual(expectedLastName, actualLastName);
+            Assert.AreEqual(expectedLookupCode, actualLookupCode);
+        }
+
+        [TestMethod]
+        public void ParseNamesHandlesDuplicateSurnamesCorrectly()
+        {
+            var parsedNames = Parse.parseNames(
+                new string[] { "Aa Name1", "Aa Name2", "Ba Name1" });
+
+            CollectionAssert.AreEqual(
+                new Tuple<string, string, string>[]
+                {
+                    Tuple.Create("Aa", "Name1", "A Name1"),
+                    Tuple.Create("Aa", "Name2", "Name2"),
+                    Tuple.Create("Ba", "Name1", "B Name1"),
+                },
+                parsedNames.ToArray());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exceptions.PlayerNameException))]
+        public void ParseNamesErrorsOnDuplicateNames()
+        {
+            var parsedNames = Parse.parseNames(
+                new[] { "Aa Name1", "Aa Name1", "Ba Name1" });
         }
     }
 }

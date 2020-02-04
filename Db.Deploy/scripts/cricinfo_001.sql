@@ -67,7 +67,7 @@ CREATE TABLE how_out (
     id SERIAL PRIMARY KEY,
 	type VARCHAR(255) UNIQUE
 );
-INSERT INTO how_out (type) VALUES ('Caught'), ('Bowled'), ('CaughtAndBowled'), ('LBW'), ('NotOut'), ('RunOut');
+INSERT INTO how_out (type) VALUES ('Caught'), ('Bowled'), ('CaughtAndBowled'), ('LBW'), ('NotOut'), ('RunOut'), ('Stumped'), ('Retired');
 
 CREATE TABLE innings (
     id SERIAL PRIMARY KEY,

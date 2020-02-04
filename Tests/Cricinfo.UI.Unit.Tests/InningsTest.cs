@@ -70,8 +70,8 @@ namespace Cricinfo.UI.Unit.Tests
             var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
             var scorecardContent = ScorecardTests.FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken", token)).ToDictionary(kv => kv.Key, kv => kv.Value);
-            scorecardContent["HomeSquad"] = "_ du Plessis\n_ Elgar\n_ Hamza\n_ Maharaj\n_ Malan\n_ _\n_ _\n_ _\n_ _\n_ _\n_ _";
-            scorecardContent["AwaySquad"] = "_ Anderson\n_ Bess\n_ Broad\n_ Buttler\n_ Curran\n_ Denly\n_ Stokes\n_ _\n_ _\n_ _\n_ _";
+            scorecardContent["HomeSquad"] = "_ du Plessis\n_ Elgar\n_ Hamza\n_ Maharaj\n_ Malan\n_ a\n_ b\n_ c\n_ d\n_ e\n_ f";
+            scorecardContent["AwaySquad"] = "_ Anderson\n_ Bess\n_ Broad\n_ Buttler\n_ Curran\n_ Denly\n_ Stokes\n_ a\n_ b\n_ c\n_ d";
             await this._client.PostAsync("Scorecard/Scorecard", new FormUrlEncodedContent(scorecardContent));
 
             var getInningsHTML = await this._client.GetAsync("Scorecard/Innings");

@@ -49,7 +49,7 @@ namespace Cricinfo.UI.Pages
 
             var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
 
-            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item2).ToHashSet();
+            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item3).ToHashSet();
 
             foreach(var bs in battingScorecard)
             {
@@ -143,7 +143,7 @@ namespace Cricinfo.UI.Pages
 
             var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
 
-            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item2).ToHashSet();
+            var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item3).ToHashSet();
 
             foreach (var bs in battingScorecard)
             {

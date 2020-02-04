@@ -17,6 +17,8 @@ module Parse =
         | LBW _ -> Dismissal.LBW
         | NotOut _ -> Dismissal.NotOut
         | RunOut _ -> Dismissal.RunOut
+        | Stumped _ -> Dismissal.Stumped
+        | Retired _ -> Dismissal.Retired
 
     let parseBattingScorecard (scorecard : string) : seq<BattingScorecard> =
         scorecard.Trim().Split('\n')
@@ -50,9 +52,11 @@ module Parse =
         |> Seq.map (fun fow -> fow.runs)
         |> Seq.toArray
 
-    let parseName (name : string) : string * string =
+    let private parseName (name : string) : string * string =
         let stripSuffix (name : string) =
-            if name.EndsWith("(c)") then
+            if name.EndsWith("(c)(wk)") then
+                name.[..(name.Length - 8)]
+            else if name.EndsWith("(c)") then
                 name.[..(name.Length - 4)]
             else if name.EndsWith("(wk)") then
                 name.[..(name.Length - 5)]
@@ -64,5 +68,18 @@ module Parse =
         | head::tail -> head, String.concat " " tail |> stripSuffix
         | _ -> name |> sprintf "invalid format for name (%s)" |> Exceptions.PlayerNameException |> raise
 
-    let parseNames (names : seq<string>) : seq<string * string> = Seq.map parseName names
-
+    let parseNames (names : seq<string>) : seq<string * string * string> =
+        if (names |> Seq.length) <> (names |> Seq.distinct |> Seq.length) then
+            sprintf "names must not contain duplicates" |> Exceptions.PlayerNameException |> raise
+        let parsedNames = Seq.map parseName names |> Seq.cache
+        let firstNames = parsedNames |> Seq.map fst |> Seq.cache
+        let lastNames = parsedNames |> Seq.map snd |> Seq.cache
+        let lookupCodes =
+            Seq.map2
+                (fun (firstName : string) lastName ->
+                    if Seq.filter (fun n -> n = lastName) lastNames |> Seq.length > 1
+                        then seq { yield string firstName.[0]; yield lastName } |> String.concat " "
+                        else lastName)
+                firstNames
+                lastNames
+        seq { yield! Seq.zip3 firstNames lastNames lookupCodes }

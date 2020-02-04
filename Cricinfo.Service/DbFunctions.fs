@@ -80,15 +80,16 @@ module private DbFunctions =
         (squad : seq<string>)
             : Async<Map<string, int>> =
         async {
-            let parseSquadMember (squadMember : string) : string * int =
-                let firstName, lastName = Parse.parseName squadMember
+            let parseSquadMember (name : string * string * string) : string * int =
+                let firstName, lastName, lookupCode = name
                 let playerId =
                     Map.ofList [ "firstname", box firstName; "lastname", box lastName ]
                     |> executeScalar conn trans "SELECT * FROM get_id_and_insert_if_not_exists_player(@firstname, @lastname);"
                 Map.ofList [ "match_id", box matchId; "team_id", box teamId; "player_id", box playerId ]
                 |> executeScalar conn trans "INSERT INTO squad (match_id, team_id, player_id) VALUES (@match_id, @team_id, @player_id);"
-                lastName, playerId
-            let playerIds = squad |> Seq.map parseSquadMember
+                lookupCode, playerId
+            let squadNames = Parse.parseNames squad
+            let playerIds = squadNames |> Seq.map parseSquadMember
             return playerIds |> Map.ofSeq
         }
 
@@ -109,7 +110,7 @@ module private DbFunctions =
                 | _ -> None
             let bowlerId =
                 match bs.Dismissal with
-                | Dismissal.NotOut | Dismissal.RunOut -> None
+                | Dismissal.NotOut | Dismissal.RunOut | Dismissal.Retired -> None
                 | _ -> tryGetPlayerId bs.Bowler |> Some
             let query = "INSERT INTO batting_scorecard (innings_id, batsman_id, how_out_id, catcher_id, bowler_id, runs, mins, balls, fours, sixes) VALUES (@innings_id, @batsman_id, @how_out_id, @catcher_id, @bowler_id, @runs, @mins, @balls, @fours, @sixes);"
             let parameters = Map.ofList [ "innings_id", box inningsId; "batsman_id", box batsmanId; "how_out_id", box howOutId;

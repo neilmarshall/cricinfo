@@ -23,6 +23,8 @@ namespace Cricinfo.Models.Enums
                 Dismissal.LBW => "LBW",
                 Dismissal.NotOut => "Not out",
                 Dismissal.RunOut => "Run out",
+                Dismissal.Stumped => "Stumped",
+                Dismissal.Retired => "Retired",
                 _ => throw new ArgumentException("bad value for 'Cricinfo.Models.Enums.Dismissal' enum")
             };
 
