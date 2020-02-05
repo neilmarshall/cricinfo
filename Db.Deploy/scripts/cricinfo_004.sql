@@ -16,8 +16,8 @@ DECLARE
     home_team_id INT;
     away_team_id INT;
 BEGIN
-    SELECT id INTO home_team_id FROM team WHERE name = $1;
-    SELECT id INTO away_team_id FROM team WHERE name = $2;
+    SELECT id INTO home_team_id FROM team WHERE lower(name) = lower($1);
+    SELECT id INTO away_team_id FROM team WHERE lower(name) = lower($2);
     DELETE FROM match WHERE home_team_id = home_team_id AND away_team_id = away_team_id AND date_of_first_day = $3;
 END; $$
 LANGUAGE PLPGSQL;
