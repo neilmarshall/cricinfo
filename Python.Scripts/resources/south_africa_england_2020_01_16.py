@@ -113,6 +113,6 @@ FallOfWicketScorecard3 = '\n'.join((
     "138-9 (76.4 ovs)    Nortje",
     "237-10 (88.5 ovs)   Maharaj\n"))
 
-BattingScorecard = [BattingScorecard1, BattingScorecard2, BattingScorecard3, None]
-BowlingScorecard = [BowlingScorecard1, BowlingScorecard2, BowlingScorecard3, None]
-FallOfWicketScorecard = [FallOfWicketScorecard1, FallOfWicketScorecard2, FallOfWicketScorecard3, None]
+BattingScorecard = [BattingScorecard1, BattingScorecard2, BattingScorecard3]
+BowlingScorecard = [BowlingScorecard1, BowlingScorecard2, BowlingScorecard3]
+FallOfWicketScorecard = [FallOfWicketScorecard1, FallOfWicketScorecard2, FallOfWicketScorecard3]

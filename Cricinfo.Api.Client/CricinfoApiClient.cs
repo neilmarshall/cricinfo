@@ -51,7 +51,7 @@ namespace Cricinfo.Api.Client
 
         public async Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date)
         {
-            var httpResponse = await _httpClient.GetAsync($"{_url}/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date}");
+            var httpResponse = await _httpClient.GetAsync($"{_url}/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date.Year}-{date.Month}-{date.Day}");
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {

@@ -14,4 +14,4 @@ AS
     ON m.awayteam_id = at.id
     JOIN result r
     ON m.result_id = r.id
-    ORDER BY m.date_of_first_match;
+    ORDER BY m.date_of_first_day;

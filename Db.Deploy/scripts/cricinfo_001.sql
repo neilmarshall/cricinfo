@@ -1,5 +1,6 @@
 -- Create table and relations
 
+DROP VIEW IF EXISTS show_matches;
 DROP TABLE IF EXISTS fall_of_wicket_scorecard;
 DROP TABLE IF EXISTS bowling_scorecard;
 DROP TABLE IF EXISTS batting_scorecard;
@@ -101,7 +102,7 @@ CREATE TABLE bowling_scorecard (
     id SERIAL PRIMARY KEY,
 	innings_id INT NOT NULL REFERENCES innings(id) ON DELETE CASCADE,
 	bowler_id INT NOT NULL REFERENCES player(id),
-	overs INT NOT NULL DEFAULT 0,
+	overs NUMERIC(3, 1) NOT NULL DEFAULT 0,
 	maidens INT NOT NULL DEFAULT 0,
 	runs_conceded INT NOT NULL DEFAULT 0,
     wickets INT NOT NULL DEFAULT 0,
