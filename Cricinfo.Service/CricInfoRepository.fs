@@ -100,3 +100,16 @@ type public CricInfoRepository(connString : string) =
                 | :? AggregateException as ae ->
                     ae.Flatten().Handle(postgresExceptionCatcher); ()
             } |> Async.StartAsTask
+
+        member this.MatchExistsAsync (homeTeam : string, awayTeam : string, date : DateTime) : Task<bool> =
+            async {
+                try
+                    use conn = new NpgsqlConnection(connString)
+                    do! conn.OpenAsync() |> Async.AwaitTask
+                    use trans = conn.BeginTransaction()
+                    return! checkMatchExistsAsync conn trans homeTeam awayTeam date
+                with
+                | :? AggregateException as ae ->
+                    ae.Flatten().Handle(postgresExceptionCatcher)
+                    return false
+            } |> Async.StartAsTask

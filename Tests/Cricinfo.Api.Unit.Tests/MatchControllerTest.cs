@@ -13,24 +13,16 @@ namespace Cricinfo.Api.Unit.Tests
     [TestClass]
     public class MatchControllerTest
     {
-        private MatchController matchController;
-        private Match match;
+        private static MatchController matchController;
 
-        [TestInitialize]
-        public void Initialize()
+        [ClassInitialize]
+        public static void Initialize(TestContext tc)
         {
             var loggerFactory = LoggerFactory.Create(builder =>
                 builder.AddConsole()
             );
             var logger = loggerFactory.CreateLogger<MatchController>();
-            this.matchController = new MatchController(new Utilities.MockCricInfoRepository(), logger);
-            this.match = new Match
-            {
-                Venue = "",
-                DateOfFirstDay = new DateTime(),
-                HomeTeam = "",
-                AwayTeam = ""
-            };
+            matchController = new MatchController(new Utilities.MockCricInfoRepository(), logger);
         }
 
         [TestMethod]
@@ -131,7 +123,15 @@ namespace Cricinfo.Api.Unit.Tests
         [TestMethod]
         public async Task CreateMatchAsyncReturns201ForValidMatch()
         {
-            var result = await matchController.CreateMatchAsync(this.match) as CreatedAtRouteResult;
+            var match = new Match
+            {
+                Venue = "",
+                DateOfFirstDay = new DateTime(),
+                HomeTeam = "",
+                AwayTeam = ""
+            };
+
+            var result = await matchController.CreateMatchAsync(match) as CreatedAtRouteResult;
             Assert.AreEqual(201, result.StatusCode);
             Assert.AreEqual(43L, result.RouteValues["id"]);
         }
@@ -146,10 +146,15 @@ namespace Cricinfo.Api.Unit.Tests
         [TestMethod]
         public async Task CreateMatchAsyncReturns409ForDuplicateMatch()
         {
-            this.match.DateOfFirstDay = DateTime.Parse("2018-12-26");
-            this.match.HomeTeam = "South Africa";
-            this.match.AwayTeam = "England";
-            var result = await matchController.CreateMatchAsync(this.match) as StatusCodeResult;
+            var match = new Match
+            {
+                Venue = "",
+                DateOfFirstDay = DateTime.Parse("2018-12-26"),
+                HomeTeam = "South Africa",
+                AwayTeam = "England"
+            };
+
+            var result = await matchController.CreateMatchAsync(match) as StatusCodeResult;
             Assert.AreEqual(409, result.StatusCode);
         }
     }

@@ -5,6 +5,10 @@
 @{
     <div>
         <form class="form-group" method="post">
+            <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly">
+                Please review the following validation errors:
+            </div>
+
             <label asp-for=Venue></label>
             <input class="form-control" asp-for=Venue />
             <span class="text-danger" asp-validation-for="Venue"></span>

@@ -11,24 +11,9 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-<PrivateAssets>all</PrivateAssets>
-</PackageReference>
+    <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
-    <None Include="**/*" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="resources\south_africa-england-26-12-18.json" />

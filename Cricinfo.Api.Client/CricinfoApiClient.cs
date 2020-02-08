@@ -48,5 +48,18 @@ namespace Cricinfo.Api.Client
             return JsonSerializer.Deserialize<Match>(jsonResponse,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive=true});
         }
+
+        public async Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date)
+        {
+            var httpResponse = await _httpClient.GetAsync($"{_url}/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date}");
+
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ArgumentException($"failed to evaluate response for parameters ({homeTeam}, {awayTeam}, {date})");
+            }
+
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return bool.Parse(response);
+        }
     }
 }

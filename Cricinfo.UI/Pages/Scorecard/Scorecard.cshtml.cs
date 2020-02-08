@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
+using Cricinfo.Api.Client;
 using Cricinfo.Models;
 using Cricinfo.Models.Enums;
 using Cricinfo.UI.ValidationAttributes;
@@ -13,6 +14,8 @@ namespace Cricinfo.UI.Pages
     [BindProperties]
     public class ScorecardModel : PageModel
     {
+        private readonly ICricinfoApiClient _cricinfoApiClient;
+
         [Required]
         public string Venue { get; set; }
         [Display(Name="Match Type")]
@@ -35,6 +38,11 @@ namespace Cricinfo.UI.Pages
         [Display(Name = "Away Squad")]
         public string AwaySquad { get; set; }
 
+        public ScorecardModel(ICricinfoApiClient cricinfoApiClient)
+        {
+            this._cricinfoApiClient = cricinfoApiClient;
+        }
+
         public void OnGet()
         {
         }
@@ -42,6 +50,12 @@ namespace Cricinfo.UI.Pages
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid) { return new PageResult(); }
+
+            if (this._cricinfoApiClient.MatchExistsAsync(HomeTeam, AwayTeam, DateOfFirstDay).Result)
+            {
+                ModelState.AddModelError(string.Empty, "A record already exists for the specified teams and date.");
+                return Page();
+            }
 
             TextInfo ti = new CultureInfo("en-UK", false).TextInfo;
 

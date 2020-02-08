@@ -38,21 +38,20 @@ namespace Cricinfo.Api.Unit.Tests
     [TestClass]
     public class CricinfoApiClientTest
     {
-        private HttpClient _httpclient;
-        private CricinfoApiClient _cricinfoApiClient;
+        private static CricinfoApiClient cricinfoApiClient;
 
-        [TestInitialize]
-        public void Initialize()
+        [ClassInitialize]
+        public static void Initialize(TestContext tc)
         {
             var webApplicationFactory = new CustomWebApplicationFactory<Startup>();
-            this._httpclient = webApplicationFactory.CreateClient();
-            this._cricinfoApiClient = new CricinfoApiClient("", this._httpclient);
+            HttpClient httpclient = webApplicationFactory.CreateClient();
+            cricinfoApiClient = new CricinfoApiClient("", httpclient);
         }
 
         [TestMethod]
         public async Task GetMatchAsyncReturnsInstantiatedObject()
         {
-            var responseObject = await this._cricinfoApiClient.GetMatchAsync(42);
+            var responseObject = await cricinfoApiClient.GetMatchAsync(42);
 
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
@@ -131,6 +130,17 @@ namespace Cricinfo.Api.Unit.Tests
             CollectionAssert.AreEqual(
                 new int[] { 0, 32, 71, 97, 111, 198, 245, 252, 277, 284 },
                 responseObject.Scores[0].FallOfWicketScorecard);
+        }
+
+        [DataTestMethod]
+        [DataRow("duplicate home team", "duplicate away team", true)]
+        [DataRow("home team", "away team", false)]
+        public async Task CheckMatchReturnsCorrectStatus(
+            string homeTeam, string awayTeam, bool expectedValue)
+        {
+            var actualValue = await cricinfoApiClient.MatchExistsAsync(
+                homeTeam, awayTeam, DateTime.Now);
+            Assert.AreEqual(expectedValue, actualValue);
         }
     }
 }

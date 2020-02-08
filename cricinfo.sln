@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cricinfo.Parser.Unit.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cricinfo.UI.Unit.Tests", "Tests\Cricinfo.UI.Unit.Tests\Cricinfo.UI.Unit.Tests.csproj", "{47E7C01D-477B-49AA-AE11-0B28B19F5F14}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Cricinfo.Services", "Cricinfo.Service\Cricinfo.Services.fsproj", "{A651F963-91BF-4044-A0B9-F254720EEF4D}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Cricinfo.Services", "Cricinfo.Service\Cricinfo.Services.fsproj", "{A651F963-91BF-4044-A0B9-F254720EEF4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CricinfoRepository.Tests", "Tests\CricinfoRepository.Tests\CricinfoRepository.Tests.csproj", "{E9A378BB-AC28-42BF-A274-C7716F4DDB26}"
 EndProject

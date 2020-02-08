@@ -12,8 +12,7 @@ namespace Cricinfo.UI.Unit.Tests
     [TestClass]
     public class InningsTest
     {
-        private WebApplicationFactory<Startup> _factory;
-        private HttpClient _client;
+        private static HttpClient client;
 
         private string battingScorecard =
             @"Malan	c Stokes	b Curran	84	367	288	3	0	29.17
@@ -43,11 +42,11 @@ namespace Cricinfo.UI.Unit.Tests
             yield return new KeyValuePair<string, string>("FallOfWicketScorecard", fallOfWicketScorecard);
         }
 
-        [TestInitialize]
-        public void Initialize()
+        [ClassInitialize]
+        public static void Initialize(TestContext tc)
         {
-            this._factory = new WebApplicationFactory<Startup>();
-            this._client = this._factory.CreateClient(new WebApplicationFactoryClientOptions
+            var factory = new Utilities.CustomWebApplicationFactory<Startup>();
+            client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
             });
@@ -57,7 +56,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task GET_EndpointReturnsCorrectStatusCode()
         {
             // Act
-            var response = await this._client.GetAsync("Scorecard/Innings");
+            var response = await client.GetAsync("Scorecard/Innings");
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -67,14 +66,14 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithValidFormReturnsCorrectRedirectResult()
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
             var scorecardContent = ScorecardTests.FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken", token)).ToDictionary(kv => kv.Key, kv => kv.Value);
             scorecardContent["HomeSquad"] = "_ du Plessis\n_ Elgar\n_ Hamza\n_ Maharaj\n_ Malan\n_ a\n_ b\n_ c\n_ d\n_ e\n_ f";
             scorecardContent["AwaySquad"] = "_ Anderson\n_ Bess\n_ Broad\n_ Buttler\n_ Curran\n_ Denly\n_ Stokes\n_ a\n_ b\n_ c\n_ d";
-            await this._client.PostAsync("Scorecard/Scorecard", new FormUrlEncodedContent(scorecardContent));
+            await client.PostAsync("Scorecard/Scorecard", new FormUrlEncodedContent(scorecardContent));
 
-            var getInningsHTML = await this._client.GetAsync("Scorecard/Innings");
+            var getInningsHTML = await client.GetAsync("Scorecard/Innings");
             token = await Utilities.GetCSRFTokenAsync(getInningsHTML.Content);
             var formContent = new FormUrlEncodedContent(
                     this.FormContent()
@@ -83,22 +82,22 @@ namespace Cricinfo.UI.Unit.Tests
             // Act + Assert
 
             // first call to 'Scorecard/Innings' should redirect back to 'Innings'
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // second call to 'Scorecard/Innings' should redirect back to 'Innings'
-            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // third call to 'Scorecard/Innings' should redirect back to 'Innings'
-            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // fourth call to 'Scorecard/Innings' should redirect to 'Verification'
-            response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Verification", response.Headers.Location.OriginalString.Split('?')[0]);
         }
@@ -110,9 +109,9 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
+            await client.PostAsync("Scorecard/Scorecard",
                 new FormUrlEncodedContent(
                     ScorecardTests.FormContent()
                                   .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
@@ -122,7 +121,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements[field] = null;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -134,9 +133,9 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithInvalidBattingScorecardReturnsCorrectValidationMessage()
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
+            await client.PostAsync("Scorecard/Scorecard",
                 new FormUrlEncodedContent(
                     ScorecardTests.FormContent()
                                   .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
@@ -153,7 +152,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["BattingScorecard"] = invalidBattingScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -165,9 +164,9 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithInvalidBowlingScorecardReturnsCorrectValidationMessage()
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
+            await client.PostAsync("Scorecard/Scorecard",
                 new FormUrlEncodedContent(
                     ScorecardTests.FormContent()
                                   .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
@@ -182,7 +181,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["BowlingScorecard"] = invalidBowlingScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -194,9 +193,9 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithInvalidFallOfWicketScorecardReturnsCorrectValidationMessage()
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
+            await client.PostAsync("Scorecard/Scorecard",
                 new FormUrlEncodedContent(
                     ScorecardTests.FormContent()
                                   .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
@@ -212,7 +211,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["FallOfWicketScorecard"] = invalidFallOfWicketScorecard;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -224,9 +223,9 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithNegativeExtrasReturnsCorrectValidationMessage()
         {
             // Arrange
-            var getScorecardHTML = await this._client.GetAsync("Scorecard/Scorecard");
+            var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
-            await this._client.PostAsync("Scorecard/Scorecard",
+            await client.PostAsync("Scorecard/Scorecard",
                 new FormUrlEncodedContent(
                     ScorecardTests.FormContent()
                                   .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
@@ -236,7 +235,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["Extras"] = "-1";
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await this._client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert

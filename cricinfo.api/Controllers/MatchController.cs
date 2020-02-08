@@ -49,5 +49,23 @@ namespace Cricinfo.Api.Controllers
 
             return CreatedAtRoute("GetMatchAsync", new { id = id }, match);
         }
+
+        [HttpGet()]
+        [Route("CheckMatchExists")]
+        public async Task<IActionResult> CheckMatchExistsAsync(
+            [FromQuery]string homeTeam, [FromQuery]string awayTeam, [FromQuery]DateTime date)
+        {
+            try
+            {
+                var result = await this._cricInfoRepository.MatchExistsAsync(homeTeam, awayTeam, date);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
+
+        }
     }
 }

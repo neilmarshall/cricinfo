@@ -14,3 +14,4 @@ type public ICricInfoRepository =
     abstract member CreateMatchAsync : Match -> Task<DataCreationResponse * Nullable<int64>>
     abstract member DeleteMatchAsync : int -> Task<Unit>
     abstract member DeleteMatchAsync : string * string * DateTime -> Task<Unit>
+    abstract member MatchExistsAsync : string * string * DateTime -> Task<bool>

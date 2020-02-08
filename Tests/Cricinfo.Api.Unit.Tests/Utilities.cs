@@ -57,8 +57,18 @@ namespace Cricinfo.Api.Unit.Tests
                 });
             }
 
-            public Task<Microsoft.FSharp.Core.Unit> DeleteMatchAsync(int value) => throw new NotImplementedException();
-            public Task<Microsoft.FSharp.Core.Unit> DeleteMatchAsync(string value1, string value2, DateTime value3) => throw new NotImplementedException();
+            public Task<Microsoft.FSharp.Core.Unit> DeleteMatchAsync(int value)
+                => throw new NotImplementedException();
+
+            public Task<Microsoft.FSharp.Core.Unit> DeleteMatchAsync(string value1, string value2, DateTime value3)
+                => throw new NotImplementedException();
+
+            public Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime _)
+            {
+                if (homeTeam == "duplicate home team" && awayTeam == "duplicate away team")
+                    return Task.Run(() => true);
+                return Task.Run(() => false);
+            }
         }
     }
 }
