@@ -73,6 +73,7 @@ namespace Cricinfo.UI.Pages
             };
 
             TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
+            TempData["matchType"] = match.MatchType;
             TempData["teamOrder"] = 1;
             TempData["innings"] = 1;
 

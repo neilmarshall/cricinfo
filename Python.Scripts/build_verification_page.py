@@ -90,7 +90,7 @@ try:
         if len(scorecard.BattingScorecard) <= 3:
             pass
         else:
-            response = post_request('innings?handler=AddAnotherInnings', innings_data(2, 3))
+            response = post_request('innings?handler=SubmitAllInnings', innings_data(2, 3))
 
     if args.stage >= 6:
         response = post_request('verification', {"__RequestVerificationToken": token})

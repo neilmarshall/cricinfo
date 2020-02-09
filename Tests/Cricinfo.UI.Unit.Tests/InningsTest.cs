@@ -97,7 +97,7 @@ namespace Cricinfo.UI.Unit.Tests
             Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
 
             // fourth call to 'Scorecard/Innings' should redirect to 'Verification'
-            response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            response = await client.PostAsync("Scorecard/Innings?handler=SubmitAllInnings", formContent);
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
             Assert.AreEqual("/Scorecard/Verification", response.Headers.Location.OriginalString.Split('?')[0]);
         }

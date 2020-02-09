@@ -1,5 +1,19 @@
 ﻿@page
+@using Cricinfo.Models.Enums
 @model InningsModel
+@{
+    bool showNextInningsButton = false, showSubmitAllInningsButton = false;
+    if (TempData.ContainsKey("matchType") && TempData.ContainsKey("teamOrder") && TempData.ContainsKey("innings"))
+    {
+        showNextInningsButton = (MatchType)TempData.Peek("matchType") switch
+        {
+            MatchType.TestMatch => (int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 2,
+            _ => (int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 1
+        };
+
+        showSubmitAllInningsButton = (int)TempData.Peek("teamOrder") == 1 && (int)TempData.Peek("innings") == 1;
+    }
+}
 @{
     <h1 class="font-weight-normal">@TempData.Peek("header")</h1>
 
@@ -34,12 +48,29 @@
 
             <div class="row">
                 <div class="col">
-                    <input class="form-control btn btn-info" type="submit"
-                           asp-page-handler="AddAnotherInnings" value="Add another innings" />
+                    @if (showNextInningsButton)
+                    {
+                        <input class="form-control btn btn-info" type="submit" disabled
+                               asp-page-handler="AddAnotherInnings" value="Add another innings" />
+                    }
+                    else
+                    {
+                        <input class="form-control btn btn-info" type="submit"
+                               asp-page-handler="AddAnotherInnings" value="Add another innings" />
+                    }
                 </div>
+
                 <div class="col">
-                    <input class="form-control btn btn-info" type="submit"
-                           asp-page-handler="SubmitAllInnings" value="Submit all innings" />
+                    @if (showSubmitAllInningsButton)
+                    {
+                        <input class="form-control btn btn-info" type="submit" disabled
+                               asp-page-handler="SubmitAllInnings" value="Submit all innings" />
+                    }
+                    else
+                    {
+                        <input class="form-control btn btn-info" type="submit"
+                               asp-page-handler="SubmitAllInnings" value="Submit all innings" />
+                    }
                 </div>
             </div>
         </form>

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Cricinfo.Models;
 using Cricinfo.Parser;
 using Cricinfo.UI.ValidationAttributes;
@@ -100,6 +98,7 @@ namespace Cricinfo.UI.Pages
 
             string header;
             TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
+            TempData["matchType"] = match.MatchType;
             switch (teamOrder, innings)
             {
                 case (1, 1):
@@ -117,8 +116,6 @@ namespace Cricinfo.UI.Pages
                     TempData["innings"] = 2;
                     header = "Second Team, Second Innings";
                     break;
-                case (2, 2):
-                    return RedirectToPage("Verification");
                 default:
                     throw new ArgumentException($"invalid values for 'teamOrder' ({teamOrder}) and/or 'innings' ({innings})");
             }
