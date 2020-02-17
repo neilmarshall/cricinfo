@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -69,8 +70,8 @@ namespace Cricinfo.UI.Unit.Tests
             var getScorecardHTML = await client.GetAsync("Scorecard/Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
             var scorecardContent = ScorecardTests.FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken", token)).ToDictionary(kv => kv.Key, kv => kv.Value);
-            scorecardContent["HomeSquad"] = "_ du Plessis\n_ Elgar\n_ Hamza\n_ Maharaj\n_ Malan\n_ a\n_ b\n_ c\n_ d\n_ e\n_ f";
-            scorecardContent["AwaySquad"] = "_ Anderson\n_ Bess\n_ Broad\n_ Buttler\n_ Curran\n_ Denly\n_ Stokes\n_ a\n_ b\n_ c\n_ d";
+            scorecardContent["HomeSquad"] = string.Join(Environment.NewLine, new[] { "_ du Plessis", "_ Elgar", "_ Hamza", "_ Maharaj", "_ Malan", "_ a", "_ b", "_ c", "_ d", "_ e", "_ f" });
+            scorecardContent["AwaySquad"] = string.Join(Environment.NewLine, new[] { "_ Anderson", "_ Bess", "_ Broad", "_ Buttler", "_ Curran", "_ Denly", "_ Stokes", "_ a", "_ b", "_ c", "_ d" });
             await client.PostAsync("Scorecard/Scorecard", new FormUrlEncodedContent(scorecardContent));
 
             var getInningsHTML = await client.GetAsync("Scorecard/Innings");

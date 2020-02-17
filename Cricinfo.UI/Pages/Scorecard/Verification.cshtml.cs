@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Cricinfo.Api.Client;
 using Cricinfo.Models;
@@ -41,6 +42,25 @@ namespace Cricinfo.UI.Pages.Scorecard
                 ViewData["errorOccurred"] = true;
                 return Page();
             }
+        }
+
+        public IActionResult OnPostReturnToPreviousPageAsync()
+        {
+            var teamOrder = (int)TempData.Peek("teamOrder");
+            var innings = (int)TempData.Peek("innings");
+
+            var match = JsonSerializer.Deserialize<Match>((string)TempData.Peek("matchFromScorecard"));
+            match.Scores = match.Scores.Take(match.Scores.Length - 1).ToArray();
+            TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
+
+            return RedirectToPage("Innings", "FromScorecard",
+                new
+                {
+                    header= $"{(teamOrder == 1 ? "First" : "Second")} Team, {(innings == 1 ? "First" : "Second")} Innings",
+                    homeTeam = match.HomeTeam,
+                    awayTeam = match.AwayTeam,
+                    selectedTeam = (match.Scores.Last().Team == match.HomeTeam ? match.AwayTeam : match.HomeTeam)
+                });
         }
     }
 }

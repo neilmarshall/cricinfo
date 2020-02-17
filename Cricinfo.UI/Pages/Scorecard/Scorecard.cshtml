@@ -26,6 +26,7 @@
 
             <label asp-for=DateOfFirstDay></label>
             <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
+            <span class="text-danger" asp-validation-for="DateOfFirstDay"></span>
 
             <label asp-for=HomeTeam></label>
             <input class="form-control" asp-for=HomeTeam />

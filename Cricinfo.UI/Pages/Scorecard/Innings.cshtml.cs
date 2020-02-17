@@ -191,5 +191,48 @@ namespace Cricinfo.UI.Pages
             TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
             return RedirectToPage("Verification");
         }
+
+        public IActionResult OnPostReturnToPreviousPage()
+        {
+            var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
+            var teamOrder = (int)TempData.Peek("teamOrder");
+            var innings = (int)TempData.Peek("innings");
+
+            string header;
+            switch (teamOrder, innings)
+            {
+                case (1, 1):
+                    return RedirectToPage("Scorecard", "FromInnings", match);
+                case (2, 1):
+                    TempData["teamOrder"] = 1;
+                    TempData["innings"] = 1;
+                    header = "First Team, First Innings";
+                    break;
+                case (1, 2):
+                    TempData["teamOrder"] = 2;
+                    TempData["innings"] = 1;
+                    header = "Second Team, First Innings";
+                    break;
+                case (2, 2):
+                    TempData["teamOrder"] = 1;
+                    TempData["innings"] = 2;
+                    header = "First Team, Second Innings";
+                    break;
+                default:
+                    throw new ArgumentException($"invalid values for 'teamOrder' ({teamOrder}) and/or 'innings' ({innings})");
+            }
+
+            match.Scores = match.Scores.Take(match.Scores.Length - 1).ToArray();
+            TempData["matchFromScorecard"] = JsonSerializer.Serialize(match);
+
+            return RedirectToPage("Innings", "FromScorecard",
+                new
+                {
+                    header,
+                    homeTeam = match.HomeTeam,
+                    awayTeam = match.AwayTeam,
+                    selectedTeam = (this.Team == match.HomeTeam ? match.AwayTeam : match.HomeTeam)
+                });
+        }
     }
 }

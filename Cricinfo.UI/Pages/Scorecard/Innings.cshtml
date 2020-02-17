@@ -48,6 +48,11 @@
 
             <div class="row">
                 <div class="col">
+                    <input class="form-control btn btn-info" type="submit"
+                           asp-page-handler="ReturnToPreviousPage" value="Back" />
+                </div>
+
+                <div class="col">
                     @if (showNextInningsButton)
                     {
                         <input class="form-control btn btn-info" type="submit" disabled

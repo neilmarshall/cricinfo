@@ -47,6 +47,18 @@ namespace Cricinfo.UI.Pages
         {
         }
 
+        public void OnGetFromInnings(Match match)
+        {
+            this.Venue = match.Venue;
+            this.MatchType = match.MatchType;
+            this.DateOfFirstDay = match.DateOfFirstDay;
+            this.HomeTeam = match.HomeTeam;
+            this.AwayTeam = match.AwayTeam;
+            this.Result = match.Result;
+            this.HomeSquad = String.Join(Environment.NewLine, match.HomeSquad);
+            this.AwaySquad = String.Join(Environment.NewLine, match.AwaySquad);
+        }
+
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid) { return new PageResult(); }
@@ -67,8 +79,8 @@ namespace Cricinfo.UI.Pages
                 HomeTeam = ti.ToTitleCase(HomeTeam),
                 AwayTeam = ti.ToTitleCase(AwayTeam),
                 Result = Result,
-                HomeSquad = HomeSquad.Trim().Split('\n'),
-                AwaySquad = AwaySquad.Trim().Split('\n'),
+                HomeSquad = HomeSquad.Trim().Split(Environment.NewLine),
+                AwaySquad = AwaySquad.Trim().Split(Environment.NewLine),
                 Scores = null
             };
 
