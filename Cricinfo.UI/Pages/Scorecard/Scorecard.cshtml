@@ -48,7 +48,7 @@
             }
 
             <label asp-for=HomeSquad></label>
-            <textarea class="form-control" asp-for=HomeSquad></textarea>
+            <textarea class="form-control" id="HomeSquadInput" asp-for=HomeSquad></textarea>
             <span class="text-danger" asp-validation-for="HomeSquad"></span>
 
             <label asp-for=AwaySquad></label>
@@ -64,4 +64,25 @@
             </div>
         </form>
     </div>
+}
+
+@section Scripts {
+    <script>
+        (function() {
+            document.getElementById("HomeSquadInput").addEventListener('input', e => {
+                if (!e.target.value) {
+                    e.target.classList.remove('is-valid');
+                    e.target.classList.remove('is-invalid');
+                }
+                else if (e.target.value.length < 5) {  // simulate invalid input
+                    e.target.classList.remove('is-valid');
+                    e.target.classList.add('is-invalid');
+                }
+                else if (e.target.value.length >= 5) {  // simulate valid input
+                    e.target.classList.add('is-valid');
+                    e.target.classList.remove('is-invalid');
+                }
+            });
+        })();
+    </script>
 }
