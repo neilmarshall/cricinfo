@@ -68,13 +68,26 @@
 
 @section Scripts {
     <script>
-        (function() {
+        (function () {
             document.getElementById("HomeSquadInput").addEventListener('input', e => {
+                const validateSquadInput = function (squadInput) {
+                    console.log(squadInput);
+                    $.get(
+                        '/scorecard/scorecard?handler=ValidateScorecard',
+                        { 'squad': squadInput },
+                        data => {
+                            console.log('Success!!!');
+                            console.log(data);
+                        }
+                    );
+                };
+
                 if (!e.target.value) {
                     e.target.classList.remove('is-valid');
                     e.target.classList.remove('is-invalid');
                 }
                 else if (e.target.value.length < 5) {  // simulate invalid input
+                    validateSquadInput(e.target.value);
                     e.target.classList.remove('is-valid');
                     e.target.classList.add('is-invalid');
                 }

@@ -98,5 +98,12 @@ namespace Cricinfo.UI.Pages
                     selectedTeam = match.HomeTeam
                 });
         }
+
+        public IActionResult OnGetValidateScorecard(string squad)
+        {
+            if (squad == null) { return new OkObjectResult(false); }
+
+            return new OkObjectResult((new SquadValidatorAttribute()).IsValid(squad));
+        }
     }
 }
