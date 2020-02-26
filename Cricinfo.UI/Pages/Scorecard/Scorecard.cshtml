@@ -52,7 +52,7 @@
             <span class="text-danger" asp-validation-for="HomeSquad"></span>
 
             <label asp-for=AwaySquad></label>
-            <textarea class="form-control" asp-for=AwaySquad></textarea>
+            <textarea class="form-control" id="AwaySquadInput" asp-for=AwaySquad></textarea>
             <span class="text-danger" asp-validation-for="AwaySquad"></span>
 
             <br />
@@ -69,7 +69,7 @@
 @section Scripts {
     <script>
         (function () {
-            document.getElementById("HomeSquadInput").addEventListener('input', e => {
+            const validateSquadInputAsync = function (e) {
                 const validateSquadInput = function (target) {
                     $.get(
                         '/scorecard/scorecard?handler=ValidateScorecard',
@@ -93,7 +93,10 @@
                 else {
                     validateSquadInput(e.target);
                 }
-            });
+            };
+
+            document.getElementById("HomeSquadInput").addEventListener('input', validateSquadInputAsync);
+            document.getElementById("AwaySquadInput").addEventListener('input', validateSquadInputAsync);
         })();
     </script>
 }
