@@ -234,5 +234,26 @@ namespace Cricinfo.UI.Pages
                     selectedTeam = (this.Team == match.HomeTeam ? match.AwayTeam : match.HomeTeam)
                 });
         }
+
+        public IActionResult OnGetValidateBattingScorecard(string data)
+        {
+            if (data == null) { return new OkObjectResult(false); }
+
+            return new OkObjectResult(new BattingScorecardValidatorAttribute().IsValid(data));
+        }
+
+        public IActionResult OnGetValidateBowlingScorecard(string data)
+        {
+            if (data == null) { return new OkObjectResult(false); }
+
+            return new OkObjectResult(new BowlingScorecardValidatorAttribute().IsValid(data));
+        }
+
+        public IActionResult OnGetValidateFallOfWicketScorecard(string data)
+        {
+            if (data == null) { return new OkObjectResult(false); }
+
+            return new OkObjectResult(new FallOFWicketScorecardValidatorAttribute().IsValid(data));
+        }
     }
 }
