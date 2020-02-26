@@ -4,6 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="wwwroot\js\scorecard\**" />
+    <Content Remove="wwwroot\js\scorecard\**" />
+    <EmbeddedResource Remove="wwwroot\js\scorecard\**" />
+    <None Remove="wwwroot\js\scorecard\**" />
+  </ItemGroup>
+
 
 
   <ItemGroup>
@@ -26,6 +33,5 @@
   <ItemGroup>
     <Folder Include="Pages\Scorecard\" />
     <Folder Include="ValidationAttributes\" />
-    <Folder Include="wwwroot\js\scorecard\" />
   </ItemGroup>
 </Project>

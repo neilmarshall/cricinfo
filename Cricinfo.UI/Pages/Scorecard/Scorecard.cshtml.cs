@@ -99,11 +99,11 @@ namespace Cricinfo.UI.Pages
                 });
         }
 
-        public IActionResult OnGetValidateScorecard(string squad)
+        public IActionResult OnGetValidateScorecard(string data)
         {
-            if (squad == null) { return new OkObjectResult(false); }
+            if (data == null) { return new OkObjectResult(false); }
 
-            return new OkObjectResult(new SquadValidatorAttribute().IsValid(squad));
+            return new OkObjectResult(new SquadValidatorAttribute().IsValid(data));
         }
     }
 }

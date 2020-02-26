@@ -69,35 +69,7 @@
 
 @section Scripts {
     <script>
-        (function () {
-            const validateSquadInputAsync = function (e) {
-                const validateSquadInput = function (target) {
-                    $.get(
-                        '/scorecard/scorecard?handler=ValidateScorecard',
-                        { 'squad': target.value },
-                        response => {
-                            if (response) {
-                                target.classList.add('is-valid');
-                                target.classList.remove('is-invalid');
-                            } else {
-                                target.classList.remove('is-valid');
-                                target.classList.add('is-invalid');
-                            }
-                        }
-                    );
-                };
-
-                if (!e.target.value) {
-                    e.target.classList.remove('is-valid');
-                    e.target.classList.remove('is-invalid');
-                }
-                else {
-                    validateSquadInput(e.target);
-                }
-            };
-
-            document.getElementById("HomeSquadInput").addEventListener('input', validateSquadInputAsync);
-            document.getElementById("AwaySquadInput").addEventListener('input', validateSquadInputAsync);
-        })();
+        document.getElementById("HomeSquadInput").addEventListener('input', validateInputAsync('/scorecard/scorecard?handler=ValidateScorecard'));
+        document.getElementById("AwaySquadInput").addEventListener('input', validateInputAsync('/scorecard/scorecard?handler=ValidateScorecard'));
     </script>
 }

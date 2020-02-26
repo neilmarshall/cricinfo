@@ -85,38 +85,8 @@
 
 @section Scripts {
     <script>
-        (function () {
-            const validateInputAsync = function (validationEndpoint) {
-                return function (e) {
-                    const validateSquadInput = function (target) {
-                        $.get(
-                            validationEndpoint,
-                            { 'data': target.value },
-                            response => {
-                                if (response) {
-                                    target.classList.add('is-valid');
-                                    target.classList.remove('is-invalid');
-                                } else {
-                                    target.classList.remove('is-valid');
-                                    target.classList.add('is-invalid');
-                                }
-                            }
-                        );
-                    };
-
-                    if (!e.target.value) {
-                        e.target.classList.remove('is-valid');
-                        e.target.classList.remove('is-invalid');
-                    }
-                    else {
-                        validateSquadInput(e.target);
-                    }
-                };
-            };
-
-            document.getElementById("BattingScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateBattingScorecard'));
-            document.getElementById("BowlingScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateBowlingScorecard'));
-            document.getElementById("FallOfWicketScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateFallOfWicketScorecard'));
-        })();
+        document.getElementById("BattingScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateBattingScorecard'));
+        document.getElementById("BowlingScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateBowlingScorecard'));
+        document.getElementById("FallOfWicketScorecardInput").addEventListener('input', validateInputAsync('/scorecard/innings?handler=ValidateFallOfWicketScorecard'));
     </script>
 }
