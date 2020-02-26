@@ -1,6 +1,7 @@
 ﻿@page
-@using Cricinfo.Models.Enums
 @model InningsModel
+@using Cricinfo.Models.Enums
+@using Cricinfo.UI.ValidationAttributes
 @{
     bool showNextInningsButton = false, showSubmitAllInningsButton = false;
     if (TempData.ContainsKey("matchType") && TempData.ContainsKey("teamOrder") && TempData.ContainsKey("innings"))
@@ -29,15 +30,15 @@
             </div>
 
             <label asp-for=BattingScorecard></label>
-            <textarea class="form-control" asp-for=BattingScorecard></textarea>
+            <textarea class="form-control" id="BattingScorecardInput" asp-for=BattingScorecard rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="BattingScorecard"></span>
 
             <label asp-for=BowlingScorecard></label>
-            <textarea class="form-control" asp-for=BowlingScorecard></textarea>
+            <textarea class="form-control" id="BowlingScorecardInput" asp-for=BowlingScorecard rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="BowlingScorecard"></span>
 
             <label asp-for=FallOfWicketScorecard></label>
-            <textarea class="form-control" asp-for=FallOfWicketScorecard></textarea>
+            <textarea class="form-control" id="FallOfWicketScorecardInput" asp-for=FallOfWicketScorecard rows="@SquadValidatorAttribute.NumberOfPlayers - 1"></textarea>
             <span class="text-danger" asp-validation-for="FallOfWicketScorecard"></span>
 
             <label asp-for=Extras></label>
