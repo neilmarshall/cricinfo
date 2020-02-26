@@ -103,7 +103,7 @@ namespace Cricinfo.UI.Pages
         {
             if (squad == null) { return new OkObjectResult(false); }
 
-            return new OkObjectResult((new SquadValidatorAttribute()).IsValid(squad));
+            return new OkObjectResult(new SquadValidatorAttribute().IsValid(squad));
         }
     }
 }

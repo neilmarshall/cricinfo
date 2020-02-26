@@ -70,14 +70,18 @@
     <script>
         (function () {
             document.getElementById("HomeSquadInput").addEventListener('input', e => {
-                const validateSquadInput = function (squadInput) {
-                    console.log(squadInput);
+                const validateSquadInput = function (target) {
                     $.get(
                         '/scorecard/scorecard?handler=ValidateScorecard',
-                        { 'squad': squadInput },
-                        data => {
-                            console.log('Success!!!');
-                            console.log(data);
+                        { 'squad': target.value },
+                        response => {
+                            if (response) {
+                                target.classList.add('is-valid');
+                                target.classList.remove('is-invalid');
+                            } else {
+                                target.classList.remove('is-valid');
+                                target.classList.add('is-invalid');
+                            }
                         }
                     );
                 };
@@ -86,14 +90,8 @@
                     e.target.classList.remove('is-valid');
                     e.target.classList.remove('is-invalid');
                 }
-                else if (e.target.value.length < 5) {  // simulate invalid input
-                    validateSquadInput(e.target.value);
-                    e.target.classList.remove('is-valid');
-                    e.target.classList.add('is-invalid');
-                }
-                else if (e.target.value.length >= 5) {  // simulate valid input
-                    e.target.classList.add('is-valid');
-                    e.target.classList.remove('is-invalid');
+                else {
+                    validateSquadInput(e.target);
                 }
             });
         })();
