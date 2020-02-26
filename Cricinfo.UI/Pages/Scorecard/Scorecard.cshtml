@@ -2,6 +2,7 @@
 @model ScorecardModel
 @using System
 @using Cricinfo.Models.Enums
+@using Cricinfo.UI.ValidationAttributes
 @{
     <div>
         <form class="form-group" method="post">
@@ -48,11 +49,11 @@
             }
 
             <label asp-for=HomeSquad></label>
-            <textarea class="form-control" id="HomeSquadInput" asp-for=HomeSquad></textarea>
+            <textarea class="form-control" id="HomeSquadInput" asp-for=HomeSquad rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="HomeSquad"></span>
 
             <label asp-for=AwaySquad></label>
-            <textarea class="form-control" id="AwaySquadInput" asp-for=AwaySquad></textarea>
+            <textarea class="form-control" id="AwaySquadInput" asp-for=AwaySquad rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="AwaySquad"></span>
 
             <br />
