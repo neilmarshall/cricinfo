@@ -101,9 +101,7 @@ namespace Cricinfo.UI.Pages
 
         public IActionResult OnGetValidateScorecard(string data)
         {
-            if (data == null) { return new OkObjectResult(false); }
-
-            return new OkObjectResult(new SquadValidatorAttribute().IsValid(data));
+            return new OkObjectResult(DataValidator.SquadIsValid(data));
         }
     }
 }

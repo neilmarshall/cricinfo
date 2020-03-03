@@ -30,15 +30,15 @@
             </div>
 
             <label asp-for=BattingScorecard></label>
-            <textarea class="form-control" id="BattingScorecardInput" asp-for=BattingScorecard rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
+            <textarea class="form-control" id="BattingScorecardInput" asp-for=BattingScorecard rows="@DataValidator.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="BattingScorecard"></span>
 
             <label asp-for=BowlingScorecard></label>
-            <textarea class="form-control" id="BowlingScorecardInput" asp-for=BowlingScorecard rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
+            <textarea class="form-control" id="BowlingScorecardInput" asp-for=BowlingScorecard rows="@DataValidator.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="BowlingScorecard"></span>
 
             <label asp-for=FallOfWicketScorecard></label>
-            <textarea class="form-control" id="FallOfWicketScorecardInput" asp-for=FallOfWicketScorecard rows="@SquadValidatorAttribute.NumberOfPlayers - 1"></textarea>
+            <textarea class="form-control" id="FallOfWicketScorecardInput" asp-for=FallOfWicketScorecard rows="@DataValidator.NumberOfPlayers - 1"></textarea>
             <span class="text-danger" asp-validation-for="FallOfWicketScorecard"></span>
 
             <label asp-for=Extras></label>

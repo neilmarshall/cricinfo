@@ -49,11 +49,11 @@
             }
 
             <label asp-for=HomeSquad></label>
-            <textarea class="form-control" id="HomeSquadInput" asp-for=HomeSquad rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
+            <textarea class="form-control" id="HomeSquadInput" asp-for=HomeSquad rows="@DataValidator.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="HomeSquad"></span>
 
             <label asp-for=AwaySquad></label>
-            <textarea class="form-control" id="AwaySquadInput" asp-for=AwaySquad rows="@SquadValidatorAttribute.NumberOfPlayers"></textarea>
+            <textarea class="form-control" id="AwaySquadInput" asp-for=AwaySquad rows="@DataValidator.NumberOfPlayers"></textarea>
             <span class="text-danger" asp-validation-for="AwaySquad"></span>
 
             <br />

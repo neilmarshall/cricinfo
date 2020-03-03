@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Cricinfo.Parser;
-using static Cricinfo.Parser.Exceptions;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Cricinfo.UI.ValidationAttributes
 {
@@ -9,17 +6,7 @@ namespace Cricinfo.UI.ValidationAttributes
     {
         public override bool IsValid(object value)
         {
-            if (value == null) { return false; }
-
-            try
-            {
-                Parse.parseFallOfWicketScorecard((string)value);
-                return true;
-            }
-            catch (FallOfWicketException)
-            {
-                return false;
-            }
+            return DataValidator.FallOfWicketScorecardIsValid((string)value);
         }
     }
 }

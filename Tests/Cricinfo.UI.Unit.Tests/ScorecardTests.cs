@@ -18,7 +18,7 @@ namespace Cricinfo.UI.Unit.Tests
         internal static IEnumerable<KeyValuePair<string, string>> FormContent()
         {
             var generatedNames = string.Join('\n',
-                Enumerable.Range(1, SquadValidatorAttribute.NumberOfPlayers)
+                Enumerable.Range(1, DataValidator.NumberOfPlayers)
                           .Select((_, i) => $"player player{i}"));
 
             yield return new KeyValuePair<string, string>("Venue", "A place");
@@ -105,7 +105,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Act
             var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
-            formElements[field] = string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers + 1));
+            formElements[field] = string.Join('\n', Enumerable.Repeat("player player", DataValidator.NumberOfPlayers + 1));
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
             var response = await client.PostAsync("Scorecard/Scorecard", formContent);
@@ -113,7 +113,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var expectedErrorMessage = $"The field {label} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            var expectedErrorMessage = $"The field {label} must be a multiline string of { DataValidator.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
             Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
         }
 
@@ -128,7 +128,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Act
             var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
-            formElements[field] = string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers));
+            formElements[field] = string.Join('\n', Enumerable.Repeat("player", DataValidator.NumberOfPlayers));
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
             var response = await client.PostAsync("Scorecard/Scorecard", formContent);
@@ -136,7 +136,7 @@ namespace Cricinfo.UI.Unit.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var expectedErrorMessage = $"The field {label} must be a multiline string of { SquadValidatorAttribute.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
+            var expectedErrorMessage = $"The field {label} must be a multiline string of { DataValidator.NumberOfPlayers} entries, each formatted as a sigle firstname followed by one or more last names.";
             Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"{field}\" data-valmsg-replace=\"true\">{expectedErrorMessage}</span>").Match(content).Success);
         }
 
