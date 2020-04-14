@@ -9,25 +9,18 @@ namespace Cricinfo.Api.Client
 {
     public class CricinfoApiClient : ICricinfoApiClient
     {
-        private readonly string _url;
         private readonly HttpClient _httpClient;
 
-        public CricinfoApiClient(string url, HttpClient httpClient)
+        public CricinfoApiClient(HttpClient httpClient)
         {
-            this._url = url;
             this._httpClient = httpClient;
-        }
-
-        public CricinfoApiClient(string url)
-            : this(url, new HttpClient())
-        {
         }
 
         public async Task CreateMatchAsync(Match match)
         {
             var content = new StringContent(JsonSerializer.Serialize(match),
                 System.Text.Encoding.UTF8, "application/json");
-            var httpResponse = await _httpClient.PostAsync($"{_url}/api", content);
+            var httpResponse = await _httpClient.PostAsync("/api", content);
 
             if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
             {
@@ -37,7 +30,7 @@ namespace Cricinfo.Api.Client
 
         public async Task<Match> GetMatchAsync(int id)
         {
-            var httpResponse = await _httpClient.GetAsync($"{_url}/api/{id}");
+            var httpResponse = await _httpClient.GetAsync($"/api/{id}");
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
@@ -51,7 +44,7 @@ namespace Cricinfo.Api.Client
 
         public async Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date)
         {
-            var httpResponse = await _httpClient.GetAsync($"{_url}/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date.Year}-{date.Month}-{date.Day}");
+            var httpResponse = await _httpClient.GetAsync($"/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date.Year}-{date.Month}-{date.Day}");
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {

@@ -26,12 +26,10 @@ namespace Cricinfo.UI
         {
             services.AddRazorPages().AddSessionStateTempDataProvider();
             services.AddSession();
-            services.AddSingleton<ICricinfoApiClient>(_ =>
+            services.AddHttpClient<ICricinfoApiClient, CricinfoApiClient>(client =>
             {
-                var cricInfoAPIURL = this.Configuration.GetValue<string>("cricInfoAPIURL");
-                return new CricinfoApiClient(cricInfoAPIURL);
-            }
-            );
+                client.BaseAddress = new Uri(this.Configuration.GetValue<string>("cricInfoAPIURL"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
