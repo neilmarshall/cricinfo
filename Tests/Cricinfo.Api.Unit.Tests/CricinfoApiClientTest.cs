@@ -45,7 +45,7 @@ namespace Cricinfo.Api.Unit.Tests
         {
             var webApplicationFactory = new CustomWebApplicationFactory<Startup>();
             HttpClient httpclient = webApplicationFactory.CreateClient();
-            cricinfoApiClient = new CricinfoApiClient("", httpclient);
+            cricinfoApiClient = new CricinfoApiClient(httpclient);
         }
 
         [TestMethod]
