@@ -28,7 +28,17 @@ namespace Cricinfo.Api
         {
             services.AddControllers();
 
-            services.AddScoped<ICricInfoRepository>(sp => new CricInfoRepository(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<ICricInfoRepository>(sp =>
+            {
+                if (this.Configuration.GetValue<bool>("CricInfoRepository:UseSqlServer"))
+                {
+                    return new SqlServerCricInfoRepository(Configuration.GetConnectionString("SqlServerConnection"));
+                }
+                else
+                {
+                    return new PostgresCricInfoRepository(Configuration.GetConnectionString("PostgresConnection"));
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

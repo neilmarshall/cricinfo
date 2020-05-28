@@ -27,6 +27,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Cricinfo.Services", "Cricin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CricinfoRepository.Tests", "Tests\CricinfoRepository.Tests\CricinfoRepository.Tests.csproj", "{E9A378BB-AC28-42BF-A274-C7716F4DDB26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db.Deploy.SqlServer", "Db.Deploy.SqlServer\Db.Deploy.SqlServer.csproj", "{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,6 +174,18 @@ Global
 		{E9A378BB-AC28-42BF-A274-C7716F4DDB26}.Release|x64.Build.0 = Release|Any CPU
 		{E9A378BB-AC28-42BF-A274-C7716F4DDB26}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9A378BB-AC28-42BF-A274-C7716F4DDB26}.Release|x86.Build.0 = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|x64.Build.0 = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Debug|x86.Build.0 = Debug|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|x64.ActiveCfg = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|x64.Build.0 = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|x86.ActiveCfg = Release|Any CPU
+		{78125D26-719D-4CDC-B25E-5F5CF5E4FF10}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C3F5EB69-7012-4C52-A0C2-9D04F17B15F4} = {54D5B5DA-0610-4AF6-A6DC-80F251483BC2}

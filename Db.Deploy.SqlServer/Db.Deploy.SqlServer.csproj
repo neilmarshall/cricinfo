@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="scripts\cricinfo_001.sql" />
+    <None Remove="appsettings.DEVELOPMENT.json" />
+    <None Remove="scripts\cricinfo_006.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="**/*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="dbup-sqlserver" Version="4.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="appsettings.DEVELOPMENT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Update="scripts\cricinfo_003.sql" />
+    <EmbeddedResource Update="scripts\cricinfo_002.sql" />
+    <EmbeddedResource Update="scripts\cricinfo_004.sql" />
+  </ItemGroup>
+</Project>

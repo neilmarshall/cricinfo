@@ -24,7 +24,7 @@ namespace CricinfoRepository.Tests
                 WriteLine("Deserializing data...");
                 var match = JsonSerializer.Deserialize<Match>(sr.ReadToEnd());
                 WriteLine("Writing data to database...");
-                ICricInfoRepository cricInfoRepository = new CricInfoRepository(connString);
+                ICricInfoRepository cricInfoRepository = new PostgresCricInfoRepository(connString);
                 await cricInfoRepository.DeleteMatchAsync(match.HomeTeam, match.AwayTeam, match.DateOfFirstDay);
                 var (response, id) = await cricInfoRepository.CreateMatchAsync(match);
                 WriteLine($"Write completed with response '{response}' and id '{id}'");

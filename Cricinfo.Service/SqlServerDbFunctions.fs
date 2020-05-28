@@ -1,80 +1,121 @@
 ﻿namespace Cricinfo.Services
 
-module private DbFunctions =
+module private SqlServerDbFunctions =
 
     open System
-    open Npgsql
+    open System.Data
     open Cricinfo.Models
     open Cricinfo.Models.Enums
     open Cricinfo.Parser
+    open System.Data.SqlClient
 
-    let private executeNonQuery (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Unit =
-        use command = new NpgsqlCommand(query, conn, trans)
+    let internal getConnection connString = new SqlConnection(connString)
+
+    let private executeNonQuery (conn : SqlConnection) (trans : SqlTransaction) (query : string) (parameters : Map<string, obj>) : Unit =
+        use command = new SqlCommand(query, conn, trans)
         parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
         do command.ExecuteNonQuery() |> ignore
 
-    let internal executeNonQueryAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<Unit> =
+    let internal executeNonQueryAsync (conn : SqlConnection) (trans : SqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<Unit> =
         async {
-            use command = new NpgsqlCommand(query, conn, trans)
+            use command = new SqlCommand(query, conn, trans)
             parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
             do! command.ExecuteNonQueryAsync() |> Async.AwaitTask |> Async.Ignore
         }
 
-    let private executeScalar<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : 'T =
-        use command = new NpgsqlCommand(query, conn, trans)
+    let private executeScalar<'T> (conn : SqlConnection) (trans : SqlTransaction) (query : string) (parameters : Map<string, obj>) : 'T =
+        use command = new SqlCommand(query, conn, trans)
         parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
         command.ExecuteScalar() :?> 'T
 
-    let private executeScalarAsync<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<'T> =
+    let private executeScalarAsync<'T> (conn : SqlConnection) (trans : SqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<'T> =
         async {
-            use command = new NpgsqlCommand(query, conn, trans)
+            use command = new SqlCommand(query, conn, trans)
             parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
             let! response =  command.ExecuteScalarAsync() |> Async.AwaitTask
             return response :?> 'T
         }
 
-    let checkMatchExistsAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (homeTeam : string) (awayTeam : string) (date : DateTime) : Async<bool> =
+    let private executeStoredProcedureScalar<'T>
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
+        (query : string)
+        (parameters : Map<string, obj>)
+        (outputParameterName : string, outputParameterType : SqlDbType)
+            : 'T =
+        use command = new SqlCommand(query, conn, trans)
+        command.CommandType <- Data.CommandType.StoredProcedure
+        parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
+        let outputParameter = SqlParameter(outputParameterName, outputParameterType, 1)
+        outputParameter.Direction <- ParameterDirection.Output
+        command.Parameters.Add(outputParameter) |> ignore
+        command.ExecuteScalar() |> ignore
+        outputParameter.Value :?> 'T
+
+    let private executeStoredProcedureScalarAsync<'T>
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
+        (query : string)
+        (parameters : Map<string, obj>)
+        (outputParameterName : string, outputParameterType : SqlDbType)
+            : Async<'T> =
         async {
-            let query = "SELECT * FROM check_match_exists(@home_team, @away_team, @date_of_first_day);"
-            let parameters = Map.ofList [ "home_team", box homeTeam; "away_team", box awayTeam; "date_of_first_day", box date ]
-            return! executeScalarAsync conn trans query parameters
+            use command = new SqlCommand(query, conn, trans)
+            command.CommandType <- Data.CommandType.StoredProcedure
+            parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
+            let outputParameter = SqlParameter(outputParameterName, outputParameterType, 1)
+            outputParameter.Direction <- ParameterDirection.Output
+            command.Parameters.Add(outputParameter) |> ignore
+            do! command.ExecuteScalarAsync() |> Async.AwaitTask |> Async.Ignore
+            return outputParameter.Value :?> 'T
         }
 
-    let getIdsAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (venue : string) (homeTeam : string) (awayTeam : string) : Async<int * int * int> = 
+    let internal executeStoredProcedureNonQueryAsync (conn : SqlConnection) (trans : SqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<Unit> =
         async {
-            let! venueId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_venue(@venue);" (Map.ofList [ "venue", box venue ])
-            let! homeTeamId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box homeTeam ])
-            let! awayTeamId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box awayTeam ])
+            use command = new SqlCommand(query, conn, trans)
+            command.CommandType <- Data.CommandType.StoredProcedure
+            parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
+            do! command.ExecuteNonQueryAsync() |> Async.AwaitTask |> Async.Ignore
+        }
+
+    let checkMatchExistsAsync (conn : SqlConnection) (trans : SqlTransaction) (homeTeam : string) (awayTeam : string) (date : DateTime) : Async<bool> =
+        async {
+            let query = "check_match_exists"
+            let parameters = Map.ofList [ "home_team_name", box homeTeam; "away_team_name", box awayTeam; "date_of_first_day", box date ]
+            return! executeStoredProcedureScalarAsync<bool> conn trans query parameters ("exists", SqlDbType.Bit)
+        }
+
+    let getIdsAsync (conn : SqlConnection) (trans : SqlTransaction) (venue : string) (homeTeam : string) (awayTeam : string) : Async<int * int * int> = 
+        async {
+            let! venueId = executeStoredProcedureScalarAsync conn trans "get_id_and_insert_if_not_exists_venue" (Map.ofList [ "venue", box venue ]) ("id", SqlDbType.Int)
+            let! homeTeamId = executeStoredProcedureScalarAsync conn trans "get_id_and_insert_if_not_exists_team" (Map.ofList [ "team", box homeTeam ]) ("id", SqlDbType.Int)
+            let! awayTeamId = executeStoredProcedureScalarAsync conn trans "get_id_and_insert_if_not_exists_team" (Map.ofList [ "team", box awayTeam ]) ("id", SqlDbType.Int)
             return venueId, homeTeamId, awayTeamId
         }
 
-    let getNextMatchIdAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) : Async<int64> =
-        async {
-            return! executeScalarAsync conn trans "SELECT NEXTVAL('match_id_seq');" Map.empty
-        }
-
     let insertMatchAsync
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
-        (matchId : int64)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (date : DateTime)
         (venueId : int)
         (homeTeamId : int)
         (awayTeamId : int)
         (result : Result)
         (matchType : MatchType)
-            : Async<unit> =
+            : Async<int64> =
         async {
             let! resultId = executeScalarAsync<int> conn trans "SELECT id FROM result WHERE type = @result" (Map.ofList [ "result", box (result.ToString()) ])
             let! matchTypeId = executeScalarAsync<int> conn trans "SELECT id FROM match_type WHERE type = @matchType" (Map.ofList [ "matchType", box (matchType.ToString()) ])
-            let query = "INSERT INTO match (id, match_type_id, date_of_first_day, venue_id, hometeam_id, awayteam_id, result_id) VALUES (@id, @matchTypeId, @date, @venue_id, @hometeam_id, @awayteam_id, @result_id);"
-            let parameters = Map.ofList [ "id", box matchId; "matchTypeId", box matchTypeId; "date", box date; "venue_id", box venueId; "hometeam_id", box homeTeamId; "awayteam_id", box awayTeamId; "result_id", box resultId ]
+            let query = "INSERT INTO match (match_type_id, date_of_first_day, venue_id, hometeam_id, awayteam_id, result_id) VALUES (@matchTypeId, @date, @venue_id, @hometeam_id, @awayteam_id, @result_id);"
+            let parameters = Map.ofList [ "matchTypeId", box matchTypeId; "date", box date; "venue_id", box venueId; "hometeam_id", box homeTeamId; "awayteam_id", box awayTeamId; "result_id", box resultId ]
             do! executeNonQueryAsync conn trans query parameters
+            let! id = executeScalarAsync<Decimal> conn trans "SELECT IDENT_CURRENT('match');" Map.empty
+            return int64(id)
         }
 
     let insertSquadAsync
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (matchId : int64)
         (teamId : int)
         (squad : seq<string>)
@@ -83,8 +124,8 @@ module private DbFunctions =
             let parseSquadMember (name : string * string * string) : string * int =
                 let firstName, lastName, lookupCode = name
                 let playerId =
-                    Map.ofList [ "firstname", box firstName; "lastname", box lastName ]
-                    |> executeScalar conn trans "SELECT * FROM get_id_and_insert_if_not_exists_player(@firstname, @lastname);"
+                    let parameters = Map.ofList [ "firstname", box firstName; "lastname", box lastName ]
+                    executeStoredProcedureScalar conn trans "get_id_and_insert_if_not_exists_player" parameters ("id", SqlDbType.Int)
                 Map.ofList [ "match_id", box matchId; "team_id", box teamId; "player_id", box playerId ]
                 |> executeScalar conn trans "INSERT INTO squad (match_id, team_id, player_id) VALUES (@match_id, @team_id, @player_id);"
                 lookupCode, playerId
@@ -94,8 +135,8 @@ module private DbFunctions =
         }
 
     let private insertBattingScores
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (tryGetPlayerId : string -> int)
         (inningsId : int64)
         (battingScorecards : seq<BattingScorecard>)
@@ -121,8 +162,8 @@ module private DbFunctions =
         battingScorecards |> Seq.iter insertBattingScorecard
 
     let private insertBowlingScores
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (tryGetPlayerId : string -> int)
         (inningsId : int64)
         (bowlingScorecards : seq<BowlingScorecard>)
@@ -136,8 +177,8 @@ module private DbFunctions =
         bowlingScorecards |> Seq.iter insertBowlingScorecard
 
     let private insertFallOfWicket
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (inningsId : int64)
         (fallOfWicket : seq<int>)
             : Unit =
@@ -148,19 +189,19 @@ module private DbFunctions =
             executeNonQuery conn trans query parameters)
 
     let insertInningsAsync
-        (conn : NpgsqlConnection)
-        (trans : NpgsqlTransaction)
+        (conn : SqlConnection)
+        (trans : SqlTransaction)
         (tryGetPlayerId : string -> int)
         (matchId : int64)
         (innings : seq<Score>)
             : Async<Unit> =
         async {
             let insertSingleInnings (innings : Score) : Unit =
-                let id = executeScalar conn trans "SELECT NEXTVAL('innings_id_seq');" Map.empty
-                let teamId = executeScalar<int> conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box innings.Team ])
-                let query = "INSERT INTO innings (id, match_id, team_id, innings, extras) VALUES (@id, @match_id, @team_id, @innings, @extras);"
-                let parameters = Map.ofList [ "id", box id; "match_id", box matchId; "team_id", box teamId; "innings", box innings.Innings;
+                let teamId = executeStoredProcedureScalar conn trans "get_id_and_insert_if_not_exists_team" (Map.ofList [ "team", box innings.Team ]) ("id", SqlDbType.Int)
+                let query = "INSERT INTO innings (match_id, team_id, innings, extras) VALUES (@match_id, @team_id, @innings, @extras);"
+                let parameters = Map.ofList [ "match_id", box matchId; "team_id", box teamId; "innings", box innings.Innings;
                                               "extras", box innings.Extras; ]
+                let id = executeScalar<Decimal> conn trans "SELECT IDENT_CURRENT('innings');" Map.empty |> int64
                 executeNonQuery conn trans query parameters
                 insertBattingScores conn trans tryGetPlayerId id innings.BattingScorecard
                 insertBowlingScores conn trans tryGetPlayerId id innings.BowlingScorecard

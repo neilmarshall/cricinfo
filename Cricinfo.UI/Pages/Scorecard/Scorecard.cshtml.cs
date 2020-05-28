@@ -79,8 +79,8 @@ namespace Cricinfo.UI.Pages
                 HomeTeam = ti.ToTitleCase(HomeTeam),
                 AwayTeam = ti.ToTitleCase(AwayTeam),
                 Result = Result,
-                HomeSquad = HomeSquad.Trim().Split(Environment.NewLine),
-                AwaySquad = AwaySquad.Trim().Split(Environment.NewLine),
+                HomeSquad = HomeSquad.Trim().Split('\n'),
+                AwaySquad = AwaySquad.Trim().Split('\n'),
                 Scores = null
             };
 

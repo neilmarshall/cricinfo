@@ -8,8 +8,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="WeatherForecast.cs" />
-    <Compile Remove="Controllers\WeatherForecastController.cs" />
     <Compile Remove="Models\FallOfWicketScorecard.cs" />
   </ItemGroup>
   <ItemGroup>

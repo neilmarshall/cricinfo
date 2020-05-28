@@ -3,12 +3,11 @@
 open System
 open System.Threading.Tasks
 open Cricinfo.Models
-open DbFunctions
-open Npgsql
+open SqlServerDbFunctions
 
-type public CricInfoRepository(connString : string) =
+type public SqlServerCricInfoRepository(connString : string) =
     
-    let postgresExceptionCatcher = new Func<exn, bool>(function | :? Npgsql.PostgresException -> true | _ -> false)
+    let sqlServerExceptionCatcher = new Func<exn, bool>(function | :? System.Data.SqlClient.SqlException -> true | _ -> false)
 
     interface ICricInfoRepository with
 
@@ -21,13 +20,12 @@ type public CricInfoRepository(connString : string) =
         member this.CreateMatchAsync (mtch : Match) : Task<DataCreationResponse * Nullable<int64>> =
             async {
                 try
-                    use conn = new NpgsqlConnection(connString)
+                    use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
 
                     let checkMatchExistsAsync = checkMatchExistsAsync conn trans
                     let getIdsAsync = getIdsAsync conn trans
-                    let getNextMatchIdAsync = getNextMatchIdAsync conn trans
                     let insertMatchAsync = insertMatchAsync conn trans
                     let insertSquadAsync = insertSquadAsync conn trans
                     let insertInningsAsync = insertInningsAsync conn trans
@@ -38,8 +36,7 @@ type public CricInfoRepository(connString : string) =
                             return DataCreationResponse.DuplicateContent, Nullable()
                         else
                             let! venueId, homeTeamId, awayTeamId = getIdsAsync mtch.Venue mtch.HomeTeam mtch.AwayTeam
-                            let! matchId = getNextMatchIdAsync
-                            do! insertMatchAsync matchId mtch.DateOfFirstDay venueId homeTeamId awayTeamId mtch.Result mtch.MatchType
+                            let! matchId = insertMatchAsync mtch.DateOfFirstDay venueId homeTeamId awayTeamId mtch.Result mtch.MatchType
                             let! homeSquadIds = insertSquadAsync matchId homeTeamId mtch.HomeSquad
                             let! awaySquadIds = insertSquadAsync matchId awayTeamId mtch.AwaySquad
                             let tryGetPlayerId name =
@@ -54,11 +51,11 @@ type public CricInfoRepository(connString : string) =
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
-                        ae.Flatten().Handle(postgresExceptionCatcher)
+                        ae.Flatten().Handle(sqlServerExceptionCatcher)
                         return DataCreationResponse.Failure, Nullable()
                 with
                 | :? AggregateException as ae ->
-                    ae.Flatten().Handle(postgresExceptionCatcher)
+                    ae.Flatten().Handle(sqlServerExceptionCatcher)
                     return DataCreationResponse.Failure, Nullable()
             } |> Async.StartAsTask
 
@@ -66,50 +63,50 @@ type public CricInfoRepository(connString : string) =
         member this.DeleteMatchAsync (matchId : int) : Task<Unit> = 
             async {
                 try
-                    use conn = new NpgsqlConnection(connString)
+                    use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
                     try
-                        do! executeNonQueryAsync conn trans "SELECT delete_match(@matchId);" (Map.ofList [ "matchId", box matchId ])
+                        do! executeStoredProcedureNonQueryAsync conn trans "delete_match_by_id" (Map.ofList [ "matchid", box matchId ])
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
-                        ae.Flatten().Handle(postgresExceptionCatcher); ()
+                        ae.Flatten().Handle(sqlServerExceptionCatcher); ()
                 with
                 | :? AggregateException as ae ->
-                    ae.Flatten().Handle(postgresExceptionCatcher); ()
+                    ae.Flatten().Handle(sqlServerExceptionCatcher); ()
             } |> Async.StartAsTask
 
 
         member this.DeleteMatchAsync (homeTeamId : string, awayTeamId : string, date : DateTime) : Task<Unit> = 
             async {
                 try
-                    use conn = new NpgsqlConnection(connString)
+                    use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
                     try
                         do!
-                            Map.ofList [ "homeTeamId", box homeTeamId; "awayTeamId", box awayTeamId; "date", box date ]
-                            |> executeNonQueryAsync conn trans "SELECT delete_match(@homeTeamId, @awayTeamId, @date);"
+                            Map.ofList [ "home_team_name", box homeTeamId; "away_team_name", box awayTeamId; "date_of_first_day", box date ]
+                            |> executeStoredProcedureNonQueryAsync conn trans "delete_match"
                         do! trans.CommitAsync() |> Async.AwaitTask
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
-                        ae.Flatten().Handle(postgresExceptionCatcher); ()
+                        ae.Flatten().Handle(sqlServerExceptionCatcher); ()
                 with
                 | :? AggregateException as ae ->
-                    ae.Flatten().Handle(postgresExceptionCatcher); ()
+                    ae.Flatten().Handle(sqlServerExceptionCatcher); ()
             } |> Async.StartAsTask
 
         member this.MatchExistsAsync (homeTeam : string, awayTeam : string, date : DateTime) : Task<bool> =
             async {
                 try
-                    use conn = new NpgsqlConnection(connString)
+                    use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
                     return! checkMatchExistsAsync conn trans homeTeam awayTeam date
                 with
                 | :? AggregateException as ae ->
-                    ae.Flatten().Handle(postgresExceptionCatcher)
+                    ae.Flatten().Handle(sqlServerExceptionCatcher)
                     return false
             } |> Async.StartAsTask
