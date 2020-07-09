@@ -13,9 +13,6 @@
     <ProjectReference Include="..\Cricinfo.Parser\Cricinfo.Parser.fsproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\Cricinfo.Api\Cricinfo.Api.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
     <ProjectReference Include="..\Cricinfo.Models\Cricinfo.Models.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
@@ -27,5 +24,8 @@
     <Folder Include="Pages\Scorecard\" />
     <Folder Include="ValidationAttributes\" />
     <Folder Include="wwwroot\js\scorecard\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.json" />
   </ItemGroup>
 </Project>
