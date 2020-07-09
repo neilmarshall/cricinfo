@@ -7,6 +7,7 @@ using Cricinfo.Api.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace Cricinfo.UI.Unit.Tests
 {
@@ -30,7 +31,7 @@ namespace Cricinfo.UI.Unit.Tests
                     }
 
                     // Add ICricinfoApiClient using a mock repository for testing.
-                    services.AddScoped<ICricinfoApiClient, Utilities.MockCricinfoApiClient>();
+                    services.AddScoped(_ => MoqCricinfoApiClient());
                 });
             }
         }
@@ -51,20 +52,16 @@ namespace Cricinfo.UI.Unit.Tests
             }
         }
 
-        internal class MockCricinfoApiClient : ICricinfoApiClient
+        private static ICricinfoApiClient MoqCricinfoApiClient()
         {
-            public Task CreateMatchAsync(Models.Match match)
-                => throw new NotImplementedException();
+            var mock = new Mock<ICricinfoApiClient>();
 
-            public Task<Models.Match> GetMatchAsync(int id)
-                => throw new NotImplementedException();
+            mock.Setup(ICricinfoApiClient => ICricinfoApiClient
+                .MatchExistsAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()))
+                .Returns((string homeTeam, string awayTeam, DateTime _) => Task.FromResult(
+                    homeTeam == "duplicate home team" && awayTeam == "duplicate away team" ? true : false));
 
-            public Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime _)
-            {
-                if (homeTeam == "duplicate home team" && awayTeam == "duplicate away team")
-                    return Task.Run(() => true);
-                return Task.Run(() => false);
-            }
+            return mock.Object;
         }
     }
 }
