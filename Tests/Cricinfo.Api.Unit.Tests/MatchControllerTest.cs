@@ -22,7 +22,7 @@ namespace Cricinfo.Api.Unit.Tests
                 builder.AddConsole()
             );
             var logger = loggerFactory.CreateLogger<MatchController>();
-            matchController = new MatchController(new Utilities.MockCricInfoRepository(), logger);
+            matchController = new MatchController(Utilities.MoqCricInfoRepository(), logger);
         }
 
         [TestMethod]

@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Cricinfo.Api.Client;
-using Cricinfo.Services;
+﻿using Cricinfo.Api.Client;
 using Cricinfo.Models.Enums;
+using Cricinfo.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Cricinfo.Api.Unit.Tests
 {
@@ -19,18 +19,12 @@ namespace Cricinfo.Api.Unit.Tests
         {
             builder.ConfigureServices(services =>
             {
-                // Remove the app's ICricInfoRepository registration.
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(ICricInfoRepository));
+                // Remove the app's ICricInfoRepository registration
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(ICricInfoRepository));
+                if (descriptor != null) { services.Remove(descriptor); }
 
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-
-                // Add ICricInfoRepository using a mock repository for testing.
-                services.AddScoped<ICricInfoRepository, Utilities.MockCricInfoRepository>();
+                // Add ICricInfoRepository using a mock repository for testing
+                services.AddScoped((_) => Utilities.MoqCricInfoRepository());
             });
         }
     }
