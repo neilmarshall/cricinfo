@@ -23,41 +23,66 @@ namespace Cricinfo.Api.Controllers
 
         [HttpGet(Name="GetMatchAsync")]
         [Route("{id}")]
-        public async Task<IActionResult> GetMatchAsync(int id)
+        public async Task<IActionResult> GetMatchAsync(int? id)
         {
-            this._logger.LogInformation($"GET request - ID '{id}'");
+            try
+            {
+                if (id == null) { return BadRequest(); }
 
-            var match = await this._cricInfoRepository.GetMatchAsync(id);
+                this._logger.LogInformation($"GET request - Match ID '{id.Value}'");
 
-            if (match == null) { return NotFound(); }
+                var match = await this._cricInfoRepository.GetMatchAsync(id.Value);
 
-            return Ok(match);
+                if (match == null) { return NotFound(); }
+
+                return Ok(match);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
         }
 
         [HttpPost()]
         public async Task<IActionResult> CreateMatchAsync([FromBody]Match match)
         {
-            if (match == null) { return BadRequest(); }
+            try
+            {
+                if (match == null) { return BadRequest(); }
 
-            var (dataCreationResponse, id) = await this._cricInfoRepository.CreateMatchAsync(match);
+                this._logger.LogInformation($"POST request - Home Team: '{match.HomeTeam}, Away Team: {match.AwayTeam}, Date: {match.DateOfFirstDay.ToLongDateString()}'");
 
-            if (dataCreationResponse == DataCreationResponse.DuplicateContent) { return StatusCode(409); }
-            if (dataCreationResponse == DataCreationResponse.Failure) { return StatusCode(500); }
-            if (dataCreationResponse == DataCreationResponse.Success && id == null) { return StatusCode(500); }
+                var (dataCreationResponse, id) = await this._cricInfoRepository.CreateMatchAsync(match);
 
-            this._logger.LogInformation($"Success - Content created at id '{id}'");
+                if (dataCreationResponse == DataCreationResponse.DuplicateContent) { return StatusCode(409); }
+                if (dataCreationResponse == DataCreationResponse.Failure) { return StatusCode(500); }
+                if (dataCreationResponse == DataCreationResponse.Success && id == null) { return StatusCode(500); }
 
-            return CreatedAtRoute("GetMatchAsync", new { id = id }, match);
+                this._logger.LogInformation($"Success - Content created at id '{id}'");
+
+                return CreatedAtRoute("GetMatchAsync", new { id = id }, match);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
         }
 
         [HttpGet()]
         [Route("CheckMatchExists")]
         public async Task<IActionResult> CheckMatchExistsAsync(
-            [FromQuery]string homeTeam, [FromQuery]string awayTeam, [FromQuery]DateTime date)
+            [FromQuery]string homeTeam, [FromQuery]string awayTeam, [FromQuery]DateTime? date)
         {
             try
             {
-                var result = await this._cricInfoRepository.MatchExistsAsync(homeTeam, awayTeam, date);
+                if (homeTeam == null || awayTeam == null || date == null) { return BadRequest(); }
+
+                this._logger.LogInformation($"GET request - Home Team: '{homeTeam}, Away Team: {awayTeam}, Date: {date}'");
+
+                var result = await this._cricInfoRepository.MatchExistsAsync(homeTeam, awayTeam, date.Value);
+
                 return Ok(result);
             }
             catch (Exception e)
