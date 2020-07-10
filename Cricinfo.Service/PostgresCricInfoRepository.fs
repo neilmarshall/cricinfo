@@ -2,12 +2,21 @@
 
 open System
 open System.Threading.Tasks
+open Microsoft.Extensions.Logging
 open Cricinfo.Models
 open PostgresDbFunctions
 
-type public PostgresCricInfoRepository(connString : string) =
+type public PostgresCricInfoRepository<'T>(connString : string, logger : ILogger<'T>) =
     
     let postgresExceptionCatcher = new Func<exn, bool>(function | :? Npgsql.PostgresException -> true | _ -> false)
+    let logger = if logger <> null then Some logger else None
+    let logError (e : exn) =
+        match logger with
+        | Some logger -> logger.LogError(e.Message)
+        | None -> ()
+
+    new (connString : string) =
+        PostgresCricInfoRepository(connString, null)
 
     interface ICricInfoRepository with
 
@@ -53,10 +62,12 @@ type public PostgresCricInfoRepository(connString : string) =
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
+                        ae.InnerExceptions |> Seq.iter logError
                         ae.Flatten().Handle(postgresExceptionCatcher)
                         return DataCreationResponse.Failure, Nullable()
                 with
                 | :? AggregateException as ae ->
+                    ae.InnerExceptions |> Seq.iter logError
                     ae.Flatten().Handle(postgresExceptionCatcher)
                     return DataCreationResponse.Failure, Nullable()
             } |> Async.StartAsTask
@@ -73,9 +84,11 @@ type public PostgresCricInfoRepository(connString : string) =
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
+                        ae.InnerExceptions |> Seq.iter logError
                         ae.Flatten().Handle(postgresExceptionCatcher); ()
                 with
                 | :? AggregateException as ae ->
+                    ae.InnerExceptions |> Seq.iter logError
                     ae.Flatten().Handle(postgresExceptionCatcher); ()
             } |> Async.StartAsTask
 
@@ -94,9 +107,11 @@ type public PostgresCricInfoRepository(connString : string) =
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
+                        ae.InnerExceptions |> Seq.iter logError
                         ae.Flatten().Handle(postgresExceptionCatcher); ()
                 with
                 | :? AggregateException as ae ->
+                    ae.InnerExceptions |> Seq.iter logError
                     ae.Flatten().Handle(postgresExceptionCatcher); ()
             } |> Async.StartAsTask
 
@@ -109,6 +124,7 @@ type public PostgresCricInfoRepository(connString : string) =
                     return! checkMatchExistsAsync conn trans homeTeam awayTeam date
                 with
                 | :? AggregateException as ae ->
+                    ae.InnerExceptions |> Seq.iter logError
                     ae.Flatten().Handle(postgresExceptionCatcher)
                     return false
             } |> Async.StartAsTask

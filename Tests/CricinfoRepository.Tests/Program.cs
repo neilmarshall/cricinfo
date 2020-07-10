@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Cricinfo.Models;
 using Cricinfo.Services;
 using static System.Console;
@@ -24,7 +25,7 @@ namespace CricinfoRepository.Tests
                 WriteLine("Deserializing data...");
                 var match = JsonSerializer.Deserialize<Match>(sr.ReadToEnd());
                 WriteLine("Writing data to database...");
-                ICricInfoRepository cricInfoRepository = new PostgresCricInfoRepository(connString);
+                ICricInfoRepository cricInfoRepository = new PostgresCricInfoRepository<ControllerBase>(connString);
                 await cricInfoRepository.DeleteMatchAsync(match.HomeTeam, match.AwayTeam, match.DateOfFirstDay);
                 var (response, id) = await cricInfoRepository.CreateMatchAsync(match);
                 WriteLine($"Write completed with response '{response}' and id '{id}'");

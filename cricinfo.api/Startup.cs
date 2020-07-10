@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cricinfo.Api.Controllers;
 using Cricinfo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,7 +37,9 @@ namespace Cricinfo.Api
                 }
                 else
                 {
-                    return new PostgresCricInfoRepository(Configuration.GetConnectionString("PostgresConnection"));
+                    return new PostgresCricInfoRepository<MatchController>(
+                        Configuration.GetConnectionString("PostgresConnection"),
+                        sp.GetRequiredService<ILogger<MatchController>>());
                 }
             });
         }
