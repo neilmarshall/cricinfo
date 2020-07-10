@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace Cricinfo.Api
 {
@@ -21,6 +22,7 @@ namespace Cricinfo.Api
                 .ConfigureLogging(logging =>
                 {
                     logging.AddConsole();
+                    logging.AddAzureWebAppDiagnostics();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
