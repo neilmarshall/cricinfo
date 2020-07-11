@@ -3,7 +3,7 @@
 @using System
 @using Cricinfo.Models.Enums
 @{
-    <div>
+    <div class="container">
         <form class="form-group" method="post">
             <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly">
                 Please review the following validation errors:
@@ -25,7 +25,9 @@
             }
 
             <label asp-for=DateOfFirstDay></label>
-            <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
+            <div class="input-group date">
+                <input class="form-control datepicker" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
+            </div>
             <span class="text-danger" asp-validation-for="DateOfFirstDay"></span>
 
             <label asp-for=HomeTeam></label>
