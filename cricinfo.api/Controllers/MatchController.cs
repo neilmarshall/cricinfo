@@ -21,21 +21,20 @@ namespace Cricinfo.Api.Controllers
             this._logger = logger;
         }
 
-        [HttpGet(Name="GetMatchAsync")]
-        [Route("{id}")]
-        public async Task<IActionResult> GetMatchAsync(int? id)
+        [HttpGet()]
+        [Route("CheckMatchExists")]
+        public async Task<IActionResult> CheckMatchExistsAsync(
+            [FromQuery] string homeTeam, [FromQuery] string awayTeam, [FromQuery] DateTime? date)
         {
             try
             {
-                if (id == null) { return BadRequest(); }
+                if (homeTeam == null || awayTeam == null || date == null) { return BadRequest(); }
 
-                this._logger.LogInformation($"GET request - Match ID '{id.Value}'");
+                this._logger.LogInformation($"GET request - Home Team: '{homeTeam}, Away Team: {awayTeam}, Date: {date}'");
 
-                var match = await this._cricInfoRepository.GetMatchAsync(id.Value);
+                var result = await this._cricInfoRepository.MatchExistsAsync(homeTeam, awayTeam, date.Value);
 
-                if (match == null) { return NotFound(); }
-
-                return Ok(match);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -70,27 +69,42 @@ namespace Cricinfo.Api.Controllers
             }
         }
 
-        [HttpGet()]
-        [Route("CheckMatchExists")]
-        public async Task<IActionResult> CheckMatchExistsAsync(
-            [FromQuery]string homeTeam, [FromQuery]string awayTeam, [FromQuery]DateTime? date)
+        [HttpGet(Name = "GetMatchAsync")]
+        [Route("Match/{id}")]
+        public async Task<IActionResult> GetMatchAsync(int? id)
         {
             try
             {
-                if (homeTeam == null || awayTeam == null || date == null) { return BadRequest(); }
+                if (id == null) { return BadRequest(); }
 
-                this._logger.LogInformation($"GET request - Home Team: '{homeTeam}, Away Team: {awayTeam}, Date: {date}'");
+                this._logger.LogInformation($"GET request - Match ID '{id.Value}'");
 
-                var result = await this._cricInfoRepository.MatchExistsAsync(homeTeam, awayTeam, date.Value);
+                var match = await this._cricInfoRepository.GetMatchAsync(id.Value);
 
-                return Ok(result);
+                if (match == null) { return NotFound(); }
+
+                return Ok(match);
             }
             catch (Exception e)
             {
                 this._logger.LogError(e.Message);
                 return StatusCode(500);
             }
+        }
 
+        [HttpGet()]
+        [Route("Teams")]
+        public async Task<IActionResult> GetTeamsAsync()
+        {
+            try
+            {
+                return Ok(await this._cricInfoRepository.GetTeamsAsync());
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
         }
     }
 }

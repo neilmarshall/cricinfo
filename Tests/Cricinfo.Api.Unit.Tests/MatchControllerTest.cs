@@ -157,5 +157,18 @@ namespace Cricinfo.Api.Unit.Tests
             var result = await matchController.CreateMatchAsync(match) as StatusCodeResult;
             Assert.AreEqual(409, result.StatusCode);
         }
+
+        [TestMethod]
+        public async Task GetTeamsAsyncReturns200()
+        {
+            var result = await matchController.GetTeamsAsync() as OkObjectResult;
+            var responseObject = result.Value as string[];
+
+            // assert on status code returned
+            Assert.AreEqual(200, result.StatusCode);
+
+            // assert on response object returned
+            CollectionAssert.AreEqual(new[] { "England", "South Africa" }, responseObject);
+        }
     }
 }

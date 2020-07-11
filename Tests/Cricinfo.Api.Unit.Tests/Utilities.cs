@@ -43,6 +43,9 @@ namespace Cricinfo.Api.Unit.Tests
                     It.Is<Match>(match => matches.Values.Any(m => m.DateOfFirstDay == match.DateOfFirstDay && m.HomeTeam == match.HomeTeam && m.AwayTeam == match.AwayTeam))))
                 .Returns(Task.FromResult(Tuple.Create<DataCreationResponse, long?>(DataCreationResponse.DuplicateContent, null)));
 
+            mock.Setup(ICricInfoRepository => ICricInfoRepository
+                .GetTeamsAsync())
+                .Returns(Task.FromResult(new[] { "England", "South Africa" }));
             return mock.Object;
         }
     }

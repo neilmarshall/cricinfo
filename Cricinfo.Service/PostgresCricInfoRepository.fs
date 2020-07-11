@@ -128,3 +128,18 @@ type public PostgresCricInfoRepository<'T>(connString : string, logger : ILogger
                     ae.Flatten().Handle(postgresExceptionCatcher)
                     return false
             } |> Async.StartAsTask
+
+        member this.GetTeamsAsync() =
+            async {
+                try
+                    use conn = getConnection connString
+                    do! conn.OpenAsync() |> Async.AwaitTask
+                    use trans = conn.BeginTransaction()
+                    let! teams = getColumnAsync<string> conn trans "SELECT name FROM TEAM;" Map.empty
+                    return teams |> Seq.toArray
+                with
+                | :? AggregateException as ae ->
+                    ae.InnerExceptions |> Seq.iter logError
+                    ae.Flatten().Handle(postgresExceptionCatcher)
+                    return Array.empty
+            } |> Async.StartAsTask

@@ -136,5 +136,12 @@ namespace Cricinfo.Api.Unit.Tests
                 homeTeam, awayTeam, DateTime.Now);
             Assert.AreEqual(expectedValue, actualValue);
         }
+
+        [TestMethod]
+        public async Task CheckGetTeamsAsyncReturnsCorrectly()
+        {
+            var actualValue = (await cricinfoApiClient.GetTeamsAsync()).ToArray();
+            CollectionAssert.AreEqual(new[] { "England", "South Africa" }, actualValue);
+        }
     }
 }

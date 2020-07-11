@@ -10,6 +10,17 @@ module private PostgresDbFunctions =
 
     let internal getConnection connString = new NpgsqlConnection(connString)
 
+    let internal getColumnAsync<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<seq<'T>> =
+        async {
+            use command = new NpgsqlCommand(query, conn, trans)
+            parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
+            let! response = command.ExecuteReaderAsync() |> Async.AwaitTask
+            return seq {
+                while response.Read() do
+                    yield response.GetValue(0) :?> 'T
+            }
+        }
+
     let private executeNonQuery (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Unit =
         use command = new NpgsqlCommand(query, conn, trans)
         parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)

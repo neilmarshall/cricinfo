@@ -110,3 +110,5 @@ type public SqlServerCricInfoRepository(connString : string) =
                     ae.Flatten().Handle(sqlServerExceptionCatcher)
                     return false
             } |> Async.StartAsTask
+
+            member this.GetTeamsAsync() = raise(NotImplementedException())
