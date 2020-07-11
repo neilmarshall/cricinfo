@@ -1,0 +1,1 @@
+INSERT INTO result (type) VALUES ('NoResult');

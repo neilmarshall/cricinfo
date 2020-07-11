@@ -71,7 +71,14 @@
     <div class="btn-toolbar justify-content-center">
         <div class="btn-group">
             <button class="btn btn-info btn-sm" id="previous-innings-btn" disabled>Previous Innings</button>
-            <button class="btn btn-info btn-sm" id="next-innings-btn">Next Innings</button>
+            @if (match.Scores.Count() == 1)
+            {
+                <button class="btn btn-info btn-sm" id="next-innings-btn" disabled>Next Innings</button>
+            }
+            else
+            {
+                <button class="btn btn-info btn-sm" id="next-innings-btn">Next Innings</button>
+            }
         </div>
     </div>
 
