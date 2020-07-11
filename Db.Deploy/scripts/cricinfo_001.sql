@@ -1,19 +1,4 @@
 -- Create table and relations
-
-DROP VIEW IF EXISTS show_matches;
-DROP TABLE IF EXISTS fall_of_wicket_scorecard;
-DROP TABLE IF EXISTS bowling_scorecard;
-DROP TABLE IF EXISTS batting_scorecard;
-DROP TABLE IF EXISTS innings;
-DROP TABLE IF EXISTS squad;
-DROP TABLE IF EXISTS how_out;
-DROP TABLE IF EXISTS player;
-DROP TABLE IF EXISTS match;
-DROP TABLE IF EXISTS match_type;
-DROP TABLE IF EXISTS result;
-DROP TABLE IF EXISTS venue;
-DROP TABLE IF EXISTS team;
-
 CREATE TABLE team (
     id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL UNIQUE

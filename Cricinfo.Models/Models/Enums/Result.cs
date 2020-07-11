@@ -9,7 +9,8 @@ namespace Cricinfo.Models.Enums
         HomeTeamWin = 0,
         AwayTeamWin = 1,
         Draw = 2,
-        Tie = 3
+        Tie = 3,
+        NoResult = 4
     }
 
     public class ResultConverter : JsonConverter<Result>
@@ -22,6 +23,7 @@ namespace Cricinfo.Models.Enums
                 "Away Team Win" => Result.AwayTeamWin,
                 "Draw" => Result.Draw,
                 "Tie" => Result.Tie,
+                "No Result" => Result.NoResult,
                 _ => throw new ArgumentException("Invalid JSON value for 'Result'")
             };
         }
@@ -34,6 +36,7 @@ namespace Cricinfo.Models.Enums
                 Result.AwayTeamWin => "Away Team Win",
                 Result.Draw => "Draw",
                 Result.Tie => "Tie",
+                Result.NoResult => "No Result",
                 _ => throw new ArgumentException("Invalid ENUM value for 'Result'")
             });
         }

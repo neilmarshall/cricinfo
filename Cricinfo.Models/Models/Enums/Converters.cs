@@ -11,6 +11,7 @@ namespace Cricinfo.Models.Enums
                 Result.AwayTeamWin => "Away Team Win",
                 Result.Draw => "Draw",
                 Result.Tie => "Tie",
+                Result.NoResult => "No Result",
                 _ => throw new ArgumentException("bad value for 'Cricinfo.Models.Enums.Result' enum")
             };
 
