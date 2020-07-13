@@ -31,7 +31,7 @@
             <div class="form-group">
                 <label asp-for=DateOfFirstDay></label>
                 <div class="input-group date">
-                    <input class="form-control datepicker" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
+                    <input class="form-control datepicker" asp-for=DateOfFirstDay type="text" value="@DateTime.Now.Date.ToString("dddd, dd MMMM yyyy")" />
                 </div>
                 <span class="text-danger" asp-validation-for="DateOfFirstDay"></span>
             </div>
@@ -86,4 +86,43 @@
             </div>
         </form>
     </div>
+}
+
+@section Scripts
+{
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('HomeTeam').addEventListener('change', () => {
+			const primarySelectBox = document.getElementById('HomeTeam');
+			const primarySelectBoxOptions = document.querySelectorAll('#HomeTeam option');
+			const alternateSelectBox = document.getElementById('AwayTeam');
+			const alternateSelectBoxOptions = document.querySelectorAll('#AwayTeam option');
+			if (primarySelectBox.value) {
+				Array.from(primarySelectBoxOptions).find(o => o.value === "").setAttribute('disabled', true);
+				Array.from(alternateSelectBoxOptions).forEach(o => {
+					if (o.value) {
+						if (o.value === primarySelectBox.value) {
+							o.setAttribute('disabled', true);
+						} else {
+							o.removeAttribute('disabled');
+						}
+					}
+				});
+			}
+
+            if (primarySelectBox.value === alternateSelectBox.value) {
+				Array.from(alternateSelectBoxOptions).find(o => o.value === "").removeAttribute('disabled');
+				Array.from(alternateSelectBoxOptions).find(o => o.value === "").selected = true;
+            }
+        });
+
+		document.getElementById('AwayTeam').addEventListener('change', () => {
+			const primarySelectBox = document.getElementById('AwayTeam');
+			const primarySelectBoxOptions = document.querySelectorAll('#AwayTeam option');
+			if (primarySelectBox.value) {
+				Array.from(primarySelectBoxOptions).find(o => o.value === "").setAttribute('disabled', true);
+			}
+        });
+    });
+</script>
 }

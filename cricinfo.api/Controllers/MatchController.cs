@@ -69,6 +69,28 @@ namespace Cricinfo.Api.Controllers
             }
         }
 
+        [HttpPost()]
+        [Route("Team")]
+        public async Task<IActionResult> CreateTeamAsync([FromQuery] string team)
+        {
+            try
+            {
+                if (team == null || team == "") { return BadRequest(); }
+
+                var dataCreationResponse = await this._cricInfoRepository.CreateTeamAsync(team);
+
+                if (dataCreationResponse == DataCreationResponse.DuplicateContent) { return StatusCode(409); }
+                if (dataCreationResponse == DataCreationResponse.Failure) { return StatusCode(500); }
+
+                return StatusCode(201);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
+        }
+
         [HttpGet(Name = "GetMatchAsync")]
         [Route("Match/{id}")]
         public async Task<IActionResult> GetMatchAsync(int? id)

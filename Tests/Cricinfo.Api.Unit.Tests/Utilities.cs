@@ -1,12 +1,12 @@
-﻿using Cricinfo.Services;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Cricinfo.Services;
+using Moq;
 using Match = Cricinfo.Models.Match;
 
 namespace Cricinfo.Api.Unit.Tests
@@ -46,6 +46,19 @@ namespace Cricinfo.Api.Unit.Tests
             mock.Setup(ICricInfoRepository => ICricInfoRepository
                 .GetTeamsAsync())
                 .Returns(Task.FromResult(new[] { "England", "South Africa" }));
+
+            mock.Setup(ICricInfoRepository => ICricInfoRepository
+                .CreateTeamAsync(It.Is<string>(t => t == "New Team")))
+                .Returns(Task.FromResult(DataCreationResponse.Success));
+
+            mock.Setup(ICricInfoRepository => ICricInfoRepository
+                .CreateTeamAsync(It.Is<string>(t => t == "Duplicate Team")))
+                .Returns(Task.FromResult(DataCreationResponse.DuplicateContent));
+
+            mock.Setup(ICricInfoRepository => ICricInfoRepository
+                .CreateTeamAsync(It.Is<string>(t => t == "")))
+                .Returns(Task.FromResult(DataCreationResponse.Failure));
+
             return mock.Object;
         }
     }

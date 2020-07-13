@@ -112,3 +112,4 @@ type public SqlServerCricInfoRepository(connString : string) =
             } |> Async.StartAsTask
 
             member this.GetTeamsAsync() = raise(NotImplementedException())
+            member this.CreateTeamAsync _ = raise(NotImplementedException())

@@ -29,6 +29,16 @@ namespace Cricinfo.Api.Client
             }
         }
 
+        public async Task CreateTeamAsync(string team)
+        {
+            var httpResponse = await _httpClient.PostAsync($"/api/team?team={team}", null);
+
+            if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
+            {
+                throw new ArgumentException($"failed to create data for match");
+            }
+        }
+
         public async Task<Match> GetMatchAsync(int id)
         {
             var httpResponse = await _httpClient.GetAsync($"/api/Match/{id}");
