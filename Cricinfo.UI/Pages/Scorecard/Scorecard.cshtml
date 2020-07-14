@@ -3,65 +3,126 @@
 @using System
 @using Cricinfo.Models.Enums
 @{
-    <div>
-        <form class="form-group" method="post">
+    <div class="container">
+        <form method="post">
             <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly">
                 Please review the following validation errors:
             </div>
 
-            <label asp-for=Venue></label>
-            <input class="form-control" asp-for=Venue />
-            <span class="text-danger" asp-validation-for="Venue"></span>
+            <div class="form-group">
+                <label asp-for=Venue></label>
+                <input class="form-control" asp-for=Venue />
+                <span class="text-danger" asp-validation-for="Venue"></span>
+            </div>
 
-            <label asp-for=MatchType></label>
-            @foreach (var matchType in Enum.GetValues(typeof(MatchType)))
-            {
-                <div class="form-check">
-                    <input class="form-check-input" asp-for=MatchType type="radio" value="@matchType">
-                    <label class="form-check-label" asp-for=MatchType>
-                        @Converters.ConvertMatchType((MatchType)matchType)
-                    </label>
+            <div class="form-group">
+                <label asp-for=MatchType></label>
+                @foreach (var matchType in Enum.GetValues(typeof(MatchType)))
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for=MatchType type="radio" value="@matchType">
+                        <label class="form-check-label" asp-for=MatchType>
+                            @Converters.ConvertMatchType((MatchType)matchType)
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for=DateOfFirstDay></label>
+                <div class="input-group date">
+                    <input class="form-control datepicker" asp-for=DateOfFirstDay type="text" value="@DateTime.Now.Date.ToString("dddd, dd MMMM yyyy")" />
                 </div>
-            }
+                <span class="text-danger" asp-validation-for="DateOfFirstDay"></span>
+            </div>
 
-            <label asp-for=DateOfFirstDay></label>
-            <input class="form-control" asp-for=DateOfFirstDay type="date" value="@DateTime.Now.Date.ToLongDateString()" />
-            <span class="text-danger" asp-validation-for="DateOfFirstDay"></span>
+            <div class="form-group">
+                <label asp-for=HomeTeam></label>
+                <select asp-for="HomeTeam" asp-items="Model.Teams">
+                    <option value="">Select a team</option>
+                </select>
+                <span class="text-danger" asp-validation-for="HomeTeam"></span>
+            </div>
 
-            <label asp-for=HomeTeam></label>
-            <input class="form-control" asp-for=HomeTeam />
-            <span class="text-danger" asp-validation-for="HomeTeam"></span>
+            <div class="form-group">
+                <label asp-for=AwayTeam></label>
+                <select asp-for="AwayTeam" asp-items="Model.Teams">
+                    <option value="">Select a team</option>
+                </select>
+                <span class="text-danger" asp-validation-for="AwayTeam"></span>
+            </div>
 
-            <label asp-for=AwayTeam></label>
-            <input class="form-control" asp-for=AwayTeam />
-            <span class="text-danger" asp-validation-for="AwayTeam"></span>
+            <div class="form-group">
+                <label asp-for=Result></label>
+                @foreach (var resultType in Enum.GetValues(typeof(Result)))
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for=Result type="radio" value="@resultType">
+                        <label class="form-check-label" asp-for=Result>
+                            @Converters.ConvertResult((Result)resultType)
+                        </label>
+                    </div>
+                }
+            </div>
 
-            <label asp-for=Result></label>
-            @foreach (var resultType in Enum.GetValues(typeof(Result)))
-            {
-                <div class="form-check">
-                    <input class="form-check-input" asp-for=Result type="radio" value="@resultType">
-                    <label class="form-check-label" asp-for=Result>
-                        @Converters.ConvertResult((Result)resultType)
-                    </label>
-                </div>
-            }
+            <div class="form-group">
+                <label asp-for=HomeSquad></label>
+                <textarea class="form-control" asp-for=HomeSquad></textarea>
+                <span class="text-danger" asp-validation-for="HomeSquad"></span>
+            </div>
 
-            <label asp-for=HomeSquad></label>
-            <textarea class="form-control" asp-for=HomeSquad></textarea>
-            <span class="text-danger" asp-validation-for="HomeSquad"></span>
+            <div class="form-group">
+                <label asp-for=AwaySquad></label>
+                <textarea class="form-control" asp-for=AwaySquad></textarea>
+                <span class="text-danger" asp-validation-for="AwaySquad"></span>
+            </div>
 
-            <label asp-for=AwaySquad></label>
-            <textarea class="form-control" asp-for=AwaySquad></textarea>
-            <span class="text-danger" asp-validation-for="AwaySquad"></span>
-
-            <br />
-
-            <div class="row">
-                <div class="col-4">
-                    <input class="form-control btn btn-info" type="submit" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <input class="form-control btn btn-info" type="submit" />
+                    </div>
                 </div>
             </div>
         </form>
     </div>
+}
+
+@section Scripts
+{
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('HomeTeam').addEventListener('change', () => {
+			const primarySelectBox = document.getElementById('HomeTeam');
+			const primarySelectBoxOptions = document.querySelectorAll('#HomeTeam option');
+			const alternateSelectBox = document.getElementById('AwayTeam');
+			const alternateSelectBoxOptions = document.querySelectorAll('#AwayTeam option');
+			if (primarySelectBox.value) {
+				Array.from(primarySelectBoxOptions).find(o => o.value === "").setAttribute('disabled', true);
+				Array.from(alternateSelectBoxOptions).forEach(o => {
+					if (o.value) {
+						if (o.value === primarySelectBox.value) {
+							o.setAttribute('disabled', true);
+						} else {
+							o.removeAttribute('disabled');
+						}
+					}
+				});
+			}
+
+            if (primarySelectBox.value === alternateSelectBox.value) {
+				Array.from(alternateSelectBoxOptions).find(o => o.value === "").removeAttribute('disabled');
+				Array.from(alternateSelectBoxOptions).find(o => o.value === "").selected = true;
+            }
+        });
+
+		document.getElementById('AwayTeam').addEventListener('change', () => {
+			const primarySelectBox = document.getElementById('AwayTeam');
+			const primarySelectBoxOptions = document.querySelectorAll('#AwayTeam option');
+			if (primarySelectBox.value) {
+				Array.from(primarySelectBoxOptions).find(o => o.value === "").setAttribute('disabled', true);
+			}
+        });
+    });
+</script>
 }

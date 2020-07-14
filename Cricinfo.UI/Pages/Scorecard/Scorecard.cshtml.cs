@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Cricinfo.Api.Client;
 using Cricinfo.Models;
 using Cricinfo.Models.Enums;
 using Cricinfo.UI.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cricinfo.UI.Pages
 {
@@ -15,6 +19,7 @@ namespace Cricinfo.UI.Pages
     public class ScorecardModel : PageModel
     {
         private readonly ICricinfoApiClient _cricinfoApiClient;
+        public List<SelectListItem> Teams { get; set; }
 
         [Required]
         public string Venue { get; set; }
@@ -43,8 +48,22 @@ namespace Cricinfo.UI.Pages
             this._cricinfoApiClient = cricinfoApiClient;
         }
 
-        public void OnGet()
+        private async Task LoadTeams()
         {
+            Teams = (await this._cricinfoApiClient.GetTeamsAsync())
+                .Select(team =>
+                    new SelectListItem
+                    {
+                        Value = team,
+                        Text = team,
+                        Selected = false
+                    })
+                .ToList();
+        }
+
+        public async Task OnGetAsync()
+        {
+            await LoadTeams();
         }
 
         public void OnGetFromInnings(Match match)
@@ -59,12 +78,17 @@ namespace Cricinfo.UI.Pages
             this.AwaySquad = String.Join(Environment.NewLine, match.AwaySquad);
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            if (!ModelState.IsValid) { return new PageResult(); }
+            if (!ModelState.IsValid)
+            {
+                await LoadTeams();
+                return new PageResult();
+            }
 
             if (this._cricinfoApiClient.MatchExistsAsync(HomeTeam, AwayTeam, DateOfFirstDay).Result)
             {
+                await LoadTeams();
                 ModelState.AddModelError(string.Empty, "A record already exists for the specified teams and date.");
                 return Page();
             }

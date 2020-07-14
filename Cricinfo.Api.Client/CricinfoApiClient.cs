@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -28,9 +29,19 @@ namespace Cricinfo.Api.Client
             }
         }
 
+        public async Task CreateTeamAsync(string team)
+        {
+            var httpResponse = await _httpClient.PostAsync($"/api/team?team={team}", null);
+
+            if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
+            {
+                throw new ArgumentException($"failed to create data for match");
+            }
+        }
+
         public async Task<Match> GetMatchAsync(int id)
         {
-            var httpResponse = await _httpClient.GetAsync($"/api/{id}");
+            var httpResponse = await _httpClient.GetAsync($"/api/Match/{id}");
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
@@ -40,6 +51,19 @@ namespace Cricinfo.Api.Client
             var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<Match>(jsonResponse,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive=true});
+        }
+
+        public async Task<IEnumerable<string>> GetTeamsAsync()
+        {
+            var httpResponse = await _httpClient.GetAsync($"/api/Teams");
+
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ArgumentException("failed to evaluate Teams");
+            }
+
+            var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<IEnumerable<string>>(jsonResponse);
         }
 
         public async Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date)

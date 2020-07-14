@@ -10,6 +10,17 @@ module private PostgresDbFunctions =
 
     let internal getConnection connString = new NpgsqlConnection(connString)
 
+    let internal getColumnAsync<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<seq<'T>> =
+        async {
+            use command = new NpgsqlCommand(query, conn, trans)
+            parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
+            let! response = command.ExecuteReaderAsync() |> Async.AwaitTask
+            return seq {
+                while response.Read() do
+                    yield response.GetValue(0) :?> 'T
+            }
+        }
+
     let private executeNonQuery (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Unit =
         use command = new NpgsqlCommand(query, conn, trans)
         parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
@@ -42,11 +53,16 @@ module private PostgresDbFunctions =
             return! executeScalarAsync conn trans query parameters
         }
 
+    let insertTeamAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (team : string) : Async<int> = 
+        async {
+            return! executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box team ])
+        }
+
     let getIdsAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (venue : string) (homeTeam : string) (awayTeam : string) : Async<int * int * int> = 
         async {
             let! venueId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_venue(@venue);" (Map.ofList [ "venue", box venue ])
-            let! homeTeamId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box homeTeam ])
-            let! awayTeamId = executeScalarAsync conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box awayTeam ])
+            let! homeTeamId = insertTeamAsync conn trans homeTeam
+            let! awayTeamId = insertTeamAsync conn trans awayTeam
             return venueId, homeTeamId, awayTeamId
         }
 

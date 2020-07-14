@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Pages\Scorecard\" />
     <Folder Include="ValidationAttributes\" />
-    <Folder Include="wwwroot\js\scorecard\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.json" />
