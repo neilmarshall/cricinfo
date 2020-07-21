@@ -64,6 +64,7 @@
             var label = innings.Innings == 1 ? "First" : "Second";
             ViewData["ScorecardTitle"] = $"{label} Innings - {innings.Team}";
             ViewData["innings-scorecard-id"] = $"innings-scorecard-{i}";
+            ViewData["batting-figures-summary"] = match.Scores[i].RenderBattingScore();
             <partial name="_Scorecard" model="innings" />
         }
     </div>

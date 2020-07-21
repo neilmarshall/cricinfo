@@ -1,73 +1,89 @@
 ﻿@page
+@using static Cricinfo.Models.Constants
 @using Cricinfo.Models.Enums
 @model InningsModel
 @{
-    bool showNextInningsButton = false;
-    if (TempData.ContainsKey("matchType") && TempData.ContainsKey("teamOrder") && TempData.ContainsKey("innings"))
-    {
-        showNextInningsButton = (MatchType)TempData.Peek("matchType") switch
-        {
-            MatchType.TestMatch => !((int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 2),
-            _ => !((int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 1)
-        };
-    }
-}
+	bool showNextInningsButton = false;
+	if (TempData.ContainsKey("matchType") && TempData.ContainsKey("teamOrder") && TempData.ContainsKey("innings"))
+	{
+		showNextInningsButton = (MatchType)TempData.Peek("matchType") switch
+		{
+			MatchType.TestMatch => !((int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 2),
+			_ => !((int)TempData.Peek("teamOrder") == 2 && (int)TempData.Peek("innings") == 1)
+		};
+	} }
 @{
-    <h1 class="font-weight-normal">@TempData.Peek("header")</h1>
+	<h1 class="font-weight-normal">@TempData.Peek("header")</h1>
 
-    <div>
-        <form class="form-group" method="post">
-            <div class="form-check">
-                <input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("homeTeam")" />
-                <label class="form-check-label" asp-for=Team>@TempData.Peek("homeTeam")</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("awayTeam")" />
-                <label class="form-check-label" asp-for=Team>@TempData.Peek("awayTeam")</label>
-            </div>
+	<div>
+		<form method="post">
+			<div class="form-check form-group row">
+				<div>
+					<input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("homeTeam")" />
+					<label class="form-check-label" asp-for=Team>@TempData.Peek("homeTeam")</label>
+				</div>
 
-            <label asp-for=BattingScorecard></label>
-            <textarea class="form-control" asp-for=BattingScorecard></textarea>
-            <span class="text-danger" asp-validation-for="BattingScorecard"></span>
+				<div>
+					<input class="form-check-input" asp-for=Team type="radio" value="@TempData.Peek("awayTeam")" />
+					<label class="form-check-label" asp-for=Team>@TempData.Peek("awayTeam")</label>
+				</div>
+			</div>
 
-            <label asp-for=BowlingScorecard></label>
-            <textarea class="form-control" asp-for=BowlingScorecard></textarea>
-            <span class="text-danger" asp-validation-for="BowlingScorecard"></span>
+			<div class="form-group row">
+				<label asp-for=BattingScorecard></label>
+				<textarea class="form-control" asp-for=BattingScorecard rows="@NumberOfPlayers"></textarea>
+				<span class="text-danger" asp-validation-for="BattingScorecard"></span>
+			</div>
 
-            <label asp-for=FallOfWicketScorecard></label>
-            <textarea class="form-control" asp-for=FallOfWicketScorecard></textarea>
-            <span class="text-danger" asp-validation-for="FallOfWicketScorecard"></span>
+			<div class="form-group form-inline row">
+				<label asp-for=Extras></label>
+				<div class="col-sm-4">
+					<input class="form-control text-right" asp-for=Extras />
+					<span class="text-danger" asp-validation-for="Extras"></span>
+				</div>
 
-            <label asp-for=Extras></label>
-            <input class="form-control" asp-for=Extras />
-            <span class="text-danger" asp-validation-for="Extras"></span>
+				<div class="form-check">
+					<label class="form-check-label col-10" asp-for=Declared></label>
+					<input class="form-check-input" asp-for="Declared">
+				</div>
+			</div>
 
-            <br />
+			<div class="form-group row">
+				<label asp-for=BowlingScorecard></label>
+				<textarea class="form-control" asp-for=BowlingScorecard rows="@NumberOfPlayers"></textarea>
+				<span class="text-danger" asp-validation-for="BowlingScorecard"></span>
+			</div>
 
-            <div class="row">
-                <div class="col">
-                    <input class="form-control btn btn-info" type="submit"
-                           asp-page-handler="ReturnToPreviousPage" value="Back" />
-                </div>
+			<div class="form-group row">
+				<label asp-for=FallOfWicketScorecard></label>
+				<textarea class="form-control" asp-for=FallOfWicketScorecard rows="@NumberOfPlayers - 1"></textarea>
+				<span class="text-danger" asp-validation-for="FallOfWicketScorecard"></span>
+			</div>
 
-                <div class="col">
-                    @if (showNextInningsButton)
-                    {
-                        <input class="form-control btn btn-info" type="submit"
-                               asp-page-handler="AddAnotherInnings" value="Add another innings" />
-                    }
-                    else
-                    {
-                        <input class="form-control btn btn-info" type="submit" disabled
-                               asp-page-handler="AddAnotherInnings" value="Add another innings" />
-                    }
-                </div>
+			<div class="form-group row">
+				<div class="col">
+					<input class="form-control btn btn-info" type="submit"
+						   asp-page-handler="ReturnToPreviousPage" value="Back" />
+				</div>
 
-                <div class="col">
-                    <input class="form-control btn btn-info" type="submit"
-                            asp-page-handler="SubmitAllInnings" value="Submit all innings" />
-                </div>
-            </div>
-        </form>
-    </div>
+				<div class="col">
+					@if (showNextInningsButton)
+					{
+						<input class="form-control btn btn-info" type="submit"
+							   asp-page-handler="AddAnotherInnings" value="Add another innings" />
+					}
+					else
+					{
+						<input class="form-control btn btn-info" type="submit" disabled
+							   asp-page-handler="AddAnotherInnings" value="Add another innings" />
+					}
+				</div>
+
+				<div class="col">
+					<input class="form-control btn btn-info" type="submit"
+						   asp-page-handler="SubmitAllInnings" value="Submit all innings" />
+				</div>
+			</div>
+		</form>
+	</div>
 }
