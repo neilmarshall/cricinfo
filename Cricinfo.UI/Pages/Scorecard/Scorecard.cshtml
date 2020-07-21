@@ -1,7 +1,8 @@
 ﻿@page
-@model ScorecardModel
 @using System
+@using static Cricinfo.Models.Constants
 @using Cricinfo.Models.Enums
+@model ScorecardModel
 @{
     <div class="container">
         <form method="post">
@@ -67,13 +68,13 @@
 
             <div class="form-group">
                 <label asp-for=HomeSquad></label>
-                <textarea class="form-control" asp-for=HomeSquad></textarea>
+                <textarea class="form-control" asp-for=HomeSquad rows="@NumberOfPlayers"></textarea>
                 <span class="text-danger" asp-validation-for="HomeSquad"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for=AwaySquad></label>
-                <textarea class="form-control" asp-for=AwaySquad></textarea>
+                <textarea class="form-control" asp-for=AwaySquad rows="@NumberOfPlayers"></textarea>
                 <span class="text-danger" asp-validation-for="AwaySquad"></span>
             </div>
 

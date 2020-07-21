@@ -176,9 +176,9 @@ module private PostgresDbFunctions =
             let insertSingleInnings (innings : Score) : Unit =
                 let id = executeScalar conn trans "SELECT NEXTVAL('innings_id_seq');" Map.empty
                 let teamId = executeScalar<int> conn trans "SELECT * FROM get_id_and_insert_if_not_exists_team(@team);" (Map.ofList [ "team", box innings.Team ])
-                let query = "INSERT INTO innings (id, match_id, team_id, innings, extras) VALUES (@id, @match_id, @team_id, @innings, @extras);"
+                let query = "INSERT INTO innings (id, match_id, team_id, innings, extras, declared) VALUES (@id, @match_id, @team_id, @innings, @extras, @declared);"
                 let parameters = Map.ofList [ "id", box id; "match_id", box matchId; "team_id", box teamId; "innings", box innings.Innings;
-                                              "extras", box innings.Extras; ]
+                                              "extras", box innings.Extras; "declared", box innings.Declared ]
                 executeNonQuery conn trans query parameters
                 insertBattingScores conn trans tryGetPlayerId id innings.BattingScorecard
                 insertBowlingScores conn trans tryGetPlayerId id innings.BowlingScorecard

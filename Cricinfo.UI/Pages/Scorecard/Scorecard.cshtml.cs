@@ -51,6 +51,7 @@ namespace Cricinfo.UI.Pages
         private async Task LoadTeams()
         {
             Teams = (await this._cricinfoApiClient.GetTeamsAsync())
+                .OrderBy(team => team)
                 .Select(team =>
                     new SelectListItem
                     {

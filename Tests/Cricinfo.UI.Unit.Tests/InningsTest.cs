@@ -5,8 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Cricinfo.Parser;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Cricinfo.Models.Constants;
 
 namespace Cricinfo.UI.Unit.Tests
 {
@@ -41,6 +43,7 @@ namespace Cricinfo.UI.Unit.Tests
             yield return new KeyValuePair<string, string>("BattingScorecard", battingScorecard);
             yield return new KeyValuePair<string, string>("BowlingScorecard", bowlingScorecard);
             yield return new KeyValuePair<string, string>("FallOfWicketScorecard", fallOfWicketScorecard);
+            yield return new KeyValuePair<string, string>("Declared", "false");
         }
 
         [ClassInitialize]
@@ -242,6 +245,41 @@ namespace Cricinfo.UI.Unit.Tests
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"Extras\" data-valmsg-replace=\"true\">The field Extras must be between 0 and {int.MaxValue}.</span>").Match(content).Success);
+        }
+
+        [TestMethod]
+        public void InningsSummaryTextRendersCorrectly()
+        {
+            var data = this.FormContent().ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var innings = new Models.Score
+            {
+                BattingScorecard = Parse.parseBattingScorecard(data["BattingScorecard"]).ToArray(),
+                BowlingScorecard = Parse.parseBowlingScorecard(data["BowlingScorecard"]).ToArray(),
+                Declared = false,
+                Extras = int.Parse(data["Extras"]),
+                FallOfWicketScorecard = Parse.parseFallOfWicketScorecard(data["FallOfWicketScorecard"]).ToArray(),
+                Innings = int.Parse(data["Innings"]),
+                Team = data["Team"]
+            };
+
+            // check basic case
+            Assert.AreEqual("164-5", innings.RenderBattingScore());
+
+            // check parses declarations
+            innings.Declared = true;
+            Assert.AreEqual("164-5d", innings.RenderBattingScore());
+
+            // check doesn't count 'not outs' in dismissals
+            innings.BattingScorecard.First().Dismissal = Models.Enums.Dismissal.NotOut;
+            Assert.AreEqual("164-4d", innings.RenderBattingScore());
+
+            // check 'all out' renders correctly
+            innings.Declared = false;
+            innings.BattingScorecard = innings.BattingScorecard
+                .Concat(Enumerable.Repeat(innings.BattingScorecard.Last(), NumberOfPlayers - innings.BattingScorecard.Length))
+                .ToArray();
+            Assert.AreEqual("278 all out", innings.RenderBattingScore());
         }
     }
 }

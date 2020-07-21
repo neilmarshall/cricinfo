@@ -28,6 +28,8 @@ namespace Cricinfo.UI.Pages
         public string FallOfWicketScorecard { get; set; }
         [Range(0, int.MaxValue)]
         public int Extras { get; set; }
+        [Required]
+        public bool Declared { get; set; }
 
         public void OnGetFromScorecard(string header, string homeTeam, string awayTeam, string selectedTeam)
         {
@@ -88,6 +90,7 @@ namespace Cricinfo.UI.Pages
                 Team = Team,
                 Innings = innings,
                 Extras = Extras,
+                Declared = Declared,
                 BattingScorecard = battingScorecard,
                 BowlingScorecard = bowlingScorecard,
                 FallOfWicketScorecard = fallOfWicketScorecard
@@ -180,6 +183,7 @@ namespace Cricinfo.UI.Pages
                 Team = Team,
                 Innings = innings,
                 Extras = Extras,
+                Declared = Declared,
                 BattingScorecard = battingScorecard,
                 BowlingScorecard = bowlingScorecard,
                 FallOfWicketScorecard = fallOfWicketScorecard
