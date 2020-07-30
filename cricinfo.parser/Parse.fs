@@ -78,7 +78,7 @@ module Parse =
             Seq.map2
                 (fun (firstName : string) lastName ->
                     if Seq.filter (fun n -> n = lastName) lastNames |> Seq.length > 1
-                        then seq { yield string firstName.[0]; yield lastName } |> String.concat " "
+                        then seq { yield string firstName; yield lastName } |> String.concat " "
                         else lastName)
                 firstNames
                 lastNames

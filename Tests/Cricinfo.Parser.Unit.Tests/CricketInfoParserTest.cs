@@ -1,6 +1,7 @@
 using Cricinfo.Models.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cricinfo.Parser.Unit.Tests
@@ -233,27 +234,41 @@ namespace Cricinfo.Parser.Unit.Tests
         public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName,
             string expectedLastName, string expectedLookupCode)
         {
-            var (actualFirstName, actualLastName, actualLookupCode) =
-                Parse.parseNames(new[] { rawString }).First();
+            var (actualFirstName, actualLastName, actualLookupCode) = Parse.parseNames(new[] { rawString }).First();
             Assert.AreEqual(expectedFirstName, actualFirstName);
             Assert.AreEqual(expectedLastName, actualLastName);
             Assert.AreEqual(expectedLookupCode, actualLookupCode);
         }
 
-        [TestMethod]
-        public void ParseNamesHandlesDuplicateSurnamesCorrectly()
+        private static IEnumerable<object[]> DuplicateSurnamesTestData()
         {
-            var parsedNames = Parse.parseNames(
-                new string[] { "Aa Name1", "Aa Name2", "Ba Name1" });
-
-            CollectionAssert.AreEqual(
+            yield return new object[]
+            {
+                new string[] { "Aa Name1", "Aa Name2", "Ba Name1" },
                 new Tuple<string, string, string>[]
                 {
-                    Tuple.Create("Aa", "Name1", "A Name1"),
+                    Tuple.Create("Aa", "Name1", "Aa Name1"),
                     Tuple.Create("Aa", "Name2", "Name2"),
-                    Tuple.Create("Ba", "Name1", "B Name1"),
-                },
-                parsedNames.ToArray());
+                    Tuple.Create("Ba", "Name1", "Ba Name1")
+                }
+            };
+            yield return new object[]
+            {
+                new string[] { "Abid Ali", "Azhar Ali(c)" },
+                new Tuple<string, string, string>[]
+                {
+                    Tuple.Create("Abid", "Ali", "Abid Ali"),
+                    Tuple.Create("Azhar", "Ali", "Azhar Ali"),
+                }
+            };
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(DuplicateSurnamesTestData), DynamicDataSourceType.Method)]
+        public void ParseNamesHandlesDuplicateSurnamesCorrectly(IEnumerable<string> namesToParse, Tuple<string, string, string>[] expected)
+        {
+            var parsedNames = Parse.parseNames(namesToParse).ToArray();
+            CollectionAssert.AreEqual(expected, parsedNames);
         }
 
         [TestMethod]
