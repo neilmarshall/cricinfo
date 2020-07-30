@@ -148,7 +148,7 @@ module private DomainModel =
                 | [runs; mins; balls; fours; sixes] -> { runs = runs; mins = mins; balls = balls; fours = fours; sixes = sixes }
                 | _ -> inputString |> sprintf "invalid figures in batting data - '%s'" |> BattingFiguresException |> raise
             let caught =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\sc\s(?<catcher>[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc\s(?<catcher>[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Caught { name = result.Groups.["batsman"].Value |> trim |> Player;
                              catcher = result.Groups.["catcher"].Value |> trim |> Player;
@@ -156,14 +156,14 @@ module private DomainModel =
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let lbw =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)lbw\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)lbw\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     LBW { name = result.Groups.["batsman"].Value |> trim |> Player;
                           bowler = result.Groups.["bowler"].Value |> trim |> Player;
                           figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let caughtAndBowled =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\sc & b\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc & b\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     CaughtAndBowled { name = result.Groups.["batsman"].Value |> trim |> Player;
                                       catcher = result.Groups.["bowler"].Value |> trim |> Player;
@@ -171,32 +171,32 @@ module private DomainModel =
                                       figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let bowled =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Bowled { name = result.Groups.["batsman"].Value |> trim |> Player;
                              bowler = result.Groups.["bowler"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let retired =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\s+Retired Not Out\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\s+Retired Not Out\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Retired { name = result.Groups.["batsman"].Value |> trim |> Player;
                               figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let notOut =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\s+not out\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\s+not out\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     NotOut { name = result.Groups.["batsman"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let runOut =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\s+run out[^\d]+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\s+run out[^\d]+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     RunOut { name = result.Groups.["batsman"].Value |> trim |> Player;
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let stumped =
-                let result = Regex("^(?<batsman>[A-Za-z\s]+)\sst\s(?:[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sst\s(?:[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Stumped { name = result.Groups.["batsman"].Value |> trim |> Player;
                               bowler = result.Groups.["bowler"].Value |> trim |> Player;
@@ -219,7 +219,7 @@ module private DomainModel =
                 match inputString.Trim().Split() |> Seq.filter (System.String.IsNullOrWhiteSpace >> not) |> Seq.map Double.Parse |> Seq.toList with
                 | [overs; maidens; runs; wickets] -> { overs = overs; maidens = int maidens; runs = int runs; wickets = int wickets }
                 | _ -> inputString |> sprintf "invalid figures in bowling data - '%s'" |> BowlingFiguresException |> raise
-            let result = Regex("^(?<bowler>[A-Za-z\s]+)(?<figures>([\d\.]+\s+){3}[\d\.]+)").Match(score)
+            let result = Regex("^(?<bowler>[A-Za-z\s']+)(?<figures>([\d\.]+\s+){3}[\d\.]+)").Match(score)
             if result.Success then
                 { name = result.Groups.["bowler"].Value |> trim |> Player;
                   figures = result.Groups.["figures"].Value |> parseBowlingFigures }

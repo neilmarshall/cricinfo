@@ -121,6 +121,14 @@ namespace Cricinfo.Parser.Unit.Tests
             var battingFigures = @"Crawley	c de Kock	4	15	15	0	0	26.67";
             Parse.parseBattingScorecard(battingFigures).ToArray();
         }
+
+        [TestMethod]
+        public void BattingScorecardParsesNamesWithApostrophes()
+        {
+            var battingFigures = @"K O'Brien	c Willey	b Rashid	22	68	36	0	0	61.11";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            Assert.AreEqual("K O'Brien", parsedBattingFigures.First().Name);
+        }
     }
 
     [TestClass]
@@ -171,8 +179,16 @@ namespace Cricinfo.Parser.Unit.Tests
         [ExpectedException(typeof(Exceptions.BowlingFiguresException))]
         public void BowlingScorecardErrorsOnInvalidInput()
         {
-            var battingFigures = @"Anderson	18.0	7";
-            Parse.parseBowlingScorecard(battingFigures).ToArray();
+            var bowlingFigures = @"Anderson	18.0	7";
+            Parse.parseBowlingScorecard(bowlingFigures).ToArray();
+        }
+
+        [TestMethod]
+        public void BowlingScorecardParsesNamesWithApostrophes()
+        {
+            var bowlingFigures = @"K O'Brien	18.0	9	23	2	1.28";
+            var parsedBowlingFigures = Parse.parseBowlingScorecard(bowlingFigures);
+            Assert.AreEqual("K O'Brien", parsedBowlingFigures.First().Name);
         }
     }
 
@@ -200,8 +216,8 @@ namespace Cricinfo.Parser.Unit.Tests
         [ExpectedException(typeof(Exceptions.FallOfWicketException))]
         public void FallOfWicketScorecardErrorsOnInvalidInput()
         {
-            var battingFigures = @"7abc1-1 (28.6 ovs)	Elgar";
-            Parse.parseFallOfWicketScorecard(battingFigures).ToArray();
+            var fallOfWicketData = @"7abc1-1 (28.6 ovs)	Elgar";
+            Parse.parseFallOfWicketScorecard(fallOfWicketData).ToArray();
         }
     }
 
@@ -213,6 +229,7 @@ namespace Cricinfo.Parser.Unit.Tests
         [DataRow("Temba Bavuma", "Temba", "Bavuma", "Bavuma")]
         [DataRow("Quinton de Kock(wk)", "Quinton", "de Kock", "de Kock")]
         [DataRow("Quinton de Kock(c)(wk)", "Quinton", "de Kock", "de Kock")]
+        [DataRow("Kevin O'Brien", "Kevin", "O'Brien", "O'Brien")]
         public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName,
             string expectedLastName, string expectedLookupCode)
         {
