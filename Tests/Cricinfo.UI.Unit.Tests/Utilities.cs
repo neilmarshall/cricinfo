@@ -7,13 +7,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Cricinfo.Api.Client;
-using Microsoft.AspNetCore.TestHost;
+using Cricinfo.Services.IdentityStore.Models;
 
 namespace Cricinfo.UI.Unit.Tests
 {
@@ -118,18 +119,17 @@ namespace Cricinfo.UI.Unit.Tests
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Remove the app's ICricinfoApiClient registration.
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType ==
                             typeof(ICricinfoApiClient));
-
-                    if (descriptor != null)
-                    {
-                        services.Remove(descriptor);
-                    }
-
-                    // Add ICricinfoApiClient using a mock repository for testing.
+                    if (descriptor != null) { services.Remove(descriptor); }
                     services.AddScoped(_ => MoqCricinfoApiClient());
+
+                    descriptor = services.SingleOrDefault(
+                        d => d.ServiceType ==
+                            typeof(UserManager<ApplicationUser>));
+                    if (descriptor != null) { services.Remove(descriptor); }
+                    services.AddScoped(_ => MoqUserManager());
 
                     // Mock authentication / authorization
                     services.AddAuthentication(options => { options.DefaultAuthenticateScheme = this.authenticationScheme; })
@@ -166,6 +166,15 @@ namespace Cricinfo.UI.Unit.Tests
                     homeTeam == "duplicate home team" && awayTeam == "duplicate away team" ? true : false));
 
             return mock.Object;
+        }
+
+        private static UserManager<ApplicationUser> MoqUserManager()
+        {
+            var mockUserStore = new Mock<IQueryableUserStore<ApplicationUser>>();
+
+            mockUserStore.SetupGet(us => us.Users).Returns((new ApplicationUser[0]).AsQueryable());
+
+            return new UserManager<ApplicationUser>(mockUserStore.Object, null, null, null, null, null, null, null, null);
         }
     }
 }
