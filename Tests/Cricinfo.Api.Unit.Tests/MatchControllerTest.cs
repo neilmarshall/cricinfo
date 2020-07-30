@@ -139,7 +139,7 @@ namespace Cricinfo.Api.Unit.Tests
                 AwayTeam = ""
             };
 
-            var result = await matchController.PostAsync(match) as CreatedAtActionResult;
+            var result = await matchController.PostAsync(match) as CreatedAtRouteResult;
             Assert.AreEqual(201, result.StatusCode);
             Assert.AreEqual(43L, result.RouteValues["id"]);
         }

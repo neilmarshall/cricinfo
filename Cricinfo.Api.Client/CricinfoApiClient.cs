@@ -21,7 +21,7 @@ namespace Cricinfo.Api.Client
         {
             var content = new StringContent(JsonSerializer.Serialize(match),
                 System.Text.Encoding.UTF8, "application/json");
-            var httpResponse = await _httpClient.PostAsync("/api", content);
+            var httpResponse = await _httpClient.PostAsync("/api/match", content);
 
             if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
             {
