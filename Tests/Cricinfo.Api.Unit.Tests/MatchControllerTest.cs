@@ -22,7 +22,10 @@ namespace Cricinfo.Api.Unit.Tests
                 builder.AddConsole()
             );
             var logger = loggerFactory.CreateLogger<MatchController>();
-            matchController = new MatchController(Utilities.MoqCricInfoRepository(), logger);
+            matchController = new MatchController(
+                Utilities.MoqCricInfoCommandService(),
+                Utilities.MoqCricInfoQueryService(),
+                logger);
         }
 
         [TestMethod]
@@ -37,7 +40,7 @@ namespace Cricinfo.Api.Unit.Tests
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
             Assert.AreEqual(MatchType.TestMatch, responseObject.MatchType);
-            Assert.AreEqual(new DateTime(2018, 12, 26), responseObject.DateOfFirstDay);
+            Assert.AreEqual(new DateTime(2019, 12, 26), responseObject.DateOfFirstDay);
             Assert.AreEqual("South Africa", responseObject.HomeTeam);
             Assert.AreEqual("England", responseObject.AwayTeam);
             Assert.AreEqual(Result.HomeTeamWin, responseObject.Result);
@@ -149,7 +152,7 @@ namespace Cricinfo.Api.Unit.Tests
             var match = new Match
             {
                 Venue = "",
-                DateOfFirstDay = DateTime.Parse("2018-12-26"),
+                DateOfFirstDay = DateTime.Parse("2019-12-26"),
                 HomeTeam = "South Africa",
                 AwayTeam = "England"
             };

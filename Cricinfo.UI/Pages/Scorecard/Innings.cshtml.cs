@@ -51,7 +51,7 @@ namespace Cricinfo.UI.Pages
 
             var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item3).ToHashSet();
 
-            foreach(var bs in battingScorecard)
+            foreach (var bs in battingScorecard)
             {
                 if (!parsedNames.Contains(bs.Name))
                 {

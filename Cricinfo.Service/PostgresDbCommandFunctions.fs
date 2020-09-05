@@ -1,6 +1,6 @@
 ﻿namespace Cricinfo.Services
 
-module private PostgresDbFunctions =
+module private PostgresDbCommandFunctions =
 
     open System
     open Npgsql
@@ -10,7 +10,7 @@ module private PostgresDbFunctions =
 
     let internal getConnection connString = new NpgsqlConnection(connString)
 
-    let internal getColumnAsync<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<seq<'T>> =
+    let private getColumnAsync<'T> (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (query : string) (parameters : Map<string, obj>) : Async<seq<'T>> =
         async {
             use command = new NpgsqlCommand(query, conn, trans)
             parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
@@ -44,13 +44,6 @@ module private PostgresDbFunctions =
             parameters |> Map.iter (fun k v -> command.Parameters.AddWithValue(k, v) |> ignore)
             let! response =  command.ExecuteScalarAsync() |> Async.AwaitTask
             return response :?> 'T
-        }
-
-    let checkMatchExistsAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (homeTeam : string) (awayTeam : string) (date : DateTime) : Async<bool> =
-        async {
-            let query = "SELECT * FROM check_match_exists(@home_team, @away_team, @date_of_first_day);"
-            let parameters = Map.ofList [ "home_team", box homeTeam; "away_team", box awayTeam; "date_of_first_day", box date ]
-            return! executeScalarAsync conn trans query parameters
         }
 
     let insertTeamAsync (conn : NpgsqlConnection) (trans : NpgsqlTransaction) (team : string) : Async<int> = 
@@ -94,11 +87,10 @@ module private PostgresDbFunctions =
         (conn : NpgsqlConnection)
         (trans : NpgsqlTransaction)
         (matchId : int64)
-        (teamId : int)
-        (squad : seq<string>)
+        (squad : seq<int * string>)
             : Async<Map<string, int>> =
         async {
-            let parseSquadMember (name : string * string * string) : string * int =
+            let parseSquadMember (name : string * string * string, teamId : int) : string * int =
                 let firstName, lastName, lookupCode = name
                 let playerId =
                     Map.ofList [ "firstname", box firstName; "lastname", box lastName ]
@@ -106,7 +98,7 @@ module private PostgresDbFunctions =
                 Map.ofList [ "match_id", box matchId; "team_id", box teamId; "player_id", box playerId ]
                 |> executeScalar conn trans "INSERT INTO squad (match_id, team_id, player_id) VALUES (@match_id, @team_id, @player_id);"
                 lookupCode, playerId
-            let squadNames = Parse.parseNames squad
+            let squadNames = Seq.zip (squad |> Seq.map snd |> Parse.parseNames) (Seq.map fst squad)
             let playerIds = squadNames |> Seq.map parseSquadMember
             return playerIds |> Map.ofSeq
         }

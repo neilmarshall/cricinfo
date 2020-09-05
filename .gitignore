@@ -357,3 +357,7 @@ MigrationBackup/
 
 # Python script output files
 Python.Scripts/output/**
+
+# Integration Test configuration
+Tests/Cricinfo.Integration.Tests/app.config
+

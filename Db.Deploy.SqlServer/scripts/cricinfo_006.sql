@@ -1,8 +1,0 @@
-ALTER TABLE batting_scorecard
-NOCHECK CONSTRAINT FK__batting_s__innin__5BE2A6F2;
-
-ALTER TABLE bowling_scorecard
-NOCHECK CONSTRAINT FK__bowling_s__innin__6C190EBB;
-
-ALTER TABLE fall_of_wicket_scorecard
-NOCHECK CONSTRAINT FK__fall_of_w__innin__778AC167;
