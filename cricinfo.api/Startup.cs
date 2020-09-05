@@ -29,18 +29,18 @@ namespace Cricinfo.Api
         {
             services.AddControllers();
 
-            services.AddScoped<ICricInfoRepository>(sp =>
+            services.AddScoped<ICricInfoCommandService>(sp =>
             {
-                if (this.Configuration.GetValue<bool>("CricInfoRepository:UseSqlServer"))
-                {
-                    return new SqlServerCricInfoRepository(Configuration.GetConnectionString("SqlServerConnection"));
-                }
-                else
-                {
-                    return new PostgresCricInfoRepository<MatchController>(
-                        Configuration.GetConnectionString("PostgresConnection"),
-                        sp.GetRequiredService<ILogger<MatchController>>());
-                }
+                return new CricInfoCommandService<MatchController>(
+                    Configuration.GetConnectionString("PostgresConnection"),
+                    sp.GetRequiredService<ILogger<MatchController>>());
+            });
+
+            services.AddScoped<ICricInfoQueryService>(sp =>
+            {
+                return new CricInfoQueryService<MatchController>(
+                    Configuration.GetConnectionString("PostgresConnection"),
+                    sp.GetRequiredService<ILogger<MatchController>>());
             });
         }
 

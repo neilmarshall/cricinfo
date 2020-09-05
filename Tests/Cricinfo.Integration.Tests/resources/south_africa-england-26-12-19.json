@@ -1,7 +1,7 @@
 {
   "Venue": "Supersport Park, Centurion",
   "MatchType": "Test Match",
-  "DateOfFirstDay": "2018-12-26",
+  "DateOfFirstDay": "2019-12-26",
   "HomeTeam": "South Africa",
   "AwayTeam": "England",
   "Result": "Home Team Win",
@@ -424,7 +424,7 @@
         {
           "Name": "Anrich Nortje",
           "Dismissal": "c",
-          "Catcher": "sub",
+          "Catcher": null,
           "Bowler": "Jofra Archer",
           "Runs": 40,
           "Mins": 125,
@@ -544,6 +544,7 @@
         {
           "Name": "Dominic Sibley",
           "Dismissal": "c&b",
+          "Catcher": "Keshav Maharaj",
           "Bowler": "Keshav Maharaj",
           "Runs": 29,
           "Mins": 118,

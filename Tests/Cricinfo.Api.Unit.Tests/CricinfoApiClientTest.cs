@@ -19,12 +19,19 @@ namespace Cricinfo.Api.Unit.Tests
         {
             builder.ConfigureServices(services =>
             {
-                // Remove the app's ICricInfoRepository registration
-                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(ICricInfoRepository));
+                // Remove the app's ICricInfoCommandService registration
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(ICricInfoCommandService));
                 if (descriptor != null) { services.Remove(descriptor); }
 
-                // Add ICricInfoRepository using a mock repository for testing
-                services.AddScoped((_) => Utilities.MoqCricInfoRepository());
+                // Add ICricInfoCommandService using a mock repository for testing
+                services.AddScoped((_) => Utilities.MoqCricInfoCommandService());
+
+                // Remove the app's ICricInfoQueryService registration
+                descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(ICricInfoQueryService));
+                if (descriptor != null) { services.Remove(descriptor); }
+
+                // Add ICricInfoQueryService using a mock repository for testing
+                services.AddScoped((_) => Utilities.MoqCricInfoQueryService());
             });
         }
     }
@@ -50,7 +57,7 @@ namespace Cricinfo.Api.Unit.Tests
             // assert on top-level response object properties returned
             Assert.AreEqual("Supersport Park, Centurion", responseObject.Venue);
             Assert.AreEqual(MatchType.TestMatch, responseObject.MatchType);
-            Assert.AreEqual(new DateTime(2018, 12, 26), responseObject.DateOfFirstDay);
+            Assert.AreEqual(new DateTime(2019, 12, 26), responseObject.DateOfFirstDay);
             Assert.AreEqual("South Africa", responseObject.HomeTeam);
             Assert.AreEqual("England", responseObject.AwayTeam);
             Assert.AreEqual(Result.HomeTeamWin, responseObject.Result);

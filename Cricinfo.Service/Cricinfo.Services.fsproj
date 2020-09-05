@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="ICricInfoRepository.fs" />
-    <Compile Include="PostgresDbFunctions.fs" />
-    <Compile Include="PostgresCricInfoRepository.fs" />
-    <Compile Include="SqlServerDbFunctions.fs" />
-    <Compile Include="SqlServerCricInfoRepository.fs" />
+    <Compile Include="PostgresDbQueryFunctions.fs" />
+    <Compile Include="PostgresDbCommandFunctions.fs" />
+    <Compile Include="ICricInfoQueryService.fs" />
+    <Compile Include="ICricInfoCommandService.fs" />
+    <Compile Include="CricInfoQueryService.fs" />
+    <Compile Include="CricInfoCommandService.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cricinfo.Models\Cricinfo.Models.csproj" />

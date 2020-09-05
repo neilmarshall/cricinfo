@@ -53,6 +53,20 @@ namespace Cricinfo.Api.Client
                 new JsonSerializerOptions { PropertyNameCaseInsensitive=true});
         }
 
+        public async Task<Match[]> GetAllMatchesAsync()
+        {
+            var httpResponse = await _httpClient.GetAsync($"/api/Match");
+
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ArgumentException($"failed to evaluate response");
+            }
+
+            var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<Match[]>(jsonResponse,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive=true});
+        }
+
         public async Task<IEnumerable<string>> GetTeamsAsync()
         {
             var httpResponse = await _httpClient.GetAsync($"/api/Teams");

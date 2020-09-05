@@ -10,7 +10,7 @@ HomeSquad = ["Aiden Markram", "Dean Elgar", "Zubayr Hamza", "Rassie van der Duss
 AwaySquad = ["Rory Burns", "Dominic Sibley", "Joe Denly", "Joe Root",
              "Ben Stokes", "Jonny Bairstow", "Jos Buttler", "Sam Curran",
              "Jofra Archer", "James Anderson", "Stuart Broad"]
-TeamOrder = ["England", "South Africa"] * 2
+TeamOrder = ["South Africa", "England"] * 2
 Extras = [9, 16, 19, 12]
 
 BattingScorecard1 = '\n'.join((
