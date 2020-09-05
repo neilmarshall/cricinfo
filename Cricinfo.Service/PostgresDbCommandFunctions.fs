@@ -87,11 +87,10 @@ module private PostgresDbCommandFunctions =
         (conn : NpgsqlConnection)
         (trans : NpgsqlTransaction)
         (matchId : int64)
-        (teamId : int)
-        (squad : seq<string>)
+        (squad : seq<int * string>)
             : Async<Map<string, int>> =
         async {
-            let parseSquadMember (name : string * string * string) : string * int =
+            let parseSquadMember (name : string * string * string, teamId : int) : string * int =
                 let firstName, lastName, lookupCode = name
                 let playerId =
                     Map.ofList [ "firstname", box firstName; "lastname", box lastName ]
@@ -99,7 +98,7 @@ module private PostgresDbCommandFunctions =
                 Map.ofList [ "match_id", box matchId; "team_id", box teamId; "player_id", box playerId ]
                 |> executeScalar conn trans "INSERT INTO squad (match_id, team_id, player_id) VALUES (@match_id, @team_id, @player_id);"
                 lookupCode, playerId
-            let squadNames = Parse.parseNames squad
+            let squadNames = Seq.zip (squad |> Seq.map snd |> Parse.parseNames) (Seq.map fst squad)
             let playerIds = squadNames |> Seq.map parseSquadMember
             return playerIds |> Map.ofSeq
         }

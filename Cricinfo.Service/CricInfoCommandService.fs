@@ -41,10 +41,11 @@ type public CricInfoCommandService<'T>(connString : string, logger : ILogger<'T>
                             let! venueId, homeTeamId, awayTeamId = getIdsAsync mtch.Venue mtch.HomeTeam mtch.AwayTeam
                             let! matchId = getNextMatchIdAsync
                             do! insertMatchAsync matchId mtch.DateOfFirstDay venueId homeTeamId awayTeamId mtch.Result mtch.MatchType
-                            let! homeSquadIds = insertSquadAsync matchId homeTeamId mtch.HomeSquad
-                            let! awaySquadIds = insertSquadAsync matchId awayTeamId mtch.AwaySquad
+                            let homeSquad = Seq.zip (Seq.replicate (Seq.length mtch.HomeSquad) homeTeamId) mtch.HomeSquad
+                            let awaySquad = Seq.zip (Seq.replicate (Seq.length mtch.AwaySquad) awayTeamId) mtch.AwaySquad
+                            let! squadIds = insertSquadAsync matchId (Seq.append homeSquad awaySquad)
                             let tryGetPlayerId name =
-                                seq { yield! homeSquadIds; yield! awaySquadIds }
+                                squadIds
                                 |> Seq.fold (fun state x -> Map.add x.Key x.Value state) Map.empty
                                 |> Map.find name
                             do! insertInningsAsync tryGetPlayerId matchId mtch.Scores
