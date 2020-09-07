@@ -19,6 +19,7 @@ module Parse =
         | RunOut _ -> Dismissal.RunOut
         | Stumped _ -> Dismissal.Stumped
         | Retired _ -> Dismissal.Retired
+        | HitWicket _ -> Dismissal.HitWicket
 
     let parseBattingScorecard (scorecard : string) : seq<BattingScorecard> =
         scorecard.Trim().Split('\n')

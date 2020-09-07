@@ -20,6 +20,7 @@ module private DomainModel =
     type RunOut = { name : Player; figures : BattingFigures}
     type Stumped = { name : Player; bowler : Player; figures : BattingFigures}
     type Retired = { name : Player; figures : BattingFigures }
+    type HitWicket = { name : Player; bowler : Player; figures : BattingFigures }
 
     type Batsman =
         | Bowled of Bowled
@@ -30,6 +31,7 @@ module private DomainModel =
         | RunOut of RunOut
         | Stumped of Stumped
         | Retired of Retired
+        | HitWicket of HitWicket
         with
 
         member this.Name =
@@ -42,6 +44,7 @@ module private DomainModel =
             | RunOut {name = name}
             | Stumped {name = name}
             | Retired {name = name}
+            | HitWicket {name = name}
                 -> name
 
         member this.Catcher =
@@ -55,6 +58,7 @@ module private DomainModel =
             | RunOut _
             | Stumped _
             | Retired _
+            | HitWicket _
                 -> None
 
         member this.Bowler =
@@ -64,6 +68,7 @@ module private DomainModel =
             | CaughtAndBowled {bowler = bowler}
             | LBW {bowler = bowler}
             | Stumped { bowler = bowler }
+            | HitWicket { bowler = bowler }
                 -> Some bowler
             | NotOut _
             | RunOut _
@@ -80,6 +85,7 @@ module private DomainModel =
             | RunOut {figures = {runs = runs}}
             | Stumped {figures = {runs = runs}}
             | Retired {figures = {runs = runs}}
+            | HitWicket {figures = {runs = runs}}
                 -> runs
 
         member this.Mins =
@@ -92,6 +98,7 @@ module private DomainModel =
             | RunOut {figures = {mins = mins}}
             | Stumped {figures = {mins = mins}}
             | Retired {figures = {mins = mins}}
+            | HitWicket {figures = {mins = mins}}
                 -> mins
 
         member this.Balls =
@@ -104,6 +111,7 @@ module private DomainModel =
             | RunOut {figures = {balls = balls}}
             | Stumped {figures = {balls = balls}}
             | Retired {figures = {balls = balls}}
+            | HitWicket {figures = {balls = balls}}
                 -> balls
 
         member this.Fours =
@@ -116,6 +124,7 @@ module private DomainModel =
             | RunOut {figures = {fours = fours}}
             | Stumped {figures = {fours = fours}}
             | Retired {figures = {fours = fours}}
+            | HitWicket {figures = {fours = fours}}
                 -> fours
 
         member this.Sixes =
@@ -128,6 +137,7 @@ module private DomainModel =
             | RunOut {figures = {sixes = sixes}}
             | Stumped {figures = {sixes = sixes}}
             | Retired {figures = {sixes = sixes}}
+            | HitWicket {figures = {sixes = sixes}}
                 -> sixes
 
         member this.StrikeRate =
@@ -140,6 +150,7 @@ module private DomainModel =
             | RunOut {figures = {runs = r; balls = b}}
             | Stumped {figures = {runs = r; balls = b}}
             | Retired {figures = {runs = r; balls = b}}
+            | HitWicket {figures = {runs = r; balls = b}}
                 -> Math.Round(float r / float b * 100.0, 2)
 
         static member Score score =
@@ -147,8 +158,15 @@ module private DomainModel =
                 match inputString.Trim().Split() |> Seq.filter (System.String.IsNullOrWhiteSpace >> not) |> Seq.map Int32.Parse |> Seq.toList with
                 | [runs; mins; balls; fours; sixes] -> { runs = runs; mins = mins; balls = balls; fours = fours; sixes = sixes }
                 | _ -> inputString |> sprintf "invalid figures in batting data - '%s'" |> BattingFiguresException |> raise
+            let hitWicket =
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)(?=Hit Wicket)Hit Wicket\s+b\s+(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                if result.Success then
+                    HitWicket { name = result.Groups.["batsman"].Value |> trim |> Player;
+                                bowler = result.Groups.["bowler"].Value |> trim |> Player;
+                                figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
+                else None
             let caught =
-                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc\s(?<catcher>[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc\s(?<catcher>[A-Za-z\s']+)\sb\s(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Caught { name = result.Groups.["batsman"].Value |> trim |> Player;
                              catcher = result.Groups.["catcher"].Value |> trim |> Player;
@@ -156,14 +174,14 @@ module private DomainModel =
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let lbw =
-                let result = Regex("^(?<batsman>[A-Za-z\s']+)lbw\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)lbw\sb\s(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     LBW { name = result.Groups.["batsman"].Value |> trim |> Player;
                           bowler = result.Groups.["bowler"].Value |> trim |> Player;
                           figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let caughtAndBowled =
-                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc & b\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sc & b\s(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     CaughtAndBowled { name = result.Groups.["batsman"].Value |> trim |> Player;
                                       catcher = result.Groups.["bowler"].Value |> trim |> Player;
@@ -171,7 +189,7 @@ module private DomainModel =
                                       figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let bowled =
-                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sb\s(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Bowled { name = result.Groups.["batsman"].Value |> trim |> Player;
                              bowler = result.Groups.["bowler"].Value |> trim |> Player;
@@ -196,13 +214,13 @@ module private DomainModel =
                              figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
             let stumped =
-                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sst\s(?:[A-Za-z\s]+)\sb\s(?<bowler>[A-Za-z\s]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
+                let result = Regex("^(?<batsman>[A-Za-z\s']+)\sst\s(?:[A-Za-z\s']+)\sb\s(?<bowler>[A-Za-z\s']+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)
                 if result.Success then
                     Stumped { name = result.Groups.["batsman"].Value |> trim |> Player;
                               bowler = result.Groups.["bowler"].Value |> trim |> Player;
                               figures = result.Groups.["figures"].Value |> parseBattingFigures } |> Some
                 else None
-            match seq { yield caught; yield lbw; yield caughtAndBowled; yield stumped; yield bowled; yield retired; yield notOut; yield runOut; } |> Seq.tryFind Option.isSome |> Option.flatten with
+            match seq { yield hitWicket; yield caught; yield lbw; yield caughtAndBowled; yield stumped; yield bowled; yield retired; yield notOut; yield runOut; } |> Seq.tryFind Option.isSome |> Option.flatten with
             | Some dismissal -> dismissal
             | None -> score |> sprintf "invalid data in batting scorecard - '%s'" |> BattingFiguresException |> raise
 

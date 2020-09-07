@@ -1,0 +1,325 @@
+{
+  "Venue": "Emirates Old Trafford, Manchester",
+  "MatchType": "Twenty-Twenty",
+  "DateOfFirstDay": "2020-09-01T00:00:00",
+  "HomeTeam": "England",
+  "AwayTeam": "Pakistan",
+  "Result": "Away Team Win",
+  "HomeSquad": [
+    "Jonny Bairstow(wk)",
+    "Tom Banton",
+    "Dawid Malan",
+    "Eoin Morgan(c)",
+    "Moeen Ali",
+    "Sam Billings",
+    "Lewis Gregory",
+    "Chris Jordan",
+    "Tom Curran",
+    "Adil Rashid",
+    "Saqib Mahmood"
+  ],
+  "AwaySquad": [
+    "Babar Azam(c)",
+    "Fakhar Zaman",
+    "Haider Ali",
+    "Mohammad Hafeez",
+    "Shoaib Malik",
+    "Sarfaraz Ahmed(wk)",
+    "Shadab Khan",
+    "Imad Wasim",
+    "Wahab Riaz",
+    "Shaheen Afridi",
+    "Haris Rauf"
+  ],
+  "Scores": [
+    {
+      "Team": "Pakistan",
+      "Innings": 1,
+      "Extras": 7,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Azam",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Curran",
+          "Runs": 21,
+          "Mins": 19,
+          "Balls": 18,
+          "Fours": 3,
+          "Sixes": 0
+        },
+        {
+          "Name": "Zaman",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Moeen Ali",
+          "Runs": 1,
+          "Mins": 6,
+          "Balls": 3,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Haider Ali",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Jordan",
+          "Runs": 54,
+          "Mins": 66,
+          "Balls": 33,
+          "Fours": 5,
+          "Sixes": 2
+        },
+        {
+          "Name": "Hafeez",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 86,
+          "Mins": 88,
+          "Balls": 52,
+          "Fours": 4,
+          "Sixes": 6
+        },
+        {
+          "Name": "Khan",
+          "Dismissal": "c",
+          "Catcher": "Curran",
+          "Bowler": "Jordan",
+          "Runs": 15,
+          "Mins": 25,
+          "Balls": 11,
+          "Fours": 2,
+          "Sixes": 0
+        },
+        {
+          "Name": "Wasim",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 6,
+          "Mins": 13,
+          "Balls": 4,
+          "Fours": 0,
+          "Sixes": 0
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "Mahmood",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 37,
+          "Wickets": 0
+        },
+        {
+          "Name": "Moeen Ali",
+          "Overs": 1,
+          "Maidens": 0,
+          "Runs": 10,
+          "Wickets": 1
+        },
+        {
+          "Name": "Jordan",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 29,
+          "Wickets": 2
+        },
+        {
+          "Name": "Curran",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 32,
+          "Wickets": 1
+        },
+        {
+          "Name": "Gregory",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 41,
+          "Wickets": 0
+        },
+        {
+          "Name": "Rashid",
+          "Overs": 3,
+          "Maidens": 0,
+          "Runs": 40,
+          "Wickets": 0
+        }
+      ],
+      "FallOfWicketScorecard": [
+        2,
+        32,
+        132,
+        177
+      ]
+    },
+    {
+      "Team": "England",
+      "Innings": 1,
+      "Extras": 11,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Banton",
+          "Dismissal": "lbw",
+          "Catcher": null,
+          "Bowler": "Rauf",
+          "Runs": 46,
+          "Mins": 40,
+          "Balls": 31,
+          "Fours": 8,
+          "Sixes": 0
+        },
+        {
+          "Name": "Bairstow",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Afridi",
+          "Runs": 0,
+          "Mins": 4,
+          "Balls": 3,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Malan",
+          "Dismissal": "c",
+          "Catcher": "Zaman",
+          "Bowler": "Wasim",
+          "Runs": 7,
+          "Mins": 14,
+          "Balls": 8,
+          "Fours": 1,
+          "Sixes": 0
+        },
+        {
+          "Name": "Morgan",
+          "Dismissal": "run out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 10,
+          "Mins": 18,
+          "Balls": 5,
+          "Fours": 0,
+          "Sixes": 1
+        },
+        {
+          "Name": "Moeen Ali",
+          "Dismissal": "c&b",
+          "Catcher": "Riaz",
+          "Bowler": "Riaz",
+          "Runs": 61,
+          "Mins": 60,
+          "Balls": 33,
+          "Fours": 4,
+          "Sixes": 4
+        },
+        {
+          "Name": "Billings",
+          "Dismissal": "c",
+          "Catcher": "Wasim",
+          "Bowler": "Riaz",
+          "Runs": 26,
+          "Mins": 29,
+          "Balls": 24,
+          "Fours": 2,
+          "Sixes": 1
+        },
+        {
+          "Name": "Gregory",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Afridi",
+          "Runs": 12,
+          "Mins": 18,
+          "Balls": 8,
+          "Fours": 2,
+          "Sixes": 0
+        },
+        {
+          "Name": "Jordan",
+          "Dismissal": "run out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 1,
+          "Mins": 5,
+          "Balls": 2,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Curran",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 8,
+          "Mins": 8,
+          "Balls": 5,
+          "Fours": 0,
+          "Sixes": 1
+        },
+        {
+          "Name": "Rashid",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 3,
+          "Mins": 5,
+          "Balls": 3,
+          "Fours": 0,
+          "Sixes": 0
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "Afridi",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 28,
+          "Wickets": 2
+        },
+        {
+          "Name": "Wasim",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 35,
+          "Wickets": 1
+        },
+        {
+          "Name": "Rauf",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 41,
+          "Wickets": 1
+        },
+        {
+          "Name": "Riaz",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 26,
+          "Wickets": 2
+        },
+        {
+          "Name": "Khan",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 48,
+          "Wickets": 0
+        }
+      ],
+      "FallOfWicketScorecard": [
+        1,
+        26,
+        65,
+        69,
+        126,
+        170,
+        172,
+        174
+      ]
+    }
+  ]
+}
