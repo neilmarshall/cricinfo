@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\england-australia-6-9-20.json" />
+    <None Remove="resources\england-pakistan-1-9-20.json" />
     <None Remove="resources\south_africa-england-26-12-19.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="resources\england-pakistan-1-9-20.json" />
+    <EmbeddedResource Include="resources\england-australia-6-9-20.json" />
     <EmbeddedResource Include="resources\south_africa-england-26-12-19.json">
     </EmbeddedResource>
   </ItemGroup>

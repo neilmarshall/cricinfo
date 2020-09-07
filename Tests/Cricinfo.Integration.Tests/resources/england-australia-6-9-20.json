@@ -1,0 +1,320 @@
+{
+  "Venue": "The Ageas Bowl, Southampton",
+  "MatchType": "Twenty-Twenty",
+  "DateOfFirstDay": "2020-09-06",
+  "HomeTeam": "England",
+  "AwayTeam": "Australia",
+  "Result": "Home Team Win",
+  "HomeSquad": [
+    "Jos Buttler(wk)",
+    "Jonny Bairstow",
+    "Dawid Malan",
+    "Tom Banton",
+    "Eoin Morgan(c)",
+    "Moeen Ali",
+    "Chris Jordan",
+    "Tom Curran",
+    "Adil Rashid",
+    "Jofra Archer",
+    "Mark Wood"
+  ],
+  "AwaySquad": [
+    "Aaron Finch(c)",
+    "David Warner",
+    "Steven Smith",
+    "Glenn Maxwell",
+    "Alex Carey(wk)",
+    "Marcus Stoinis",
+    "Ashton Agar",
+    "Pat Cummins",
+    "Mitchell Starc",
+    "Kane Richardson",
+    "Adam Zampa"
+  ],
+  "Scores": [
+    {
+      "Team": "Australia",
+      "Innings": 1,
+      "Extras": 6,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Warner",
+          "Dismissal": "c",
+          "Catcher": "Buttler",
+          "Bowler": "Archer",
+          "Runs": 0,
+          "Mins": 4,
+          "Balls": 3,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Finch",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Jordan",
+          "Runs": 40,
+          "Mins": 59,
+          "Balls": 33,
+          "Fours": 4,
+          "Sixes": 2
+        },
+        {
+          "Name": "Carey",
+          "Dismissal": "c",
+          "Catcher": "Buttler",
+          "Bowler": "Wood",
+          "Runs": 2,
+          "Mins": 8,
+          "Balls": 7,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Smith",
+          "Dismissal": "run out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 10,
+          "Mins": 16,
+          "Balls": 7,
+          "Fours": 1,
+          "Sixes": 1
+        },
+        {
+          "Name": "Stoinis",
+          "Dismissal": "c",
+          "Catcher": "Malan",
+          "Bowler": "Rashid",
+          "Runs": 35,
+          "Mins": 38,
+          "Balls": 26,
+          "Fours": 2,
+          "Sixes": 2
+        },
+        {
+          "Name": "Maxwell",
+          "Dismissal": "c",
+          "Catcher": "Buttler",
+          "Bowler": "Jordan",
+          "Runs": 26,
+          "Mins": 32,
+          "Balls": 18,
+          "Fours": 1,
+          "Sixes": 1
+        },
+        {
+          "Name": "Agar",
+          "Dismissal": "run out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 23,
+          "Mins": 38,
+          "Balls": 20,
+          "Fours": 2,
+          "Sixes": 0
+        },
+        {
+          "Name": "Cummins",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 13,
+          "Mins": 12,
+          "Balls": 5,
+          "Fours": 1,
+          "Sixes": 1
+        },
+        {
+          "Name": "Starc",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 2,
+          "Mins": 1,
+          "Balls": 1,
+          "Fours": 0,
+          "Sixes": 0
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "Archer",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 32,
+          "Wickets": 1
+        },
+        {
+          "Name": "Wood",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 25,
+          "Wickets": 1
+        },
+        {
+          "Name": "Curran",
+          "Overs": 3,
+          "Maidens": 0,
+          "Runs": 25,
+          "Wickets": 0
+        },
+        {
+          "Name": "Rashid",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 25,
+          "Wickets": 1
+        },
+        {
+          "Name": "Jordan",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 40,
+          "Wickets": 2
+        },
+        {
+          "Name": "Ali",
+          "Overs": 1,
+          "Maidens": 0,
+          "Runs": 8,
+          "Wickets": 0
+        }
+      ],
+      "FallOfWicketScorecard": [
+        0,
+        3,
+        30,
+        79,
+        89,
+        132,
+        155
+      ]
+    },
+    {
+      "Team": "England",
+      "Innings": 1,
+      "Extras": 8,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Buttler",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 77,
+          "Mins": 87,
+          "Balls": 54,
+          "Fours": 8,
+          "Sixes": 2
+        },
+        {
+          "Name": "Bairstow",
+          "Dismissal": "hit wicket",
+          "Catcher": null,
+          "Bowler": "Starc",
+          "Runs": 9,
+          "Mins": 16,
+          "Balls": 11,
+          "Fours": 2,
+          "Sixes": 0
+        },
+        {
+          "Name": "Malan",
+          "Dismissal": "c",
+          "Catcher": "Stoinis",
+          "Bowler": "Agar",
+          "Runs": 42,
+          "Mins": 47,
+          "Balls": 32,
+          "Fours": 7,
+          "Sixes": 0
+        },
+        {
+          "Name": "Banton",
+          "Dismissal": "c",
+          "Catcher": "Cummins",
+          "Bowler": "Agar",
+          "Runs": 2,
+          "Mins": 13,
+          "Balls": 4,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Morgan",
+          "Dismissal": "c",
+          "Catcher": "Maxwell",
+          "Bowler": "Zampa",
+          "Runs": 7,
+          "Mins": 9,
+          "Balls": 6,
+          "Fours": 1,
+          "Sixes": 0
+        },
+        {
+          "Name": "Ali",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 13,
+          "Mins": 7,
+          "Balls": 6,
+          "Fours": 1,
+          "Sixes": 1
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "Starc",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 25,
+          "Wickets": 1
+        },
+        {
+          "Name": "Cummins",
+          "Overs": 3,
+          "Maidens": 0,
+          "Runs": 24,
+          "Wickets": 0
+        },
+        {
+          "Name": "Richardson",
+          "Overs": 2,
+          "Maidens": 0,
+          "Runs": 19,
+          "Wickets": 0
+        },
+        {
+          "Name": "Maxwell",
+          "Overs": 2,
+          "Maidens": 0,
+          "Runs": 16,
+          "Wickets": 0
+        },
+        {
+          "Name": "Zampa",
+          "Overs": 3.5,
+          "Maidens": 0,
+          "Runs": 42,
+          "Wickets": 1
+        },
+        {
+          "Name": "Agar",
+          "Overs": 4,
+          "Maidens": 0,
+          "Runs": 27,
+          "Wickets": 2
+        }
+      ],
+      "FallOfWicketScorecard": [
+        19,
+        106,
+        122,
+        135
+      ]
+    }
+  ]
+}
