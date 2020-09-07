@@ -116,6 +116,22 @@ namespace Cricinfo.Parser.Unit.Tests
         }
 
         [TestMethod]
+        public void BattingScorecardWithHitWicketDismissalParsedCorrectly()
+        {
+            var battingFigures = "Bairstow  Hit Wicket  b Starc 9   16  11  2   0   81.82";
+            var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
+            Assert.AreEqual("Bairstow", parsedBattingFigures.First().Name);
+            Assert.AreEqual(Dismissal.HitWicket, parsedBattingFigures.First().Dismissal);
+            Assert.IsNull(parsedBattingFigures.First().Catcher);
+            Assert.AreEqual("Starc", parsedBattingFigures.First().Bowler);
+            Assert.AreEqual(9, parsedBattingFigures.First().Runs);
+            Assert.AreEqual(16, parsedBattingFigures.First().Mins);
+            Assert.AreEqual(11, parsedBattingFigures.First().Balls);
+            Assert.AreEqual(2, parsedBattingFigures.First().Fours);
+            Assert.AreEqual(0, parsedBattingFigures.First().Sixes);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exceptions.BattingFiguresException))]
         public void BattingScorecardErrorsOnInvalidInput()
         {

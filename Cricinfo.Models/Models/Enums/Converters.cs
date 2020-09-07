@@ -26,6 +26,7 @@ namespace Cricinfo.Models.Enums
                 Dismissal.RunOut => "Run out",
                 Dismissal.Stumped => "Stumped",
                 Dismissal.Retired => "Retired",
+                Dismissal.HitWicket => "Hit Wicket",
                 _ => throw new ArgumentException("bad value for 'Cricinfo.Models.Enums.Dismissal' enum")
             };
 

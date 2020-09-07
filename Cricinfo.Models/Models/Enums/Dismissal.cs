@@ -13,7 +13,8 @@ namespace Cricinfo.Models.Enums
         NotOut = 4,
         RunOut = 5,
         Stumped = 6,
-        Retired = 7
+        Retired = 7,
+        HitWicket = 8
     }
 
     public class DismissalConverter : JsonConverter<Dismissal>
@@ -30,6 +31,7 @@ namespace Cricinfo.Models.Enums
                 "run out" => Dismissal.RunOut,
                 "stumped" => Dismissal.Stumped,
                 "retired" => Dismissal.Retired,
+                "hit wicket" => Dismissal.HitWicket,
                 _ => throw new ArgumentException("Invalid JSON value for 'Dismissal'")
             };
         }
@@ -46,6 +48,7 @@ namespace Cricinfo.Models.Enums
                 Dismissal.RunOut => "run out",
                 Dismissal.Stumped => "stumped",
                 Dismissal.Retired => "retired",
+                Dismissal.HitWicket => "hit wicket",
                 _ => throw new ArgumentException("Invalid ENUM value for 'Dismissal'")
             });
         }
