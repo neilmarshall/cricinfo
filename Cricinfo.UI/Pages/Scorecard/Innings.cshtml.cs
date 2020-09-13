@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
@@ -39,6 +40,44 @@ namespace Cricinfo.UI.Pages
             this.Team = selectedTeam;
         }
 
+        private IList<string> getMissingBatsmen(ICollection<string> parsedNames, BattingScorecard[] battingScorecard)
+        {
+            var missingBatsmen = new List<string>();
+
+            foreach (var bs in battingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    missingBatsmen.Add(bs.Name);
+                }
+                if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
+                {
+                    missingBatsmen.Add(bs.Bowler);
+                }
+                if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
+                {
+                    missingBatsmen.Add(bs.Catcher);
+                }
+            }
+
+            return missingBatsmen;
+        }
+
+        private IList<string> getMissingBowlers(ICollection<string> parsedNames, BowlingScorecard[] bowlingScorecard)
+        {
+            var missingBowlers = new List<string>();
+
+            foreach(var bs in bowlingScorecard)
+            {
+                if (!parsedNames.Contains(bs.Name))
+                {
+                    missingBowlers.Add(bs.Name);
+                }
+            }
+
+            return missingBowlers;
+        }
+
         public IActionResult OnPostAddAnotherInnings()
         {
             if (!ModelState.IsValid) { return new PageResult(); }
@@ -51,36 +90,24 @@ namespace Cricinfo.UI.Pages
 
             var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item3).ToHashSet();
 
-            foreach (var bs in battingScorecard)
+            var missingBatsmen = getMissingBatsmen(parsedNames, battingScorecard);
+            if (missingBatsmen.Count > 0)
             {
-                if (!parsedNames.Contains(bs.Name))
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
-                if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Bowler}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
-                if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Catcher}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
+                ModelState.AddModelError("BattingScorecard",
+                    $"Could not find the following player(s): {String.Join(", ", missingBatsmen.Distinct())}");
             }
 
-            foreach(var bs in bowlingScorecard)
+            var missingBowlers = getMissingBowlers(parsedNames, bowlingScorecard);
+            if (missingBowlers.Count > 0)
             {
-                if (!parsedNames.Contains(bs.Name))
-                {
-                    ModelState.AddModelError("BowlingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
+                ModelState.AddModelError("BowlingScorecard",
+                    $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
+            }
+
+            if (ModelState.ErrorCount > 0)
+            {
+                TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                return new PageResult();
             }
 
             var teamOrder = (int)TempData["teamOrder"];
@@ -145,36 +172,24 @@ namespace Cricinfo.UI.Pages
 
             var parsedNames = Parse.parseNames(match.HomeSquad.Union(match.AwaySquad)).Select(name => name.Item3).ToHashSet();
 
-            foreach (var bs in battingScorecard)
+            var missingBatsmen = getMissingBatsmen(parsedNames, battingScorecard);
+            if (missingBatsmen.Count() > 0)
             {
-                if (!parsedNames.Contains(bs.Name))
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
-                if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Bowler}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
-                if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
-                {
-                    ModelState.AddModelError("BattingScorecard", $"Could not find player '{bs.Catcher}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
+                ModelState.AddModelError("BattingScorecard",
+                    $"Could not find the following player(s): {String.Join(", ", missingBatsmen.Distinct())}");
             }
 
-            foreach (var bs in bowlingScorecard)
+            var missingBowlers = getMissingBowlers(parsedNames, bowlingScorecard);
+            if (missingBowlers.Count > 0)
             {
-                if (!parsedNames.Contains(bs.Name))
-                {
-                    ModelState.AddModelError("BowlingScorecard", $"Could not find player '{bs.Name}' in either Home or Away squads.");
-                    TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
-                    return new PageResult();
-                }
+                ModelState.AddModelError("BowlingScorecard",
+                    $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
+            }
+
+            if (ModelState.ErrorCount > 0)
+            {
+                TempData["matchFromScorecard"] = TempData["matchFromScorecard"];
+                return new PageResult();
             }
 
             var innings = (int)TempData["innings"];
