@@ -61,6 +61,10 @@ namespace Cricinfo.Api.Unit.Tests
                 .Returns(() => Task.FromResult(matches[42]));
 
             mock.Setup(ICricInfoRepository => ICricInfoRepository
+                .GetAllMatchesAsync())
+                .Returns(() => Task.FromResult(new[] { matches[42] }));
+
+            mock.Setup(ICricInfoRepository => ICricInfoRepository
                 .MatchExistsAsync(
                     It.Is<string>(homeTeam => homeTeam == "duplicate home team"),
                     It.Is<string>(awayTeam => awayTeam == "duplicate away team"),

@@ -87,7 +87,7 @@ namespace Cricinfo.UI.Pages
                 return new PageResult();
             }
 
-            if (this._cricinfoApiClient.MatchExistsAsync(HomeTeam, AwayTeam, DateOfFirstDay).Result)
+            if (this._cricinfoApiClient.ExistsAsync(HomeTeam, AwayTeam, DateOfFirstDay).Result)
             {
                 await LoadTeams();
                 ModelState.AddModelError(string.Empty, "A record already exists for the specified teams and date.");

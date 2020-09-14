@@ -31,7 +31,7 @@ namespace Cricinfo.Api.Client
 
         public async Task CreateTeamAsync(string team)
         {
-            var httpResponse = await _httpClient.PostAsync($"/api/team?team={team}", null);
+            var httpResponse = await _httpClient.PostAsync($"/api/Teams?team={team}", null);
 
             if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.Conflict)
             {
@@ -80,9 +80,9 @@ namespace Cricinfo.Api.Client
             return JsonSerializer.Deserialize<IEnumerable<string>>(jsonResponse);
         }
 
-        public async Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date)
+        public async Task<bool> ExistsAsync(string homeTeam, string awayTeam, DateTime date)
         {
-            var httpResponse = await _httpClient.GetAsync($"/api/CheckMatchExists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date.Year}-{date.Month}-{date.Day}");
+            var httpResponse = await _httpClient.GetAsync($"/api/Match/Exists?homeTeam={homeTeam}&awayTeam={awayTeam}&date={date.Year}-{date.Month}-{date.Day}");
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {

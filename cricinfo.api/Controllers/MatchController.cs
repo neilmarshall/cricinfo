@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cricinfo.Models;
-using Cricinfo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Cricinfo.Models;
+using Cricinfo.Services;
+using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace Cricinfo.Api.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api/[controller]")]
     public class MatchController : ControllerBase
     {
         private readonly ICricInfoCommandService cricInfoCommandService;
@@ -24,9 +25,16 @@ namespace Cricinfo.Api.Controllers
             this._logger = logger;
         }
 
-        [HttpGet()]
-        [Route("CheckMatchExists")]
-        public async Task<IActionResult> CheckMatchExistsAsync(
+        /// <summary>
+        /// Check if a match exists for the given teams and date
+        /// </summary>
+        /// <param name="homeTeam"></param>
+        /// <param name="awayTeam"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet("Exists")]
+        [ProducesResponseType(typeof(bool), Status200OK)]
+        public async Task<IActionResult> ExistsAsync(
             [FromQuery] string homeTeam, [FromQuery] string awayTeam, [FromQuery] DateTime? date)
         {
             try
@@ -46,8 +54,61 @@ namespace Cricinfo.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Get match details for specified match
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Match), Status200OK)]
+        [ProducesResponseType(Status404NotFound)]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            try
+            {
+                this._logger.LogInformation($"GET request - Match ID '{id}'");
+
+                var match = await this.cricInfoQueryService.GetMatchAsync(id);
+
+                if (match == null) { return NotFound(); }
+
+                return Ok(match);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Get match details for all matches
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet()]
+        [ProducesResponseType(typeof(Match[]), Status200OK)]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                return Ok(await this.cricInfoQueryService.GetAllMatchesAsync());
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Add new match details
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
         [HttpPost()]
-        public async Task<IActionResult> CreateMatchAsync([FromBody]Match match)
+        [ProducesResponseType(Status201Created)]
+        [ProducesResponseType(Status409Conflict)]
+        public async Task<IActionResult> PostAsync([FromBody] Match match)
         {
             try
             {
@@ -63,70 +124,7 @@ namespace Cricinfo.Api.Controllers
 
                 this._logger.LogInformation($"Success - Content created at id '{id}'");
 
-                return CreatedAtRoute("GetMatchAsync", new { id = id }, match);
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message);
-                return StatusCode(500);
-            }
-        }
-
-        [HttpPost()]
-        [Route("Team")]
-        public async Task<IActionResult> CreateTeamAsync([FromQuery] string team)
-        {
-            try
-            {
-                if (team == null || team == "") { return BadRequest(); }
-
-                var dataCreationResponse = await this.cricInfoCommandService.CreateTeamAsync(team);
-
-                if (dataCreationResponse == DataCreationResponse.DuplicateContent) { return StatusCode(409); }
-                if (dataCreationResponse == DataCreationResponse.Failure) { return StatusCode(500); }
-
-                return StatusCode(201);
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message);
-                return StatusCode(500);
-            }
-        }
-
-        [HttpGet(Name = "GetMatchAsync")]
-        [Route("Match/{id?}")]
-        public async Task<IActionResult> GetMatchAsync(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return Ok(await this.cricInfoQueryService.GetAllMatchesAsync());
-                }
-
-                this._logger.LogInformation($"GET request - Match ID '{id.Value}'");
-
-                var match = await this.cricInfoQueryService.GetMatchAsync(id.Value);
-
-                if (match == null) { return NotFound(); }
-
-                return Ok(match);
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message);
-                return StatusCode(500);
-            }
-        }
-
-        [HttpGet()]
-        [Route("Teams")]
-        public async Task<IActionResult> GetTeamsAsync()
-        {
-            try
-            {
-                return Ok(await this.cricInfoQueryService.GetTeamsAsync());
+                return CreatedAtAction(nameof(GetAsync), new { id }, match);
             }
             catch (Exception e)
             {

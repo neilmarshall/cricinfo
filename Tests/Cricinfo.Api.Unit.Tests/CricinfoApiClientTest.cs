@@ -1,4 +1,5 @@
 ﻿using Cricinfo.Api.Client;
+using Cricinfo.Models;
 using Cricinfo.Models.Enums;
 using Cricinfo.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -133,19 +134,28 @@ namespace Cricinfo.Api.Unit.Tests
                 responseObject.Scores[0].FallOfWicketScorecard);
         }
 
+        [TestMethod]
+        public async Task GetAllMatchesAsyncReturnsArrayOfObjects()
+        {
+            var responseObject = await cricinfoApiClient.GetAllMatchesAsync();
+
+            Assert.IsInstanceOfType(responseObject, typeof(Match[]));
+            Assert.AreEqual(1, responseObject.Length);
+        }
+
         [DataTestMethod]
         [DataRow("duplicate home team", "duplicate away team", true)]
         [DataRow("home team", "away team", false)]
-        public async Task CheckMatchReturnsCorrectStatus(
+        public async Task ExistsAsyncReturnsCorrectStatus(
             string homeTeam, string awayTeam, bool expectedValue)
         {
-            var actualValue = await cricinfoApiClient.MatchExistsAsync(
+            var actualValue = await cricinfoApiClient.ExistsAsync(
                 homeTeam, awayTeam, DateTime.Now);
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [TestMethod]
-        public async Task CheckGetTeamsAsyncReturnsCorrectly()
+        public async Task GetTeamsAsyncReturnsCorrectly()
         {
             var actualValue = (await cricinfoApiClient.GetTeamsAsync()).ToArray();
             CollectionAssert.AreEqual(new[] { "England", "South Africa" }, actualValue);

@@ -12,6 +12,6 @@ namespace Cricinfo.Api.Client
         public Task<Match> GetMatchAsync(int id);
         public Task<Match[]> GetAllMatchesAsync();
         public Task<IEnumerable<string>> GetTeamsAsync();
-        public Task<bool> MatchExistsAsync(string homeTeam, string awayTeam, DateTime date);
+        public Task<bool> ExistsAsync(string homeTeam, string awayTeam, DateTime date);
     }
 }
