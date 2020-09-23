@@ -1,0 +1,345 @@
+{
+  "Venue": "The Ageas Bowl, Southampton",
+  "MatchType": "One Day International",
+  "DateOfFirstDay": "2020-07-30",
+  "HomeTeam": "England",
+  "AwayTeam": "Ireland",
+  "Result": "Home Team Win",
+  "HomeSquad": [
+    "Jonny Bairstow",
+    "Jason Roy",
+    "Eoin Morgan",
+    "Tom Banton",
+    "Tom Curran",
+    "Moeen Ali",
+    "Adil Rashid",
+    "Saqib Mahmood",
+    "James Vince",
+    "David Willey",
+    "Sam Billings"
+  ],
+  "AwaySquad": [
+    "Andrew Balbirnie",
+    "Paul Stirling",
+    "Gareth Delany",
+    "Harry Tector",
+    "Kevin O'Brien",
+    "Lorcan Tucker",
+    "Simi Singh",
+    "Curtis Campher",
+    "Andy McBrine",
+    "Barry McCarthy",
+    "Craig Young"
+  ],
+  "Scores": [
+    {
+      "Team": "Ireland",
+      "Innings": 1,
+      "Extras": 10,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Stirling",
+          "Dismissal": "c",
+          "Catcher": "Morgan",
+          "Bowler": "Willey",
+          "Runs": 2,
+          "Mins": 4,
+          "Balls": 4,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Delany",
+          "Dismissal": "c",
+          "Catcher": "Banton",
+          "Bowler": "Willey",
+          "Runs": 22,
+          "Mins": 31,
+          "Balls": 16,
+          "Fours": 5,
+          "Sixes": 0
+        },
+        {
+          "Name": "Balbirnie",
+          "Dismissal": "c",
+          "Catcher": "Bairstow",
+          "Bowler": "Willey",
+          "Runs": 3,
+          "Mins": 8,
+          "Balls": 7,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Tector",
+          "Dismissal": "b",
+          "Catcher": null,
+          "Bowler": "Mahmood",
+          "Runs": 0,
+          "Mins": 15,
+          "Balls": 9,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "O'Brien",
+          "Dismissal": "c",
+          "Catcher": "Willey",
+          "Bowler": "Rashid",
+          "Runs": 22,
+          "Mins": 68,
+          "Balls": 36,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Tucker",
+          "Dismissal": "lbw",
+          "Catcher": null,
+          "Bowler": "Willey",
+          "Runs": 0,
+          "Mins": 4,
+          "Balls": 1,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Campher",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 59,
+          "Mins": 148,
+          "Balls": 118,
+          "Fours": 4,
+          "Sixes": 0
+        },
+        {
+          "Name": "Singh",
+          "Dismissal": "run out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 0,
+          "Mins": 4,
+          "Balls": 4,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "McBrine",
+          "Dismissal": "c",
+          "Catcher": "Billings",
+          "Bowler": "Curran",
+          "Runs": 40,
+          "Mins": 57,
+          "Balls": 48,
+          "Fours": 3,
+          "Sixes": 1
+        },
+        {
+          "Name": "McCarthy",
+          "Dismissal": "c",
+          "Catcher": "Vince",
+          "Bowler": "Mahmood",
+          "Runs": 3,
+          "Mins": 15,
+          "Balls": 11,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Young",
+          "Dismissal": "c",
+          "Catcher": "Roy",
+          "Bowler": "Willey",
+          "Runs": 11,
+          "Mins": 16,
+          "Balls": 14,
+          "Fours": 1,
+          "Sixes": 0
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "Willey",
+          "Overs": 8.4,
+          "Maidens": 2,
+          "Runs": 30,
+          "Wickets": 5
+        },
+        {
+          "Name": "Mahmood",
+          "Overs": 9,
+          "Maidens": 1,
+          "Runs": 36,
+          "Wickets": 2
+        },
+        {
+          "Name": "Rashid",
+          "Overs": 10,
+          "Maidens": 3,
+          "Runs": 26,
+          "Wickets": 1
+        },
+        {
+          "Name": "Curran",
+          "Overs": 7,
+          "Maidens": 0,
+          "Runs": 37,
+          "Wickets": 1
+        },
+        {
+          "Name": "Ali",
+          "Overs": 10,
+          "Maidens": 0,
+          "Runs": 37,
+          "Wickets": 0
+        }
+      ],
+      "FallOfWicketScorecard": [
+        2,
+        7,
+        28,
+        28,
+        28,
+        79,
+        79,
+        145,
+        156,
+        172
+      ]
+    },
+    {
+      "Team": "England",
+      "Innings": 1,
+      "Extras": 9,
+      "Declared": false,
+      "BattingScorecard": [
+        {
+          "Name": "Roy",
+          "Dismissal": "lbw",
+          "Catcher": null,
+          "Bowler": "Young",
+          "Runs": 24,
+          "Mins": 27,
+          "Balls": 22,
+          "Fours": 2,
+          "Sixes": 1
+        },
+        {
+          "Name": "Bairstow",
+          "Dismissal": "lbw",
+          "Catcher": null,
+          "Bowler": "McBrine",
+          "Runs": 2,
+          "Mins": 15,
+          "Balls": 7,
+          "Fours": 0,
+          "Sixes": 0
+        },
+        {
+          "Name": "Vince",
+          "Dismissal": "c",
+          "Catcher": "Tucker",
+          "Bowler": "Young",
+          "Runs": 25,
+          "Mins": 27,
+          "Balls": 21,
+          "Fours": 5,
+          "Sixes": 0
+        },
+        {
+          "Name": "Banton",
+          "Dismissal": "c",
+          "Catcher": "Tucker",
+          "Bowler": "Campher",
+          "Runs": 11,
+          "Mins": 32,
+          "Balls": 24,
+          "Fours": 1,
+          "Sixes": 0
+        },
+        {
+          "Name": "Billings",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 67,
+          "Mins": 72,
+          "Balls": 54,
+          "Fours": 11,
+          "Sixes": 0
+        },
+        {
+          "Name": "Morgan",
+          "Dismissal": "not out",
+          "Catcher": null,
+          "Bowler": null,
+          "Runs": 36,
+          "Mins": 56,
+          "Balls": 40,
+          "Fours": 4,
+          "Sixes": 2
+        }
+      ],
+      "BowlingScorecard": [
+        {
+          "Name": "McCarthy",
+          "Overs": 0.5,
+          "Maidens": 0,
+          "Runs": 3,
+          "Wickets": 0
+        },
+        {
+          "Name": "Stirling",
+          "Overs": 0.1,
+          "Maidens": 0,
+          "Runs": 1,
+          "Wickets": 0
+        },
+        {
+          "Name": "Young",
+          "Overs": 8,
+          "Maidens": 0,
+          "Runs": 56,
+          "Wickets": 2
+        },
+        {
+          "Name": "McBrine",
+          "Overs": 8,
+          "Maidens": 0,
+          "Runs": 47,
+          "Wickets": 1
+        },
+        {
+          "Name": "Campher",
+          "Overs": 5,
+          "Maidens": 0,
+          "Runs": 26,
+          "Wickets": 1
+        },
+        {
+          "Name": "Singh",
+          "Overs": 3.5,
+          "Maidens": 0,
+          "Runs": 23,
+          "Wickets": 0
+        },
+        {
+          "Name": "Delany",
+          "Overs": 2,
+          "Maidens": 0,
+          "Runs": 12,
+          "Wickets": 0
+        }
+      ],
+      "FallOfWicketScorecard": [
+        12,
+        34,
+        59,
+        78
+      ]
+    }
+  ]
+}

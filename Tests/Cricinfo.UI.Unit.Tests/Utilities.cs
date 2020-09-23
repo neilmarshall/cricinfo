@@ -57,7 +57,7 @@ namespace Cricinfo.UI.Unit.Tests
             var mock = new Mock<ICricinfoApiClient>();
 
             mock.Setup(ICricinfoApiClient => ICricinfoApiClient
-                .MatchExistsAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()))
+                .ExistsAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()))
                 .Returns((string homeTeam, string awayTeam, DateTime _) => Task.FromResult(
                     homeTeam == "duplicate home team" && awayTeam == "duplicate away team" ? true : false));
 

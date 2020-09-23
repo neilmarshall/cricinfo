@@ -28,6 +28,7 @@ namespace Cricinfo.Integration.Tests
         [DataRow("Cricinfo.Integration.Tests.resources.south_africa-england-26-12-19.json")]
         [DataRow("Cricinfo.Integration.Tests.resources.england-australia-6-9-20.json")]
         [DataRow("Cricinfo.Integration.Tests.resources.england-pakistan-1-9-20.json")]
+        [DataRow("Cricinfo.Integration.Tests.resources.england-ireland-30-7-20.json")]
         public async Task GetMatchFixture(string filepath)
         {
             using Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(filepath);

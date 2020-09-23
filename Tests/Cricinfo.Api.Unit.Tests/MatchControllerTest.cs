@@ -14,6 +14,7 @@ namespace Cricinfo.Api.Unit.Tests
     public class MatchControllerTest
     {
         private static MatchController matchController;
+        private static TeamsController teamsController;
 
         [ClassInitialize]
         public static void Initialize(TestContext tc)
@@ -26,12 +27,16 @@ namespace Cricinfo.Api.Unit.Tests
                 Utilities.MoqCricInfoCommandService(),
                 Utilities.MoqCricInfoQueryService(),
                 logger);
+            teamsController = new TeamsController(
+                Utilities.MoqCricInfoCommandService(),
+                Utilities.MoqCricInfoQueryService(),
+                logger);
         }
 
         [TestMethod]
         public async Task GetMatchAsyncReturns200ForValidId()
         {
-            var result = await matchController.GetMatchAsync(42) as OkObjectResult;
+            var result = await matchController.GetAsync(42) as OkObjectResult;
             var responseObject = result.Value as Match;
 
             // assert on status code returned
@@ -119,7 +124,7 @@ namespace Cricinfo.Api.Unit.Tests
         [TestMethod]
         public async Task GetMatchAsyncReturns404ForMissingId()
         {
-            var result = await matchController.GetMatchAsync(99) as NotFoundResult;
+            var result = await matchController.GetAsync(99) as NotFoundResult;
             Assert.AreEqual(404, result.StatusCode);
         }
 
@@ -134,7 +139,7 @@ namespace Cricinfo.Api.Unit.Tests
                 AwayTeam = ""
             };
 
-            var result = await matchController.CreateMatchAsync(match) as CreatedAtRouteResult;
+            var result = await matchController.PostAsync(match) as CreatedAtActionResult;
             Assert.AreEqual(201, result.StatusCode);
             Assert.AreEqual(43L, result.RouteValues["id"]);
         }
@@ -142,7 +147,7 @@ namespace Cricinfo.Api.Unit.Tests
         [TestMethod]
         public async Task CreateMatchAsyncReturns400ForBadInput()
         {
-            var result = await matchController.CreateMatchAsync(null) as BadRequestResult;
+            var result = await matchController.PostAsync(null) as BadRequestResult;
             Assert.AreEqual(400, result.StatusCode);
         } 
 
@@ -157,14 +162,14 @@ namespace Cricinfo.Api.Unit.Tests
                 AwayTeam = "England"
             };
 
-            var result = await matchController.CreateMatchAsync(match) as StatusCodeResult;
+            var result = await matchController.PostAsync(match) as StatusCodeResult;
             Assert.AreEqual(409, result.StatusCode);
         }
 
         [TestMethod]
         public async Task GetTeamsAsyncReturns200()
         {
-            var result = await matchController.GetTeamsAsync() as OkObjectResult;
+            var result = await teamsController.GetAsync() as OkObjectResult;
             var responseObject = result.Value as string[];
 
             // assert on status code returned
@@ -180,7 +185,7 @@ namespace Cricinfo.Api.Unit.Tests
         [DataRow("Duplicate Team", 409)]
         public async Task CreateTeamAsyncReturns201ForValidMatch(string team, int expectedStatusCode)
         {
-            var result = await matchController.CreateTeamAsync(team) as StatusCodeResult;
+            var result = await teamsController.PostAsync(team) as StatusCodeResult;
             Assert.AreEqual(expectedStatusCode, result.StatusCode);
         }
     }
