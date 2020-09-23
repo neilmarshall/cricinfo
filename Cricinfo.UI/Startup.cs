@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cricinfo.Api.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using HealthChecks.UI.Client;
+using Cricinfo.Api.Client;
+using Cricinfo.UI.Healthchecks;
 
 namespace Cricinfo.UI
 {
@@ -28,8 +29,14 @@ namespace Cricinfo.UI
             services.AddSession();
             services.AddHttpClient<ICricinfoApiClient, CricinfoApiClient>(client =>
             {
-                client.BaseAddress = new Uri(this.Configuration.GetValue<string>("cricInfoAPIURL"));
+                client.BaseAddress = new Uri(Configuration.GetValue<string>("cricInfoAPIURL"));
             });
+
+            services.AddHealthChecks()
+                .AddCheck("UI Healthcheck", () => HealthCheckResult.Healthy())
+                .AddTypeActivatedCheck<APIHealthCheck>("API Healthcheck", Configuration.GetValue<string>("cricInfoAPIURL"));
+
+            services.AddHealthChecksUI().AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +63,17 @@ namespace Cricinfo.UI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResultStatusCodes = new Dictionary<HealthStatus, int>
+                    {
+                        { HealthStatus.Healthy, 200 },
+                        { HealthStatus.Unhealthy, 500 },
+                        { HealthStatus.Degraded, 503 },
+                    },
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Cricinfo.Api.Controllers;
 using Cricinfo.Services;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace Cricinfo.Api
@@ -63,6 +67,24 @@ namespace Cricinfo.Api
                     Configuration.GetConnectionString("PostgresConnection"),
                     sp.GetRequiredService<ILogger<MatchController>>());
             });
+
+            services.AddHealthChecks()
+                .AddCheck("API Healthcheck", () => HealthCheckResult.Healthy())
+                .AddCheck("SQL Healthcheck", () =>
+                {
+                    using var conn = new Npgsql.NpgsqlConnection(Configuration.GetConnectionString("PostgresConnection"));
+                    try
+                    {
+                        conn.Open();
+                        return HealthCheckResult.Healthy();
+                    }
+                    catch (Npgsql.NpgsqlException)
+                    {
+                        return HealthCheckResult.Degraded();
+                    }
+                });
+
+            services.AddHealthChecksUI().AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +111,17 @@ namespace Cricinfo.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/api/health", new HealthCheckOptions
+                {
+                    ResultStatusCodes = new Dictionary<HealthStatus, int>
+                    {
+                        { HealthStatus.Healthy, 200 },
+                        { HealthStatus.Degraded, 500 },
+                        { HealthStatus.Unhealthy, 503 }
+                    },
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
         }
     }
