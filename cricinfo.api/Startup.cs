@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,9 @@ namespace Cricinfo.Api
                         Version = Configuration.GetValue<string>("APIVersion")
                     });
 
-                setupAction.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Cricinfo.API.xml"));
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                setupAction.IncludeXmlComments(xmlPath);
 
                 setupAction.UseInlineDefinitionsForEnums();
             });
