@@ -9,10 +9,12 @@ namespace Cricinfo.UI.Healthchecks
     public class APIHealthCheck : IHealthCheck
     {
         private readonly string apiEndpoint;
+        private readonly string healthcheckEndpoint;
 
-        public APIHealthCheck(string apiEndpoint)
+        public APIHealthCheck(string apiEndpoint, string healthcheckEndpoint)
         {
             this.apiEndpoint = apiEndpoint;
+            this.healthcheckEndpoint = healthcheckEndpoint;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
@@ -20,7 +22,7 @@ namespace Cricinfo.UI.Healthchecks
             using var httpClient = new HttpClient { BaseAddress = new Uri(apiEndpoint) };
             try
             {
-                var response = await httpClient.GetAsync("/api/health");
+                var response = await httpClient.GetAsync(healthcheckEndpoint);
                 return response.IsSuccessStatusCode ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy();
             }
             catch (Exception)

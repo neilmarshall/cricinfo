@@ -87,7 +87,9 @@ namespace Cricinfo.Api
                     }
                 });
 
-            services.AddHealthChecksUI().AddInMemoryStorage();
+            services.AddHealthChecksUI(setupSettings =>
+                    setupSettings.AddHealthCheckEndpoint("Healthchecks", Configuration.GetValue<string>("HealthcheckEndpoint")))
+                .AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,7 +116,7 @@ namespace Cricinfo.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/api/health", new HealthCheckOptions
+                endpoints.MapHealthChecks(Configuration.GetValue<string>("HealthcheckEndpoint"), new HealthCheckOptions
                 {
                     ResultStatusCodes = new Dictionary<HealthStatus, int>
                     {
