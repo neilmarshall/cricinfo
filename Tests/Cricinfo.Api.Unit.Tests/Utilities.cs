@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 using Moq;
 using Match = Cricinfo.Models.Match;
 

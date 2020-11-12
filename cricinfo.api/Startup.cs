@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Cricinfo.Api.Controllers;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -47,7 +47,7 @@ namespace Cricinfo.Api
                     new OpenApiInfo
                     {
                         Title = "Cricinfo.API - Documentation",
-                        Version = Configuration.GetValue<string>("APIVersion")
+                        Version = Configuration["APIVersion"]
                     });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -88,7 +88,7 @@ namespace Cricinfo.Api
                 });
 
             services.AddHealthChecksUI(setupSettings =>
-                    setupSettings.AddHealthCheckEndpoint("Healthchecks", Configuration.GetValue<string>("HealthcheckEndpoint")))
+                    setupSettings.AddHealthCheckEndpoint("Healthchecks", Configuration["HealthcheckEndpoint"]))
                 .AddInMemoryStorage();
         }
 
@@ -116,7 +116,7 @@ namespace Cricinfo.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks(Configuration.GetValue<string>("HealthcheckEndpoint"), new HealthCheckOptions
+                endpoints.MapHealthChecks(Configuration["HealthcheckEndpoint"], new HealthCheckOptions
                 {
                     ResultStatusCodes = new Dictionary<HealthStatus, int>
                     {

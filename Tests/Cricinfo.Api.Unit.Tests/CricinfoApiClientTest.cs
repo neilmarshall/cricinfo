@@ -1,7 +1,7 @@
 ﻿using Cricinfo.Api.Client;
 using Cricinfo.Models;
 using Cricinfo.Models.Enums;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;

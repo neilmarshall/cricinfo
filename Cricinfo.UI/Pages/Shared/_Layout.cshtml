@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Cricinfo.UI</title>
+    <title>@ViewData["Title"] - CricInfo</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.standalone.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -12,20 +12,39 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Cricinfo.UI</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">CricInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+					<ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                              Account
+                            </a>
+                            <div class="dropdown-menu">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-page-handler="Logout">Logout</a>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                                }
+
+                                @if (@User.HasClaim("CanAddUser", "true"))
+                                {
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Add New User</a>
+                                }
+
+                                @if (@User.HasClaim("CanManagePermissions", "true"))
+                                {
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/ManagePermissions">Manage Permissions</a>
+                                }
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+					</ul>
                 </div>
             </div>
         </nav>
@@ -38,7 +57,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Cricinfo.UI - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2020 - CricInfo
         </div>
     </footer>
 

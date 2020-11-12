@@ -5,13 +5,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Cricinfo.Api.Client;
 using Cricinfo.Models;
 using Cricinfo.Models.Enums;
 using Cricinfo.UI.ValidationAttributes;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cricinfo.UI.Pages
 {

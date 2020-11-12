@@ -1,4 +1,4 @@
-﻿namespace Cricinfo.Services
+﻿namespace Cricinfo.Services.Matchdata
 
 open System
 open System.Threading.Tasks
@@ -7,16 +7,11 @@ open Cricinfo.Models
 open PostgresDbCommandFunctions
 
 type public CricInfoCommandService<'T>(connString : string, logger : ILogger<'T>) =
-    
-    let postgresExceptionCatcher = new Func<exn, bool>(function | :? Npgsql.PostgresException -> true | _ -> false)
-    let logger = if logger <> null then Some logger else None
-    let logError (e : exn) =
-        match logger with
-        | Some logger -> logger.LogError(e.Message)
-        | None -> ()
+
+    let logError = logError logger
 
     new (connString : string) =
-        CricInfoCommandService(connString, null)
+        new CricInfoCommandService<'T>(connString, null)
 
     interface ICricInfoCommandService with
 
@@ -74,11 +69,16 @@ type public CricInfoCommandService<'T>(connString : string, logger : ILogger<'T>
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
 
-                    do! insertTeamAsync conn trans team |> Async.Ignore
-
-                    do! trans.CommitAsync() |> Async.AwaitTask
-
-                    return DataCreationResponse.Success
+                    try
+                        do! insertTeamAsync conn trans team |> Async.Ignore
+                        do! trans.CommitAsync() |> Async.AwaitTask
+                        return DataCreationResponse.Success
+                    with
+                    | :? AggregateException as ae ->
+                        do! trans.RollbackAsync() |> Async.AwaitTask
+                        ae.InnerExceptions |> Seq.iter logError
+                        ae.Flatten().Handle(postgresExceptionCatcher)
+                        return DataCreationResponse.Failure
                 with
                 | :? AggregateException as ae ->
                     ae.InnerExceptions |> Seq.iter logError
@@ -87,14 +87,16 @@ type public CricInfoCommandService<'T>(connString : string, logger : ILogger<'T>
             }|> Async.StartAsTask
 
 
-        member this.DeleteMatchAsync (matchId : int) : Task<Unit> = 
+        member this.DeleteMatchAsync (matchId : int) : Task<Unit> =
             async {
                 try
                     use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
+
                     try
-                        do! executeNonQueryAsync conn trans "SELECT delete_match(@matchId);" (Map.ofList [ "matchId", box matchId ])
+                        do! deleteMatchAsyncById conn trans matchId
+                        do! trans.CommitAsync() |> Async.AwaitTask
                     with
                     | :? AggregateException as ae ->
                         do! trans.RollbackAsync() |> Async.AwaitTask
@@ -107,16 +109,15 @@ type public CricInfoCommandService<'T>(connString : string, logger : ILogger<'T>
             } |> Async.StartAsTask
 
 
-        member this.DeleteMatchAsync (homeTeamId : string, awayTeamId : string, date : DateTime) : Task<Unit> = 
+        member this.DeleteMatchAsync (homeTeam : string, awayTeam : string, date : DateTime) : Task<Unit> =
             async {
                 try
                     use conn = getConnection connString
                     do! conn.OpenAsync() |> Async.AwaitTask
                     use trans = conn.BeginTransaction()
+
                     try
-                        do!
-                            Map.ofList [ "homeTeamId", box homeTeamId; "awayTeamId", box awayTeamId; "date", box date ]
-                            |> executeNonQueryAsync conn trans "SELECT delete_match(@homeTeamId, @awayTeamId, @date);"
+                        do! deleteMatchAsync conn trans homeTeam awayTeam date
                         do! trans.CommitAsync() |> Async.AwaitTask
                     with
                     | :? AggregateException as ae ->

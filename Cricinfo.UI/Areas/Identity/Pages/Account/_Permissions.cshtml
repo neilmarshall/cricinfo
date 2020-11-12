@@ -1,0 +1,18 @@
+﻿@model Cricinfo.UI.Areas.Identity.Pages.Account.ManagePermissionsModel
+
+<div class="row col">
+    <table class="table table-sm">
+        @for(int i = 0; i < Model.Claims.Length; i++)
+        {
+            <tr>
+                <td>
+                    @Model.Claims[i].ClaimType
+                </td>
+                <td>
+                    <input type="hidden" asp-for="@Model.Claims[i].ClaimType" />
+                    <input type="checkbox" asp-for="@Model.Claims[i].ClaimValue" />
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Cricinfo.Api.Client;
-using Cricinfo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Cricinfo.Api.Client;
+using Cricinfo.Models;
 
 namespace Cricinfo.UI.Pages.Scorecard
 {

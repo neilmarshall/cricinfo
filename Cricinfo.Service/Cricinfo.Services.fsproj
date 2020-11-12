@@ -5,18 +5,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="PostgresDbQueryFunctions.fs" />
+    <Compile Include="PostgresDbBase.fs" />
     <Compile Include="PostgresDbCommandFunctions.fs" />
-    <Compile Include="ICricInfoQueryService.fs" />
-    <Compile Include="ICricInfoCommandService.fs" />
-    <Compile Include="CricInfoQueryService.fs" />
-    <Compile Include="CricInfoCommandService.fs" />
+    <Compile Include="PostgresDbQueryFunctions.fs" />
+    <Compile Include="Matchdata\PostgresDbCommandFunctions.fs" />
+    <Compile Include="Matchdata\PostgresDbQueryFunctions.fs" />
+    <Compile Include="Matchdata\ICricInfoCommandService.fs" />
+    <Compile Include="Matchdata\ICricInfoQueryService.fs" />
+    <Compile Include="Matchdata\CricInfoCommandService.fs" />
+    <Compile Include="Matchdata\CricInfoQueryService.fs" />
+    <Compile Include="IdentityStore\Models\ApplicationUser.fs" />
+    <Compile Include="IdentityStore\Models\ApplicationRole.fs" />
+    <Compile Include="IdentityStore\PostgresDbCommandFunctions.fs" />
+    <Compile Include="IdentityStore\PostgresDbQueryFunctions.fs" />
+    <Compile Include="IdentityStore\CricInfoUserStore.fs" />
+    <Compile Include="IdentityStore\CricInfoRoleStore.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cricinfo.Models\Cricinfo.Models.csproj" />
     <ProjectReference Include="..\Cricinfo.Parser\Cricinfo.Parser.fsproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.9" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.6.20305.6" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="Npgsql" Version="4.1.3.1" />

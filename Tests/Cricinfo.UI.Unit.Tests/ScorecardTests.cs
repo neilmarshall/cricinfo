@@ -34,7 +34,7 @@ namespace Cricinfo.UI.Unit.Tests
         [ClassInitialize]
         public static void Initialize(TestContext tc)
         {
-            var factory = new Utilities.CustomWebApplicationFactory<Startup>();
+            var factory = new Utilities.AuthenticatedCustomWebApplicationFactory<Startup>("TestAuthHandlerWithClaims");
             client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
@@ -45,7 +45,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task GET_EndpointReturnsCorrectStatusCode()
         {
             // Act
-            var response = await client.GetAsync("Scorecard/Scorecard");
+            var response = await client.GetAsync("Scorecard");
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -55,14 +55,14 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithValidFormReturnsCorrectRedirectResult()
         {
             // Arrange
-            var getHTML = await client.GetAsync("Scorecard/Scorecard");
+            var getHTML = await client.GetAsync("Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
 
             // Act
             var formContent = new FormUrlEncodedContent(
                 FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken",
                 token)));
-            var response = await client.PostAsync("Scorecard/Scorecard", formContent);
+            var response = await client.PostAsync("Scorecard", formContent);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
@@ -78,7 +78,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
-            var getHTML = await client.GetAsync("Scorecard/Scorecard");
+            var getHTML = await client.GetAsync("Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
 
             // Act
@@ -86,7 +86,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements[field] = null;
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await client.PostAsync("Scorecard/Scorecard", formContent);
+            var response = await client.PostAsync("Scorecard", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -100,7 +100,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithInvalidSquadSizeReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
-            var getHTML = await client.GetAsync("Scorecard/Scorecard");
+            var getHTML = await client.GetAsync("Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
 
             // Act
@@ -108,7 +108,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements[field] = string.Join('\n', Enumerable.Repeat("player player", SquadValidatorAttribute.NumberOfPlayers + 1));
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await client.PostAsync("Scorecard/Scorecard", formContent);
+            var response = await client.PostAsync("Scorecard", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -123,7 +123,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithInvalidSquadNamesReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
-            var getHTML = await client.GetAsync("Scorecard/Scorecard");
+            var getHTML = await client.GetAsync("Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
 
             // Act
@@ -131,7 +131,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements[field] = string.Join('\n', Enumerable.Repeat("player", SquadValidatorAttribute.NumberOfPlayers));
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await client.PostAsync("Scorecard/Scorecard", formContent);
+            var response = await client.PostAsync("Scorecard", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -144,7 +144,7 @@ namespace Cricinfo.UI.Unit.Tests
         public async Task POST_EndpointWithDuplicateMatchDetailsReturnsError()
         {
             // Arrange
-            var getHTML = await client.GetAsync("Scorecard/Scorecard");
+            var getHTML = await client.GetAsync("Scorecard");
             var token = await Utilities.GetCSRFTokenAsync(getHTML.Content);
 
             // Act
@@ -153,7 +153,7 @@ namespace Cricinfo.UI.Unit.Tests
             formElements["AwayTeam"] = "duplicate away team";
             formElements.Add("__RequestVerificationToken", token);
             var formContent = new FormUrlEncodedContent(formElements);
-            var response = await client.PostAsync("Scorecard/Scorecard", formContent);
+            var response = await client.PostAsync("Scorecard", formContent);
             var content = await response.Content.ReadAsStringAsync();
 
             // Assert

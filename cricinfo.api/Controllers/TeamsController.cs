@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 
 namespace Cricinfo.Api.Controllers
 {

@@ -1,0 +1,45 @@
+﻿@page
+@model Cricinfo.UI.Areas.Identity.Pages.Account.ManagePermissionsModel
+@{
+    ViewData["Title"] = "Manage Permissions";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <form method="post">
+        <div class="row my-3">
+            <div class="col">
+                <label asp-for="Username" class="h6"></label>
+            </div>
+            <div class="col">
+                <select asp-for="Username" asp-items="Model.Usernames">
+                    <option value="">-- select a user --</option>
+                </select>
+            </div>
+        </div>
+        <div id="userPermissionsTable"></div>
+        <button id="userPermissionsSubmitButton" type="submit" class="btn btn-primary d-none">Set Permissions</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+			document.getElementById('Username')
+                .addEventListener('change', () => {
+					const userName = document.getElementById('Username').value;
+                    fetch(`ManagePermissions?handler=UserPermissions&username=${userName}`)
+                        .then(response => response.text())
+                        .then(text => {
+                            document.getElementById('userPermissionsTable').innerHTML = text;
+                            if (userName) {
+                                document.getElementById('userPermissionsSubmitButton').classList.remove('d-none');
+                            } else {
+                                document.getElementById('userPermissionsSubmitButton').classList.add('d-none');
+                            }
+                        });
+				});
+		});
+    </script>
+}

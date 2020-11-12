@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Cricinfo.Api.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Cricinfo.Api.Client;
 
 namespace Cricinfo.UI.Pages
 {

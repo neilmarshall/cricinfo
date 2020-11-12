@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Cricinfo.Models;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace Cricinfo.Api.Controllers

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Cricinfo.Models;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cricinfo.Integration.Tests
@@ -42,7 +42,7 @@ namespace Cricinfo.Integration.Tests
 
             var creationResponse = await cricInfoCommandService.CreateMatchAsync(expected);
 
-            Assert.AreEqual(creationResponse.Item1, DataCreationResponse.Success);
+            Assert.AreEqual(DataCreationResponse.Success, creationResponse.Item1);
             Assert.IsNotNull(creationResponse.Item2);
 
             var actual = await cricInfoQueryService.GetMatchAsync((int)creationResponse.Item2);

@@ -1,4 +1,4 @@
-﻿namespace Cricinfo.Services
+﻿namespace Cricinfo.Services.Matchdata
 
 open System
 open System.Threading.Tasks

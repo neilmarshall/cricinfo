@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Cricinfo.Models;
-using Cricinfo.Services;
+using Cricinfo.Services.Matchdata;
 
 namespace Cricinfo.ConsoleApp
 {
