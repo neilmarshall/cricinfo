@@ -160,5 +160,13 @@ namespace Cricinfo.Api.Unit.Tests
             var actualValue = (await cricinfoApiClient.GetTeamsAsync()).ToArray();
             CollectionAssert.AreEqual(new[] { "England", "South Africa" }, actualValue);
         }
+
+        [TestMethod]
+        public async Task CreateMatchCallsCorrectEndpoints()
+        {
+            var match = await cricinfoApiClient.GetMatchAsync(42);
+            match.DateOfFirstDay = match.DateOfFirstDay.AddDays(1);
+            await cricinfoApiClient.CreateMatchAsync(match);
+        }
     }
 }

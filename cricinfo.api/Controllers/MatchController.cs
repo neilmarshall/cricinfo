@@ -124,7 +124,7 @@ namespace Cricinfo.Api.Controllers
 
                 this._logger.LogInformation($"Success - Content created at id '{id}'");
 
-                return CreatedAtAction(nameof(GetAsync), new { id }, match);
+                return CreatedAtRoute(new { id }, match);
             }
             catch (Exception e)
             {
