@@ -79,7 +79,10 @@ namespace Cricinfo.UI
                 .AddTypeActivatedCheck<APIHealthCheck>("API Healthcheck", Configuration["cricInfoAPIURL"], Configuration["HealthcheckEndpoint"]);
 
             services.AddHealthChecksUI(setupSettings =>
-                    setupSettings.AddHealthCheckEndpoint("Healthchecks", Configuration["HealthcheckEndpoint"]))
+            {
+                setupSettings.AddHealthCheckEndpoint("Healthchecks", Configuration["HealthcheckEndpoint"]);
+                setupSettings.SetEvaluationTimeInSeconds(300);
+            })
                 .AddInMemoryStorage();
         }
 
