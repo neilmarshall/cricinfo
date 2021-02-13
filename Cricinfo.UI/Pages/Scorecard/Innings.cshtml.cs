@@ -40,6 +40,26 @@ namespace Cricinfo.UI.Pages
             this.Team = selectedTeam;
         }
 
+        private string matchName(ICollection<string> parsedNames, string name)
+        {
+            if (name == null)
+                throw new ArgumentException("Parameter 'name' cannot be null");
+
+            var firstName = name.Split().First();
+            var lastName = name.Split().Last();
+
+            if (parsedNames.Contains(lastName))
+            {
+                return lastName;
+            }
+            else if (parsedNames.FirstOrDefault(name => name.StartsWith(firstName.First()) && name.EndsWith(lastName)) != null)
+            {
+                return parsedNames.First(name => name.StartsWith(firstName.First()) && name.EndsWith(lastName));
+            }
+
+            return null;
+        }
+
         private IList<string> getMissingBatsmen(ICollection<string> parsedNames, BattingScorecard[] battingScorecard)
         {
             var missingBatsmen = new List<string>();
@@ -48,15 +68,42 @@ namespace Cricinfo.UI.Pages
             {
                 if (!parsedNames.Contains(bs.Name))
                 {
-                    missingBatsmen.Add(bs.Name);
+                    var name = matchName(parsedNames, bs.Name);
+
+                    if (name != null)
+                    {
+                        bs.Name = name;
+                    }
+                    else
+                    {
+                        missingBatsmen.Add(bs.Name);
+                    }
                 }
                 if (bs.Bowler != null && !parsedNames.Contains(bs.Bowler))
                 {
-                    missingBatsmen.Add(bs.Bowler);
+                    var name = matchName(parsedNames, bs.Bowler);
+
+                    if (name != null)
+                    {
+                        bs.Bowler = name;
+                    }
+                    else
+                    {
+                        missingBatsmen.Add(bs.Bowler);
+                    }
                 }
                 if (bs.Catcher != null && !parsedNames.Contains(bs.Catcher) && bs.Catcher != "sub")
                 {
-                    missingBatsmen.Add(bs.Catcher);
+                    var name = matchName(parsedNames, bs.Catcher);
+
+                    if (name != null)
+                    {
+                        bs.Catcher = name;
+                    }
+                    else
+                    {
+                        missingBatsmen.Add(bs.Catcher);
+                    }
                 }
             }
 
@@ -71,7 +118,16 @@ namespace Cricinfo.UI.Pages
             {
                 if (!parsedNames.Contains(bs.Name))
                 {
-                    missingBowlers.Add(bs.Name);
+                    var name = matchName(parsedNames, bs.Name);
+
+                    if (name != null)
+                    {
+                        bs.Name = name;
+                    }
+                    else
+                    {
+                        missingBowlers.Add(bs.Name);
+                    }
                 }
             }
 
