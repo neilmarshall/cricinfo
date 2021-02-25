@@ -109,7 +109,6 @@ namespace Cricinfo.UI.Unit.Tests
         [DataTestMethod]
         [DataRow("BattingScorecard", "Batting Scorecard")]
         [DataRow("BowlingScorecard", "Bowling Scorecard")]
-        [DataRow("FallOfWicketScorecard", "Fall of Wicket Scorecard")]
         public async Task POST_EndpointWithMissingFieldsReturnsCorrectValidationMessage(string field, string label)
         {
             // Arrange
@@ -221,6 +220,36 @@ namespace Cricinfo.UI.Unit.Tests
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"FallOfWicketScorecard\" data-valmsg-replace=\"true\">The field Fall of Wicket Scorecard is invalid.</span>").Match(content).Success);
+        }
+
+        [TestMethod]
+        public async Task POST_EndpointWithMissingFallOfWicketScorecardDataReturnsCorrectValidationMessage()
+        {
+            // Arrange
+            var getScorecardHTML = await client.GetAsync("Scorecard");
+            var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
+            await client.PostAsync("Scorecard",
+                new FormUrlEncodedContent(
+                    ScorecardTests.FormContent()
+                                  .Append(new KeyValuePair<string, string>("__RequestVerificationToken", token))));
+
+            string invalidFallOfWicketScorecard =
+                @"71-1 (28.6 ovs)	Elgar
+                  123-2 (54.2 ovs)	Hamza
+                  129-3 (58.5 ovs)	Maharaj\n";
+
+            // Act
+            var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
+            formElements["FallOfWicketScorecard"] = invalidFallOfWicketScorecard;
+            formElements.Add("__RequestVerificationToken", token);
+            var formContent = new FormUrlEncodedContent(formElements);
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var content = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var errMsg = "Missing fall of wicket data - expected 4 entries, found 3";
+            Assert.IsTrue(new Regex($"<span class=\"text-danger field-validation-error\" data-valmsg-for=\"FallOfWicketScorecard\" data-valmsg-replace=\"true\">{errMsg}</span>").Match(content).Success);
         }
 
         [TestMethod]

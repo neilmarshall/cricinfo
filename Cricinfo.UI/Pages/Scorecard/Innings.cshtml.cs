@@ -23,7 +23,6 @@ namespace Cricinfo.UI.Pages
         [BowlingScorecardValidator]
         [Display(Name = "Bowling Scorecard")]
         public string BowlingScorecard { get; set; }
-        [Required]
         [FallOFWicketScorecardValidator]
         [Display(Name = "Fall of Wicket Scorecard")]
         public string FallOfWicketScorecard { get; set; }
@@ -140,7 +139,9 @@ namespace Cricinfo.UI.Pages
 
             var battingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray();
             var bowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray();
-            var fallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
+            var fallOfWicketScorecard = string.IsNullOrEmpty(FallOfWicketScorecard)
+                    ? Array.Empty<int>()
+                    : Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
 
             var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
 
@@ -158,6 +159,12 @@ namespace Cricinfo.UI.Pages
             {
                 ModelState.AddModelError("BowlingScorecard",
                     $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
+            }
+
+            if (fallOfWicketScorecard.Length != bowlingScorecard.Select(bs => bs.Wickets).Sum())
+            {
+                ModelState.AddModelError("FallOfWicketScorecard",
+                    $"Missing fall of wicket data - expected {bowlingScorecard.Select(bs => bs.Wickets).Sum()} entries, found {fallOfWicketScorecard.Length}");
             }
 
             if (ModelState.ErrorCount > 0)
@@ -222,7 +229,9 @@ namespace Cricinfo.UI.Pages
 
             var battingScorecard = Parse.parseBattingScorecard(BattingScorecard).ToArray();
             var bowlingScorecard = Parse.parseBowlingScorecard(BowlingScorecard).ToArray();
-            var fallOfWicketScorecard = Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
+            var fallOfWicketScorecard = string.IsNullOrEmpty(FallOfWicketScorecard)
+                ? Array.Empty<int>()
+                : Parse.parseFallOfWicketScorecard(FallOfWicketScorecard);
 
             var match = JsonSerializer.Deserialize<Match>((string)TempData["matchFromScorecard"]);
 
@@ -240,6 +249,12 @@ namespace Cricinfo.UI.Pages
             {
                 ModelState.AddModelError("BowlingScorecard",
                     $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
+            }
+
+            if (fallOfWicketScorecard.Length != bowlingScorecard.Select(bs => bs.Wickets).Sum())
+            {
+                ModelState.AddModelError("FallOfWicketScorecard",
+                    $"Missing fall of wicket data - expected {bowlingScorecard.Select(bs => bs.Wickets).Sum()} entries, found {fallOfWicketScorecard.Length}");
             }
 
             if (ModelState.ErrorCount > 0)
