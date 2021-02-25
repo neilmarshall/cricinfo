@@ -28,11 +28,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div>
-                    <partial name="_FallOfWicketScorecard" for="FallOfWicketScorecard" />
+            @if (Model.FallOfWicketScorecard.Length > 0)
+            {
+                <div class="col-4">
+                    <div>
+                        <partial name="_FallOfWicketScorecard" for="FallOfWicketScorecard" />
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 }

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cricinfo.UI.Unit.Tests", "T
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Cricinfo.Services", "Cricinfo.Service\Cricinfo.Services.fsproj", "{A651F963-91BF-4044-A0B9-F254720EEF4D}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Cricinfo.Integration.Tests", "Tests\Cricinfo.Integration.Tests\Cricinfo.Integration.Tests.csproj", "{ADAE3167-E53F-418E-8157-DEA974E233C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cricinfo.Integration.Tests", "Tests\Cricinfo.Integration.Tests\Cricinfo.Integration.Tests.csproj", "{ADAE3167-E53F-418E-8157-DEA974E233C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cricinfo.ConsoleApp", "Cricinfo.ConsoleApp\Cricinfo.ConsoleApp.csproj", "{A8C71960-C11B-4A8A-9FB0-5485EAF2983A}"
 EndProject

@@ -9,7 +9,7 @@ namespace Cricinfo.UI.ValidationAttributes
     {
         public override bool IsValid(object value)
         {
-            if (value == null) { return false; }
+            if (value == null) { return true; }
 
             try
             {
