@@ -33,7 +33,8 @@ namespace Cricinfo.UI.Unit.Tests
             @"71-1 (28.6 ovs)	Elgar
               123-2 (54.2 ovs)	Hamza
               129-3 (58.5 ovs)	Maharaj
-              164-4 (76.2 ovs)	du Plessis\n";
+              129-4 (58.5 ovs)	Malan
+              164-5 (76.2 ovs)	du Plessis\n";
 
         private IEnumerable<KeyValuePair<string, string>> FormContent()
         {
@@ -220,6 +221,71 @@ namespace Cricinfo.UI.Unit.Tests
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsTrue(new Regex("<span class=\"text-danger field-validation-error\" data-valmsg-for=\"FallOfWicketScorecard\" data-valmsg-replace=\"true\">The field Fall of Wicket Scorecard is invalid.</span>").Match(content).Success);
+        }
+
+        [TestMethod]
+        public async Task POST_EndpointWithValidScorecardReturnsCorrectly()
+        {
+            // Arrange
+            var getScorecardHTML = await client.GetAsync("Scorecard");
+            var token = await Utilities.GetCSRFTokenAsync(getScorecardHTML.Content);
+            var scorecardContent = ScorecardTests.FormContent().Append(new KeyValuePair<string, string>("__RequestVerificationToken", token)).ToDictionary(kv => kv.Key, kv => kv.Value);
+            scorecardContent["HomeSquad"] = string.Join(Environment.NewLine, new[] { "Rohit Sharma", "Shubman Gill", "Cheteshwar Pujara", "Virat Kohli(c)", "Ajinkya Rahane", "Rishabh Pant(wk)", "Ravichandran Ashwin", "Axar Patel", "Washington Sundar", "Mohammed Siraj", "Ishant Sharma" });
+            scorecardContent["AwaySquad"] = string.Join(Environment.NewLine, new[] { "Dominic Sibley", "Zak Crawley", "Jonny Bairstow", "Joe Root(c)", "Ben Stokes", "Ollie Pope", "Dan Lawrence", "Ben Foakes(wk)", "Dom Bess", "Jack Leach", "James Anderson" });
+            await client.PostAsync("Scorecard", new FormUrlEncodedContent(scorecardContent));
+
+            string battingScorecard =
+                @"Gill	lbw	b Anderson	0	4	3	0	0	0.00
+                  Rohit Sharma	lbw	b Stokes	49	238	144	7	0	34.03
+                  Pujara	lbw	b Leach	17	107	66	1	0	25.76
+                  Kohli	c Foakes	b Stokes	0	11	8	0	0	0.00
+                  Rahane	c Stokes	b Anderson	27	54	45	4	0	60.00
+                  Pant	c Root	b Anderson	101	226	118	13	2	85.59
+                  R Ashwin	c Pope	b Leach	13	45	32	2	0	40.62
+                  Sundar	not out		96	257	174	10	1	55.17
+                  A Patel	run out (Bairstow)		43	134	97	5	1	44.33
+                  I Sharma	lbw	b Stokes	0	3	1	0	0	0.00
+                  Siraj		b Stokes	0	4	3	0	0	0.00";
+
+            string bowlingScorecard =
+                @"Anderson	25.0	14	44	3	1.76
+                  Stokes	27.4	6	89	4	3.22
+                  Leach	27.0	5	89	2	3.30
+                  Bess	17.0	1	71	0	4.18
+                  Root	18.0	1	56	0	3.11";
+
+            string fallOfWicketScorecard =
+                @"0-1 (0.3 ovs)	Gill
+                  40-2 (23.6 ovs)	Pujara
+                  41-3 (26.4 ovs)	Kohli
+                  80-4 (37.5 ovs)	Rahane
+                  121-5 (49.6 ovs)	Rohit Sharma
+                  146-6 (58.1 ovs)	R Ashwin
+                  259-7 (84.1 ovs)	Pant
+                  365-8 (113.6 ovs)	A Patel
+                  365-9 (114.1 ovs)	I Sharma
+                  365-10 (114.4 ovs)	Siraj";
+
+            // Act
+            var formElements = FormContent().ToDictionary(kv => kv.Key, kv => kv.Value);
+            formElements["BattingScorecard"] = battingScorecard;
+            formElements["BowlingScorecard"] = bowlingScorecard;
+            formElements["FallOfWicketScorecard"] = fallOfWicketScorecard;
+            formElements.Add("__RequestVerificationToken", token);
+            var formContent = new FormUrlEncodedContent(formElements);
+
+            // Assert -
+
+            // call to 'Scorecard/Innings' should redirect back to 'Innings'
+            var response = await client.PostAsync("Scorecard/Innings?handler=AddAnotherInnings", formContent);
+            var content = await response.Content.ReadAsStringAsync();
+            Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.AreEqual("/Scorecard/Innings", response.Headers.Location.OriginalString.Split('?')[0]);
+
+            // call to 'Scorecard/Innings' should redirect to 'Verification'
+            response = await client.PostAsync("Scorecard/Innings?handler=SubmitAllInnings", formContent);
+            Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.AreEqual("/Scorecard/Verification", response.Headers.Location.OriginalString.Split('?')[0]);
         }
 
         [TestMethod]

@@ -161,7 +161,7 @@ namespace Cricinfo.UI.Pages
                     $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
             }
 
-            if (fallOfWicketScorecard.Length != bowlingScorecard.Select(bs => bs.Wickets).Sum())
+            if (fallOfWicketScorecard.Length != battingScorecard.Where(bs => bs.Dismissal != Models.Enums.Dismissal.NotOut).Count())
             {
                 ModelState.AddModelError("FallOfWicketScorecard",
                     $"Missing fall of wicket data - expected {bowlingScorecard.Select(bs => bs.Wickets).Sum()} entries, found {fallOfWicketScorecard.Length}");
@@ -251,7 +251,7 @@ namespace Cricinfo.UI.Pages
                     $"Could not find the following player(s): {String.Join(", ", missingBowlers.Distinct())}");
             }
 
-            if (fallOfWicketScorecard.Length != bowlingScorecard.Select(bs => bs.Wickets).Sum())
+            if (fallOfWicketScorecard.Length != battingScorecard.Where(bs => bs.Dismissal != Models.Enums.Dismissal.NotOut).Count())
             {
                 ModelState.AddModelError("FallOfWicketScorecard",
                     $"Missing fall of wicket data - expected {bowlingScorecard.Select(bs => bs.Wickets).Sum()} entries, found {fallOfWicketScorecard.Length}");
