@@ -63,19 +63,26 @@ namespace Cricinfo.UI.Areas.Identity.Pages.Account
                 var user = new ApplicationUser { UserName = Input.Username };
                 var userCreationResult = await _userManager.CreateAsync(user, Input.Password);
                 user.Id = (await _userManager.FindByNameAsync(user.UserName)).Id;
-                var claimsCreationResult = await _userManager.AddClaimsAsync(user, new[]
+
+                IdentityResult claimsCreationResult = null;
+                if (userCreationResult.Succeeded)
                 {
-                    new Claim("CanAddTeam", "true"),
-                    new Claim("CanAddScorecard", "true"),
-                    new Claim("CanAddUser", "false"),
-                    new Claim("CanManagePermissions", "false")
-                });
-                if (userCreationResult.Succeeded && claimsCreationResult.Succeeded)
+                    claimsCreationResult = await _userManager.AddClaimsAsync(user, new[]
+                    {
+                        new Claim("CanAddTeam", "true"),
+                        new Claim("CanAddScorecard", "true"),
+                        new Claim("CanAddUser", "false"),
+                        new Claim("CanManagePermissions", "false")
+                    });
+                }
+
+                if (userCreationResult.Succeeded && (claimsCreationResult?.Succeeded ?? false))
                 {
                     _logger.LogInformation("User created a new account with password.");
 
                     return LocalRedirect(returnUrl);
                 }
+
                 foreach (var error in userCreationResult.Errors.Union(claimsCreationResult.Errors))
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

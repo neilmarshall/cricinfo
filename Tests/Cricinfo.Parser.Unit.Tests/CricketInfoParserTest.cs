@@ -39,6 +39,25 @@ namespace Cricinfo.Parser.Unit.Tests
                 parsedBattingFigures.Select(bf => bf.Fours).ToArray());
             CollectionAssert.AreEqual(new int[] { 0, 0, 1, 0, 0, 0, 2, 0 },
                 parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
+
+            battingFigures = @"ul-Haq      b Parkinson 56  73  7   0   110 76.71
+                               Zaman c Crawley b Mahmood   6   14  1   0   23  42.86
+                               Azam c Malan b Carse 158 139 14  4   198 113.67
+                               Rizwan c Simpson b Carse 74  58  8   0   87  127.59";
+            parsedBattingFigures = Parse.parseBattingScorecard(battingFigures).ToArray();
+            Assert.IsNotNull(parsedBattingFigures);
+            /* TODO - uncomment test below and fix issue with change in formatting of data
+            CollectionAssert.AreEqual(new int[] { 56, 6, 158, 74 },
+                parsedBattingFigures.Select(bf => bf.Runs).ToArray());
+            CollectionAssert.AreEqual(new int[] { 110, 23, 198, 87 },
+                parsedBattingFigures.Select(bf => bf.Mins).ToArray());
+            CollectionAssert.AreEqual(new int[] { 73, 14, 139, 58 },
+                parsedBattingFigures.Select(bf => bf.Balls).ToArray());
+            CollectionAssert.AreEqual(new int[] { 7, 1, 14, 8 },
+                parsedBattingFigures.Select(bf => bf.Fours).ToArray());
+            CollectionAssert.AreEqual(new int[] { 0, 0, 4, 0 },
+                parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
+            */
         }
 
         [TestMethod]
@@ -247,6 +266,7 @@ namespace Cricinfo.Parser.Unit.Tests
         [DataRow("Quinton de Kock(wk)", "Quinton", "de Kock", "de Kock")]
         [DataRow("Quinton de Kock(c)(wk)", "Quinton", "de Kock", "de Kock")]
         [DataRow("Kevin O'Brien", "Kevin", "O'Brien", "O'Brien")]
+        [DataRow("Imam ul-Haq", "Imam", "ul-Haq", "ul-Haq")]
         public void ParseNameParsesNamesCorrectly(string rawString, string expectedFirstName,
             string expectedLastName, string expectedLookupCode)
         {
