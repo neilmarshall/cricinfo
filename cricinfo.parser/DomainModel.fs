@@ -156,7 +156,7 @@ module private DomainModel =
         static member Score score =
             let parseBattingFigures (inputString : string) =
                 match inputString.Trim().Split() |> Seq.filter (System.String.IsNullOrWhiteSpace >> not) |> Seq.map Int32.Parse |> Seq.toList with
-                | [runs; mins; balls; fours; sixes] -> { runs = runs; mins = mins; balls = balls; fours = fours; sixes = sixes }
+                | [runs; balls; fours; sixes; mins] -> { runs = runs; balls = balls; fours = fours; sixes = sixes; mins = mins }
                 | _ -> inputString |> sprintf "invalid figures in batting data - '%s'" |> BattingFiguresException |> raise
             let hitWicket =
                 let result = Regex("^(?<batsman>[A-Za-z\s'-]+)(?=Hit Wicket)Hit Wicket\s+b\s+(?<bowler>[A-Za-z\s'-]+)\s+(?<figures>(\d+\s+){4}\d+)").Match(score)

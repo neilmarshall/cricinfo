@@ -12,32 +12,41 @@ namespace Cricinfo.Parser.Unit.Tests
         [TestMethod]
         public void BattingScorecardParsedCorrectly()
         {
-            var battingFigures = @"Crawley	c de Kock	b Philander	4	15	15	0	0	26.67
-                                   Sibley c de Kock   b Rabada    49  108 76  7   0   44.74
-                                   Stokes c Elgar b Nortje    47  109 77  6   1   61.04
-                                   Archer c van der Dussen b Nortje    4   7   5   1   0   80.00
-                                   Denly b Maharaj   38  191 130 5   0   29.23
-                                   Pope not out		61  199 144 7   0   42.36
-                                   Denly lbw b Pretorius 32  128 79  3   2   39.24
-                                   Sibley c & b Maharaj   29  118 90  5   0   32.22\n";
+            var battingFigures = @"Crawley	c de Kock	b Philander	4	15	0	0	15	26.67
+                                   Sibley c de Kock   b Rabada    49  76  7   0   108 44.74
+                                   Stokes c Elgar b Nortje    47  77  6   1   109 61.04
+                                   Archer c van der Dussen b Nortje    4   5   1   0   7   80.00
+                                   Denly b Maharaj   38  130 5   0   191 29.23
+                                   Pope not out		61  144 7   0   199 42.36
+                                   Denly lbw b Pretorius 32  79  3   2   128 39.24
+                                   Sibley c & b Maharaj   29  90  5   0   118 32.22\n";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
-            CollectionAssert.AreEqual(new string[] { "Crawley", "Sibley", "Stokes", "Archer", "Denly", "Pope", "Denly", "Sibley" },
+            CollectionAssert.AreEqual(
+                new string[] { "Crawley", "Sibley", "Stokes", "Archer", "Denly", "Pope", "Denly", "Sibley" },
                 parsedBattingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Bowled, Dismissal.NotOut, Dismissal.LBW, Dismissal.CaughtAndBowled },
+            CollectionAssert.AreEqual(
+                new Dismissal[] { Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Caught, Dismissal.Bowled, Dismissal.NotOut, Dismissal.LBW, Dismissal.CaughtAndBowled },
                 parsedBattingFigures.Select(bf => bf.Dismissal).ToArray());
-            CollectionAssert.AreEqual(new string[] { "de Kock", "de Kock", "Elgar", "van der Dussen", null, null, null, "Maharaj" },
+            CollectionAssert.AreEqual(
+                new string[] { "de Kock", "de Kock", "Elgar", "van der Dussen", null, null, null, "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Catcher).ToArray());
-            CollectionAssert.AreEqual(new string[] { "Philander", "Rabada", "Nortje", "Nortje", "Maharaj", null, "Pretorius", "Maharaj" },
+            CollectionAssert.AreEqual(
+                new string[] { "Philander", "Rabada", "Nortje", "Nortje", "Maharaj", null, "Pretorius", "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Bowler).ToArray());
-            CollectionAssert.AreEqual(new int[] { 4, 49, 47, 4, 38, 61, 32, 29 },
+            CollectionAssert.AreEqual(
+                new int[] { 4, 49, 47, 4, 38, 61, 32, 29 },
                 parsedBattingFigures.Select(bf => bf.Runs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15, 108, 109, 7, 191, 199, 128, 118 },
+            CollectionAssert.AreEqual(
+                new int[] { 15, 108, 109, 7, 191, 199, 128, 118 },
                 parsedBattingFigures.Select(bf => bf.Mins).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15, 76, 77, 5, 130, 144, 79, 90 },
+            CollectionAssert.AreEqual(
+                new int[] { 15, 76, 77, 5, 130, 144, 79, 90 },
                 parsedBattingFigures.Select(bf => bf.Balls).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0, 7, 6, 1, 5, 7, 3, 5 },
+            CollectionAssert.AreEqual(
+                new int[] { 0, 7, 6, 1, 5, 7, 3, 5 },
                 parsedBattingFigures.Select(bf => bf.Fours).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0, 0, 1, 0, 0, 0, 2, 0 },
+            CollectionAssert.AreEqual(
+                new int[] { 0, 0, 1, 0, 0, 0, 2, 0 },
                 parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
 
             battingFigures = @"ul-Haq      b Parkinson 56  73  7   0   110 76.71
@@ -46,50 +55,62 @@ namespace Cricinfo.Parser.Unit.Tests
                                Rizwan c Simpson b Carse 74  58  8   0   87  127.59";
             parsedBattingFigures = Parse.parseBattingScorecard(battingFigures).ToArray();
             Assert.IsNotNull(parsedBattingFigures);
-            /* TODO - uncomment test below and fix issue with change in formatting of data
-            CollectionAssert.AreEqual(new int[] { 56, 6, 158, 74 },
+            CollectionAssert.AreEqual(
+                new int[] { 56, 6, 158, 74 },
                 parsedBattingFigures.Select(bf => bf.Runs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 110, 23, 198, 87 },
+            CollectionAssert.AreEqual(
+                new int[] { 110, 23, 198, 87 },
                 parsedBattingFigures.Select(bf => bf.Mins).ToArray());
-            CollectionAssert.AreEqual(new int[] { 73, 14, 139, 58 },
+            CollectionAssert.AreEqual(
+                new int[] { 73, 14, 139, 58 },
                 parsedBattingFigures.Select(bf => bf.Balls).ToArray());
-            CollectionAssert.AreEqual(new int[] { 7, 1, 14, 8 },
+            CollectionAssert.AreEqual(
+                new int[] { 7, 1, 14, 8 },
                 parsedBattingFigures.Select(bf => bf.Fours).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0, 0, 4, 0 },
+            CollectionAssert.AreEqual(
+                new int[] { 0, 0, 4, 0 },
                 parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
-            */
         }
 
         [TestMethod]
         public void BattingScorecardWithMissingEconomyParsedCorrectly()
         {
-            var battingFigures = @"Crawley	c de Kock	b Philander	4	15	15	0	0	26.67
-                                   Sibley c & b Maharaj   29  118 90  5   0\n";
+            var battingFigures = @"Crawley	c de Kock	b Philander	4	15	0	0	15	26.67
+                                   Sibley c & b Maharaj   29  90  5   0 118\n";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
-            CollectionAssert.AreEqual(new string[] { "Crawley", "Sibley" },
+            CollectionAssert.AreEqual(
+                new string[] { "Crawley", "Sibley" },
                 parsedBattingFigures.Select(bf => bf.Name).ToArray());
-            CollectionAssert.AreEqual(new Dismissal[] { Dismissal.Caught, Dismissal.CaughtAndBowled },
+            CollectionAssert.AreEqual(
+                new Dismissal[] { Dismissal.Caught, Dismissal.CaughtAndBowled },
                 parsedBattingFigures.Select(bf => bf.Dismissal).ToArray());
-            CollectionAssert.AreEqual(new string[] { "de Kock", "Maharaj" },
+            CollectionAssert.AreEqual(
+                new string[] { "de Kock", "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Catcher).ToArray());
-            CollectionAssert.AreEqual(new string[] { "Philander", "Maharaj" },
+            CollectionAssert.AreEqual(
+                new string[] { "Philander", "Maharaj" },
                 parsedBattingFigures.Select(bf => bf.Bowler).ToArray());
-            CollectionAssert.AreEqual(new int[] { 4, 29 },
+            CollectionAssert.AreEqual(
+                new int[] { 4, 29 },
                 parsedBattingFigures.Select(bf => bf.Runs).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15, 118 },
+            CollectionAssert.AreEqual(
+                new int[] { 15, 118 },
                 parsedBattingFigures.Select(bf => bf.Mins).ToArray());
-            CollectionAssert.AreEqual(new int[] { 15, 90 },
+            CollectionAssert.AreEqual(
+                new int[] { 15, 90 },
                 parsedBattingFigures.Select(bf => bf.Balls).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0, 5 },
+            CollectionAssert.AreEqual(
+                new int[] { 0, 5 },
                 parsedBattingFigures.Select(bf => bf.Fours).ToArray());
-            CollectionAssert.AreEqual(new int[] { 0, 0 },
+            CollectionAssert.AreEqual(
+                new int[] { 0, 0 },
                 parsedBattingFigures.Select(bf => bf.Sixes).ToArray());
         }
 
         [TestMethod]
         public void BattingScorecardWithRunOutDismissalParsedCorrectly()
         {
-            var battingFigures = @"Maharaj	run out (S Curran)		71	148	106	10	3	66.98";
+            var battingFigures = @"Maharaj	run out (S Curran)		71	106	10	3	148	66.98";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             Assert.AreEqual("Maharaj", parsedBattingFigures.First().Name);
             Assert.AreEqual(Dismissal.RunOut, parsedBattingFigures.First().Dismissal);
@@ -105,7 +126,7 @@ namespace Cricinfo.Parser.Unit.Tests
         [TestMethod]
         public void BattingScorecardWithStumpedDismissalParsedCorrectly()
         {
-            var battingFigures = @"du Plessis  st Bairstow b Parkinson	28	0	45	3	0	62.22";
+            var battingFigures = @"du Plessis  st Bairstow b Parkinson	28	45	3	0	0	62.22";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             Assert.AreEqual("du Plessis", parsedBattingFigures.First().Name);
             Assert.AreEqual(Dismissal.Stumped, parsedBattingFigures.First().Dismissal);
@@ -121,7 +142,7 @@ namespace Cricinfo.Parser.Unit.Tests
         [TestMethod]
         public void BattingScorecardWithRetiredDismissalParsedCorrectly()
         {
-            var battingFigures = "Bairstow Retired Not Out		100	0	83	11	4	120.48";
+            var battingFigures = "Bairstow Retired Not Out		100	83	11	4	0	120.48";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             Assert.AreEqual("Bairstow", parsedBattingFigures.First().Name);
             Assert.AreEqual(Dismissal.Retired, parsedBattingFigures.First().Dismissal);
@@ -137,7 +158,7 @@ namespace Cricinfo.Parser.Unit.Tests
         [TestMethod]
         public void BattingScorecardWithHitWicketDismissalParsedCorrectly()
         {
-            var battingFigures = "Bairstow  Hit Wicket  b Starc 9   16  11  2   0   81.82";
+            var battingFigures = "Bairstow  Hit Wicket  b Starc 9   11  2   0   16  81.82";
             var parsedBattingFigures = Parse.parseBattingScorecard(battingFigures);
             Assert.AreEqual("Bairstow", parsedBattingFigures.First().Name);
             Assert.AreEqual(Dismissal.HitWicket, parsedBattingFigures.First().Dismissal);
